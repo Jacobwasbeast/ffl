@@ -1074,7 +1074,7 @@ void FFLiDatabaseRandom::Get(FFLiCharInfo* pCharInfo, FFLGender gender, FFLAge a
     pCharInfo->localOnly = false;
 
     pCharInfo->regionMove = 0;
-    pCharInfo->fontRegion = FFL_FONT_REGION_0;
+    pCharInfo->fontRegion = FFL_FONT_REGION_JP_US_EU;
 
     pCharInfo->pageIndex = 0;
     pCharInfo->slotIndex = 0;

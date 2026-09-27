@@ -11,6 +11,10 @@ FFLiCompressDrawer::FFLiCompressDrawer()
 {
 }
 
+FFLiCompressDrawer::~FFLiCompressDrawer()
+{
+}
+
 void FFLiCompressDrawer::SetupCPU(FFLiBufferAllocator* pAllocator)
 {
     const u32 POSITION_BUFFER_SIZE = sizeof(FFLVec3) * 4;

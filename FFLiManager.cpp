@@ -44,6 +44,11 @@ FFLiCompressor* CreateCompressor(const void* pShaderData, FFLiBufferAllocator* p
 
 }
 
+FFLResult FFLiInitRes(void* pBuffer, const FFLInitDesc* pInitDesc)
+{
+    return InitResImpl(pBuffer, pInitDesc, NULL);
+}
+
 FFLResult FFLiInitResEx(void* pBuffer, const FFLInitDesc* pInitDesc, const FFLResourceDesc* pResDesc)
 {
     return InitResImpl(pBuffer, pInitDesc, pResDesc);

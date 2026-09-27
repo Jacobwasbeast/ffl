@@ -1,5 +1,5 @@
 #include <nn/ffl/FFLiFsCommand.h>
-#include <nn/ffl/FFliFsFile.h>
+#include <nn/ffl/FFLiFsFile.h>
 #include <nn/ffl/FFLiPath.h>
 #include <nn/ffl/FFLiResourceHeader.h>
 #include <nn/ffl/FFLiResourceManager.h>

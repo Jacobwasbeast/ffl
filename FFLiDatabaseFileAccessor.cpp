@@ -399,7 +399,7 @@ FFLiFsResult ReadFile(void* pDst, u32 size, FFLiFsCommand* pCommand, const char*
 
 FSStatus WriteFileImpl(FFLiFsFile& file, const void* pSrc, u32 size, FFLiFileWriteBuffer* pWriteBuffer)
 {
-    FSStatus ret = 0;
+    FSStatus ret = FS_STATUS_OK;
 
     const u32 count = (size + (FFLI_FILE_WRITE_BUFFER_SIZE - 1)) / FFLI_FILE_WRITE_BUFFER_SIZE;
 

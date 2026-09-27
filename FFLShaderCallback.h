@@ -17,8 +17,8 @@ typedef struct FFLShaderCallback
     void*                   pObj;
     const GX2ContextState*  pContextState;
 
-    void (*pDrawFunc)(void* pObj, const FFLDrawParam& drawParam);
-    void (*pSetMatrixFunc)(void* pObj, const Mat44& matrix);
+    void (*pDrawFunc)(void* pObj, const FFLDrawParam* pDrawParam);
+    void (*pSetMatrixFunc)(void* pObj, const Mat44* pMatrix);
 }
 FFLShaderCallback;
 NN_STATIC_ASSERT(sizeof(FFLShaderCallback) == 0x10);

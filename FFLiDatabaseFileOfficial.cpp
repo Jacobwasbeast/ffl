@@ -105,6 +105,18 @@ bool FFLiDatabaseFileOfficial::IsAvailable(u16 miiDataIndex, bool checkSpecial, 
     return Get(&charInfo, miiDataIndex, checkSpecial, allowSpecial);
 }
 
+u16 FFLiDatabaseFileOfficial::NumOfAvailable(bool checkSpecial, bool allowSpecial) const
+{
+    u16 count = 0;
+    for (u16 i = 0; i < GetMiiDataNum(); i++)
+    {
+        FFLiCharInfo charInfo;
+        if (Get(&charInfo, i, checkSpecial, allowSpecial))
+            count++;
+    }
+    return count;
+}
+
 bool FFLiDatabaseFileOfficial::Search(u16* pMiiDataIndex, const FFLCreateID& createID) const
 {
     for (u16 i = 0; i < GetMiiDataNum(); i++)

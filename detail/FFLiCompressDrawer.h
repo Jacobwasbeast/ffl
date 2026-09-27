@@ -9,7 +9,7 @@ class FFLiCompressDrawer
 {
 public:
     FFLiCompressDrawer();
-    ~FFLiCompressDrawer();  // Deleted in NSMBU
+    ~FFLiCompressDrawer();
 
     void SetupCPU(FFLiBufferAllocator* pAllocator);
     void SetupGPU();

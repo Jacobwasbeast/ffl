@@ -23,6 +23,13 @@ u32 FFLiGetBufferRenderTexture(u32 width, u32 height, GX2SurfaceFormat format, u
     );
 }
 
+u32 FFLiGetDepthBufferSizeRenderTexture(u32 width, u32 height)
+{
+    GX2DepthBuffer depthBuffer;
+    GX2InitDepthBuffer(&depthBuffer, width, height, GX2_SURFACE_FORMAT_TCD_R16_UNORM, GX2_AA_MODE_1X);
+    return depthBuffer.surface.imageSize + depthBuffer.surface.alignment;
+}
+
 void FFLiInitRenderTexture(FFLiRenderTexture* pRenderTexture, u32 width, u32 height, GX2SurfaceFormat format, u32 numMips, FFLiBufferAllocator* pAllocator)
 {
     std::memset(pRenderTexture, 0, sizeof(FFLiRenderTexture));

@@ -14,6 +14,18 @@ FFLResult FFLiGetStoreData(FFLStoreData* pStoreData, FFLDataSource dataSource, u
     return FFLiManager::GetInstance()->GetDatabaseManager().GetStoreData(static_cast<FFLiStoreDataCFL*>(pStoreData), dataSource, index);
 }
 
+u16 FFLGetAvailableOfficialDataNum(void)
+{
+    if (FFLiManager::IsConstruct())
+    {
+        FFLiManager* pManager = FFLiManager::GetInstance();
+        FFLiDatabaseManager& databaseManager = pManager->GetDatabaseManager();
+        FFLiDatabaseFile* pDatabaseFile = databaseManager.GetDatabaseFileAccessor().GetDatabaseFile();
+        return pDatabaseFile->official.NumOfAvailable(true, databaseManager.IsEnabledSpecialMii());
+    }
+    return 0;
+}
+
 BOOL FFLIsAvailableOfficialData(u16 index)
 {
     if (FFLiManager::IsConstruct())

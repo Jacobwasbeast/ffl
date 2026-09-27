@@ -1,7 +1,5 @@
 #include <nn/ffl/FFLiPath.h>
 
-#include <cafe/sysapp.h>
-
 #include <nn/save/save_Types.h>
 
 extern "C" {

@@ -105,7 +105,7 @@ bool FFLiMiiDataCoreRFL2CharInfo(FFLiCharInfo* pCharInfo, const FFLiMiiDataCoreR
     pCharInfo->localOnly = miiDataCoreRFL.LocalOnly();
 
     pCharInfo->regionMove = 0;
-    pCharInfo->fontRegion = FFL_FONT_REGION_0;
+    pCharInfo->fontRegion = FFL_FONT_REGION_JP_US_EU;
 
     pCharInfo->pageIndex = 0;
     pCharInfo->slotIndex = 0;

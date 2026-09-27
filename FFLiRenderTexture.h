@@ -12,6 +12,7 @@ struct FFLiRenderTexture
 NN_STATIC_ASSERT(sizeof(FFLiRenderTexture) == 0x9C);
 
 u32 FFLiGetBufferRenderTexture(u32 width, u32 height, GX2SurfaceFormat format, u32 numMips);
+u32 FFLiGetDepthBufferSizeRenderTexture(u32 width, u32 height);
 
 struct FFLColor;
 

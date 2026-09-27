@@ -23,6 +23,7 @@ struct  FFLiDatabaseFile;
 struct  FFLiFileWriteBuffer;
 struct  FFLiResourceMultiHeader;
 
+FFLResult FFLiInitRes(void* pBuffer, const FFLInitDesc* pInitDesc);
 FFLResult FFLiInitResEx(void* pBuffer, const FFLInitDesc* pInitDesc, const FFLResourceDesc* pResDesc);
 void FFLiInitResGPUStep();
 

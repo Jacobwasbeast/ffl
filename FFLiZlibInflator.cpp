@@ -36,3 +36,13 @@ s32 FFLiZlibInflator::Process(void** ppDst, u32* pDstSize, const void** ppSrc, u
 
     return ret;
 }
+
+u32 FFLiZlibInflator::TotalInputSize() const
+{
+    return m_Stream.total_in;
+}
+
+u32 FFLiZlibInflator::TotalOutputSize() const
+{
+    return m_Stream.total_out;
+}

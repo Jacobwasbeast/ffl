@@ -12,12 +12,12 @@ void FFLiGetDateTimeNow(FFLiDateTime* pDateTime)
     OSCalendarTime calendarTime;
     OSTicksToCalendarTime(FFLiGetTick(), &calendarTime);
 
-    pDateTime->year = calendarTime.year;
-    pDateTime->month = calendarTime.mon + 1;
-    pDateTime->day = calendarTime.mday;
-    pDateTime->hour = calendarTime.hour;
-    pDateTime->minute = calendarTime.min;
-    pDateTime->second = calendarTime.sec;
+    pDateTime->year = calendarTime.tm_year;
+    pDateTime->month = calendarTime.tm_mon + 1;
+    pDateTime->day = calendarTime.tm_mday;
+    pDateTime->hour = calendarTime.tm_hour;
+    pDateTime->minute = calendarTime.tm_min;
+    pDateTime->second = calendarTime.tm_sec;
 }
 
 void FFLiGetNowDateTime(s32* pYear, s32* pMonth, s32* pDay, s32* pHour, s32* pMinute, s32* pSecond)

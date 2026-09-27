@@ -5,7 +5,7 @@
 
 class FFLiAllocator;
 class FFLiDatabaseFile;
-class FFLiFileWriteBuffer;
+struct FFLiFileWriteBuffer;
 class FFLiFsClient;
 
 class FFLiDatabaseFileAccessor

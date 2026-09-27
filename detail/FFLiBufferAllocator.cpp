@@ -2,6 +2,11 @@
 
 #include <nn/ffl/detail/FFLiBufferAllocator.h>
 
+void FFLiInitBufferAllocator(FFLiBufferAllocator* pAllocator, void* pBuffer, u32 size)
+{
+    pAllocator->Init(pBuffer, size);
+}
+
 void* FFLiAllocateBufferAllocator(FFLiBufferAllocator* pAllocator, u32 size, u32 alignment)
 {
     return pAllocator->Allocate(size, alignment);

@@ -13,6 +13,7 @@ typedef struct FFLStoreData FFLStoreData;
 
 FFLResult FFLiGetStoreData(FFLStoreData* pStoreData, FFLDataSource dataSource, u16 index);
 
+u16 FFLGetAvailableOfficialDataNum(void);
 BOOL FFLIsAvailableOfficialData(u16 index);
 BOOL FFLIsRegularOfficialData(u16 index);
 

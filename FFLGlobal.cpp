@@ -3,6 +3,11 @@
 #include <nn/ffl/FFLiColor.h>
 #include <nn/ffl/FFLiManager.h>
 
+FFLResult FFLInitRes(void* pBuffer, const FFLInitDesc* pInitDesc)
+{
+    return FFLiInitRes(pBuffer, pInitDesc);
+}
+
 FFLResult FFLInitResEx(void* pBuffer, const FFLInitDesc* pInitDesc, const FFLResourceDesc* pResDesc)
 {
     return FFLiInitResEx(pBuffer, pInitDesc, pResDesc);

@@ -25,13 +25,13 @@ void FFLiShaderCallback::Set(const FFLShaderCallback* pCallback)
 void FFLiShaderCallback::CallSetMatrix(const Mat44& mat) const
 {
     if (IsExist())
-        (*m_pShaderCallback->pSetMatrixFunc)(m_pShaderCallback->pObj, mat);
+        (*m_pShaderCallback->pSetMatrixFunc)(m_pShaderCallback->pObj, &mat);
 }
 
 void FFLiShaderCallback::CallDraw(const FFLDrawParam& drawParam) const
 {
     if (IsExist())
-        (*m_pShaderCallback->pDrawFunc)(m_pShaderCallback->pObj, drawParam);
+        (*m_pShaderCallback->pDrawFunc)(m_pShaderCallback->pObj, &drawParam);
 }
 
 void FFLiShaderCallback::CallSetContextState() const

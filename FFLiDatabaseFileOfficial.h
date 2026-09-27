@@ -34,6 +34,7 @@ public:
     bool IsAvailable(u16 miiDataIndex, bool checkSpecial, bool allowSpecial) const;
     bool Search(u16* pMiiDataIndex, const FFLCreateID& createID) const;
     bool IsRegular(u16 miiDataIndex, bool checkSpecial, bool allowSpecial) const;
+    u16 NumOfAvailable(bool checkSpecial, bool allowSpecial) const;
 
     bool AdjustRegularList(AdjustRegularBuffer* pBuffer);
 
