@@ -11,13 +11,13 @@ public:
     FFLiFsClient();
     ~FFLiFsClient();
 
-    FSStatus Init(const FSStateChangeParams* pChangeParams, FSRetFlag errHandling = FS_RET_NO_ERROR);
+    FSStatus Init(const FSStateChangeParams* pChangeParams, u32 errHandling = FS_RET_NO_ERROR);
     void SetStateChangeNotification(FSStateChangeParams* pChangeParams);
 
     bool IsValid() const;
 
-    FSStatus Shutdown(FSRetFlag errHandling = FS_RET_NO_ERROR);
-    FSStatus ShutdownIfValid(FSRetFlag errHandling = FS_RET_NO_ERROR);
+    FSStatus Shutdown(u32 errHandling = FS_RET_NO_ERROR);
+    FSStatus ShutdownIfValid(u32 errHandling = FS_RET_NO_ERROR);
 
     FSClient& GetFSClient()
     {

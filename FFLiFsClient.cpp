@@ -23,9 +23,9 @@ FSStateChangeParams s_Param = {
 
 }
 
-FSStatus FFLiFsClient::Init(const FSStateChangeParams* pChangeParams, FSRetFlag errHandling)
+FSStatus FFLiFsClient::Init(const FSStateChangeParams* pChangeParams, u32 errHandling)
 {
-    FSStatus status = FSAddClient(&m_FSClient, errHandling);
+    FSStatus status = FSAddClient(&m_FSClient, static_cast<FSErrorFlag>(errHandling));
     if (status != FS_STATUS_OK)
         return status;
 
@@ -48,14 +48,14 @@ bool FFLiFsClient::IsValid() const
     return m_IsValid;
 }
 
-FSStatus FFLiFsClient::Shutdown(FSRetFlag errHandling)
+FSStatus FFLiFsClient::Shutdown(u32 errHandling)
 {
-    FSStatus status = FSDelClient(&m_FSClient, errHandling);
+    FSStatus status = FSDelClient(&m_FSClient, static_cast<FSErrorFlag>(errHandling));
     m_IsValid = false;
     return status;
 }
 
-FSStatus FFLiFsClient::ShutdownIfValid(FSRetFlag errHandling)
+FSStatus FFLiFsClient::ShutdownIfValid(u32 errHandling)
 {
     FSStatus status = FS_STATUS_OK;
     if (IsValid())
