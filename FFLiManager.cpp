@@ -110,6 +110,8 @@ FFLResult FFLiManager::Destroy()
 
     FFLiManager* pManager = GetInstance();
 
+    pManager->FlushQuota(false);
+
     FFLResult result = pManager->BeforeDestruct();
 
     pManager->~FFLiManager();
@@ -202,6 +204,9 @@ FFLResult FFLiManager::AfterConstruct(const FFLInitDesc* pInitDesc, const FFLRes
     {
         for (u32 i = 0; i < FFL_RESOURCE_TYPE_MAX; i++)
         {
+            if (pResDesc->pData[i] == NULL)
+                continue;
+
             result = m_ResourceManager.AttachCache(pResDesc->pData[i], pResDesc->size[i], FFLResourceType(i));
             if (result != FFL_RESULT_OK)
             {
