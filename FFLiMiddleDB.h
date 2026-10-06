@@ -104,7 +104,7 @@ public:
     void SetRandomParam(FFLGender gender, FFLAge age, FFLRace race);
 
     s32 Size() const;
-    s32 StoredSize() const;
+    u32 StoredSize() const;
 
     FFLMiddleDBType Type() const;
 

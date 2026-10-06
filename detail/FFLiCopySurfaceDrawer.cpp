@@ -54,11 +54,8 @@ void FFLiCopySurfaceDrawer::SetupGPU()
 
 void FFLiCopySurfaceDrawer::SetAttributeBuffer(u32 positionBufferIndex, u32 texCoordBufferIndex)
 {
-    const u32 POSITION_BUFFER_SIZE = sizeof(FFLVec2) * 4;
-    const u32 TEXCOORD_BUFFER_SIZE = sizeof(FFLVec2) * 4;
-
-    GX2SetAttribBuffer(positionBufferIndex, POSITION_BUFFER_SIZE, sizeof(FFLVec2), m_pPositionBuffer);
-    GX2SetAttribBuffer(texCoordBufferIndex, TEXCOORD_BUFFER_SIZE, sizeof(FFLVec2), m_pTexCoordBuffer);
+    GX2SetAttribBuffer(positionBufferIndex, sizeof(FFLVec2) * 4, sizeof(FFLVec2), m_pPositionBuffer);
+    GX2SetAttribBuffer(texCoordBufferIndex, sizeof(FFLVec2) * 4, sizeof(FFLVec2), m_pTexCoordBuffer);
 }
 
 void FFLiCopySurfaceDrawer::Draw()

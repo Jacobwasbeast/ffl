@@ -3,6 +3,11 @@
 #include <nn/ffl/FFLiCharModel.h>
 #include <nn/ffl/FFLiManager.h>
 
+u32 FFLGetCharModelBufferSize(const FFLCharModelDesc* pDesc)
+{
+    return FFLiGetBufferSizeCharModel(pDesc);
+}
+
 u32 FFLGetBufferSizeCharModel(const FFLCharModelDesc* pDesc)
 {
     return FFLiGetBufferSizeCharModel(pDesc);

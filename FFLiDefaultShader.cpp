@@ -146,8 +146,8 @@ void SetupMaterial(const FFLiDefaultShader* pShader, const FFLDrawParam& drawPar
     if (type >= FFL_MODULATE_TYPE_MUSTACHE && type <= FFL_MODULATE_TYPE_FILL)
         return;
 
+    bool noTangent = drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT].ptr == NULL;
     const FFLiDefaultShaderMaterial& material = pShader->param.material[type];
-    bool hasTangent = drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT].ptr != NULL;
 
     FFLColor specular = material.specular;
 
@@ -159,7 +159,7 @@ void SetupMaterial(const FFLiDefaultShader* pShader, const FFLDrawParam& drawPar
     GX2SetPixelUniformReg(pShader->materialSpecularPowerLocation, 4, specularPower);
 
     u32 specularMode[4] = { static_cast<u32>(material.specularMode), 0, 0, 0 };
-    if (!hasTangent)
+    if (noTangent)
         specularMode[0] = FFL_SPECULAR_MODE_BLINN;
     GX2SetPixelUniformReg(pShader->materialSpecularModeLocation, 4, specularMode);
 }
@@ -388,15 +388,18 @@ const FFLShaderCallback* FFLiGetCallbackDefaultShader(const FFLiDefaultShader* p
 
 void FFLiSetDefaultShader(const FFLiDefaultShader* pShader)
 {
+    GX2VertexShader* pVertexShader = pShader->pVertexShader;
+    GX2PixelShader* pPixelShader = pShader->pPixelShader;
+
     GX2SetFetchShader(&pShader->fetchShader.fetchShader);
-    GX2SetVertexShader(pShader->pVertexShader);
-    GX2SetPixelShader(pShader->pPixelShader);
+    GX2SetVertexShader(pVertexShader);
+    GX2SetPixelShader(pPixelShader);
 }
 
 void FFLiSetupInitCharModelDefaultShaderNoSetCallback(const FFLiDefaultShader* pShader)
 {
     FFLiShaderCallback callback;
-    callback.Set(FFLiGetCallbackDefaultShader(pShader));
+    callback.Set(&pShader->callback);
     callback.CallSetContextState();
 
     FFLiSetDefaultShader(pShader);
@@ -407,7 +410,8 @@ void FFLiSetupInitCharModelDefaultShader(const FFLiDefaultShader* pShader)
 {
     if (FFLiManager::IsConstruct())
     {
-        FFLiManager::GetInstance()->GetShaderCallback().Set(FFLiGetCallbackDefaultShader(pShader));
+        FFLiShaderCallback& callback = FFLiManager::GetInstance()->GetShaderCallback();
+        callback.Set(FFLiGetCallbackDefaultShader(pShader));
         FFLiSetupInitCharModelDefaultShaderNoSetCallback(pShader);
     }
 }
@@ -422,7 +426,8 @@ void FFLiSetupDrawDefaultShader(const FFLiDefaultShader* pShader)
 {
     if (FFLiManager::IsConstruct())
     {
-        FFLiManager::GetInstance()->GetShaderCallback().Set(FFLiGetCallbackDefaultShader(pShader));
+        FFLiShaderCallback& callback = FFLiManager::GetInstance()->GetShaderCallback();
+        callback.Set(FFLiGetCallbackDefaultShader(pShader));
         FFLiSetupDrawDefaultShaderNoSetCallback(pShader);
     }
 }

@@ -126,7 +126,7 @@ s32 FFLiMiddleDB::Size() const
     return m_Size;
 }
 
-s32 FFLiMiddleDB::StoredSize() const
+u32 FFLiMiddleDB::StoredSize() const
 {
     return m_StoredSize;
 }

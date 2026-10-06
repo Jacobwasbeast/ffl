@@ -12,7 +12,6 @@ class FFLiCompressShader
 {
 public:
     FFLiCompressShader();
-    ~FFLiCompressShader();  // Deleted in NSMBU
 
     bool UseUB() const;
 

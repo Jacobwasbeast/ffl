@@ -29,6 +29,7 @@ typedef struct FFLDrawParam FFLDrawParam;
 typedef struct FFLPartsTransform FFLPartsTransform;
 typedef struct FFLShaderCallback FFLShaderCallback;
 
+u32 FFLGetCharModelBufferSize(const FFLCharModelDesc* pDesc);
 u32 FFLGetBufferSizeCharModel(const FFLCharModelDesc* pDesc);
 u32 FFLGetTempBufferSizeCharModel(const FFLCharModelDesc* pDesc);
 

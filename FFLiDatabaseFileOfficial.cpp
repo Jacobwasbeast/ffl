@@ -107,10 +107,10 @@ bool FFLiDatabaseFileOfficial::IsAvailable(u16 miiDataIndex, bool checkSpecial, 
 
 u16 FFLiDatabaseFileOfficial::NumOfAvailable(bool checkSpecial, bool allowSpecial) const
 {
+    FFLiCharInfo charInfo;
     u16 count = 0;
     for (u16 i = 0; i < GetMiiDataNum(); i++)
     {
-        FFLiCharInfo charInfo;
         if (Get(&charInfo, i, checkSpecial, allowSpecial))
             count++;
     }
@@ -119,6 +119,7 @@ u16 FFLiDatabaseFileOfficial::NumOfAvailable(bool checkSpecial, bool allowSpecia
 
 bool FFLiDatabaseFileOfficial::Search(u16* pMiiDataIndex, const FFLCreateID& createID) const
 {
+    FFLiCharInfo charInfo;
     for (u16 i = 0; i < GetMiiDataNum(); i++)
     {
         const FFLiMiiDataOfficial& official = GetImpl(i);
@@ -126,7 +127,6 @@ bool FFLiDatabaseFileOfficial::Search(u16* pMiiDataIndex, const FFLCreateID& cre
 
         if (FFLiIsSameMiiID(pCreateID, &createID))
         {
-            FFLiCharInfo charInfo;
             if (Get(&charInfo, i, false, false))
             {
                 if (pMiiDataIndex != NULL)
@@ -195,17 +195,11 @@ bool FFLiDatabaseFileOfficial::AdjustRegularList(AdjustRegularBuffer* pBuffer)
 
 void FFLiDatabaseFileOfficial::SwapEndian()
 {
-    // This function is deleted in NSMBU.
-    // Therefore, its implementation is only theoretical.
-
     m_Magic = FFLiSwapEndianImpl<u32>(m_Magic);
     _4 = FFLiSwapEndianImpl<u32>(_4);
 
     for (u32 i = 0; i < 3000; i++)
         m_MiiDataOfficial[i].SwapEndian();
-
-    // Dunno what to do with this
-    // _4381c
 
     m_Crc = FFLiSwapEndianImpl<u16>(m_Crc);
 

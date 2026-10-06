@@ -35,7 +35,7 @@ T FFLiSwapEndianImpl(T value)
     union {
         T   value;
         u8  data[count];
-    } value_ = { .value = value };
+    } value_ = { value };
 
     for (u32 i = 0; i < count_2; i++)
         std::swap(value_.data[i], value_.data[count - 1 - i]);

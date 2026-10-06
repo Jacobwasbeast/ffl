@@ -27,10 +27,6 @@ FFLiCompressShader::FFLiCompressShader()
 {
 }
 
-FFLiCompressShader::~FFLiCompressShader()
-{
-}
-
 bool FFLiCompressShader::UseUB() const
 {
     return m_pVertexShader->shaderMode == GX2_SHADER_MODE_UNIFORM_BLOCK;
@@ -78,10 +74,9 @@ bool FFLiCompressShader::SetupLocation()
 
 bool FFLiCompressShader::SetupLocationForUR()
 {
-    if (!FFLiUtilShader::GetUniformLocation(&m_VertexUniformLocation, m_pVertexShader, VERTEX_UNIFORM_TEX_SIZE_NAME[0]))
-        return false;
+    if (FFLiUtilShader::GetUniformLocation(&m_VertexUniformLocation, m_pVertexShader, VERTEX_UNIFORM_TEX_SIZE_NAME[0]))
+        FFLiUtilShader::GetUniformLocation(&m_PixelUniformLocation, m_pPixelShader, PIXEL_UNIFORM_REFRER_LEVEL_NAME[0]);
 
-    FFLiUtilShader::GetUniformLocation(&m_PixelUniformLocation, m_pPixelShader, PIXEL_UNIFORM_REFRER_LEVEL_NAME[0]);
     return true;
 }
 
@@ -126,9 +121,12 @@ void FFLiCompressShader::SetupGPU()
 
 void FFLiCompressShader::Bind() const
 {
+    GX2VertexShader* pVertexShader = m_pVertexShader;
+    GX2PixelShader* pPixelShader = m_pPixelShader;
+
     GX2SetFetchShader(&m_FetchShader.fetchShader);
-    GX2SetVertexShader(m_pVertexShader);
-    GX2SetPixelShader(m_pPixelShader);
+    GX2SetVertexShader(pVertexShader);
+    GX2SetPixelShader(pPixelShader);
 }
 
 void FFLiCompressShader::SetTexture(const GX2Texture* pGX2Texture) const

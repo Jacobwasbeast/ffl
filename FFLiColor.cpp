@@ -31,16 +31,30 @@ enum FFLiContainerType
     FFLI_CONTAINER_TYPE_MAX     = 2
 };
 
+}
+
 struct FFLiColorContainer
 {
     FFLColor    colors[FFLI_COLOR_TYPE_MAX];
 };
+
+namespace {
 
 FFLiColorContainer s_ColorContainer[FFLI_CONTAINER_TYPE_MAX];
 FFLiContainerType s_ContainerType = FFLI_CONTAINER_TYPE_NORMAL;
 bool s_UseOffScreenSrgbFetch = true;
 bool s_IsIntializedColorContainer = false;
 
+}
+
+void FFLiSetLinearGammaColor(bool isLinear)
+{
+    s_ContainerType = isLinear ? FFLI_CONTAINER_TYPE_SRGB : FFLI_CONTAINER_TYPE_NORMAL;
+}
+
+void FFLiSetOffScreenSrgbFetch(bool enable)
+{
+    s_UseOffScreenSrgbFetch = enable;
 }
 
 static bool UseOffScreenSrgbFetch()

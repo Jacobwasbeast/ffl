@@ -3,6 +3,8 @@
 
 #include <nn/ffl/types.h>
 
+void FFLiSetLinearGammaColor(bool isLinear);
+void FFLiSetOffScreenSrgbFetch(bool enable);
 bool FFLiUseOffScreenSrgbFetch();
 
 struct FFLColor;

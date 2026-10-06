@@ -54,11 +54,8 @@ void FFLiCompressDrawer::SetupGPU()
 
 void FFLiCompressDrawer::SetAttributeBuffer(u32 positionBufferIndex, u32 texCoordBufferIndex)
 {
-    const u32 POSITION_BUFFER_SIZE = sizeof(FFLVec3) * 4;
-    const u32 TEXCOORD_BUFFER_SIZE = sizeof(FFLVec2) * 4;
-
-    GX2SetAttribBuffer(positionBufferIndex, POSITION_BUFFER_SIZE, sizeof(FFLVec3), m_pPositionBuffer);
-    GX2SetAttribBuffer(texCoordBufferIndex, TEXCOORD_BUFFER_SIZE, sizeof(FFLVec2), m_pTexCoordBuffer);
+    GX2SetAttribBuffer(positionBufferIndex, sizeof(FFLVec3) * 4, sizeof(FFLVec3), m_pPositionBuffer);
+    GX2SetAttribBuffer(texCoordBufferIndex, sizeof(FFLVec2) * 4, sizeof(FFLVec2), m_pTexCoordBuffer);
 }
 
 void FFLiCompressDrawer::Draw()
