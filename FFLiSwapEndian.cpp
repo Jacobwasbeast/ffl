@@ -20,9 +20,10 @@ u32 TypeToSize(FFLiSwapEndianType type)
 
 u32 FFLiSwapEndianGroup(void* ptr, const FFLiSwapEndianDesc* pDesc, u32 num)
 {
+    u32 i = 0;
     void* pPtr = ptr;
 
-    for (u32 i = 0; i < num; i++)
+    for (; i < num; i++)
     {
         const FFLiSwapEndianDesc& desc = pDesc[i];
 

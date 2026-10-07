@@ -38,7 +38,13 @@ T FFLiSwapEndianImpl(T value)
     } value_ = { value };
 
     for (u32 i = 0; i < count_2; i++)
-        std::swap(value_.data[i], value_.data[count - 1 - i]);
+    {
+        const u32 j = count - 1 - i;
+        const u8 b = value_.data[j];
+        const u8 a = value_.data[i];
+        value_.data[i] = b;
+        value_.data[j] = a;
+    }
 
     return value_.value;
 }

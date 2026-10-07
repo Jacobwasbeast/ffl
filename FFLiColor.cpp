@@ -35,7 +35,25 @@ enum FFLiContainerType
 
 struct FFLiColorContainer
 {
-    FFLColor    colors[FFLI_COLOR_TYPE_MAX];
+    union
+    {
+        FFLColor    colors[FFLI_COLOR_TYPE_MAX];
+        struct
+        {
+            FFLColor    facelineColor[FFLI_FACELINE_COLOR_NUM];
+            FFLColor    hairColor[FFLI_HAIR_COLOR_NUM];
+            FFLColor    eyeColorR[FFLI_EYE_COLOR_R_NUM];
+            FFLColor    eyeColorG;
+            FFLColor    eyeColorB[FFLI_EYE_COLOR_B_NUM];
+            FFLColor    glassColor[FFLI_GLASS_COLOR_NUM];
+            FFLColor    mouthColorR[FFLI_MOUTH_COLOR_R_NUM];
+            FFLColor    mouthColorG[FFLI_MOUTH_COLOR_G_NUM];
+            FFLColor    mouthColorB;
+            FFLColor    moleColor;
+            FFLColor    favoriteColor[FFLI_FAVORITE_COLOR_NUM];
+            FFLColor    faceLine;
+        };
+    };
 };
 
 namespace {
@@ -437,7 +455,8 @@ f32 SrgbFetchValue(f32 value)
         248, 250, 253, 255
     };
 
-    return srgbFetchTable[u8(value * 255.0f)] / 255.0f;
+    u8 index = u8(value * 255.0f);
+    return srgbFetchTable[index] / 255.0f;
 }
 
 void DegammaColorContainer(FFLiColorContainer& container)
@@ -482,87 +501,87 @@ const FFLiColorContainer& GetColorContainer()
 
 const FFLColor& GetFacelineColor(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_FACELINE_COLOR_0 + index];
+    return container.facelineColor[index];
 }
 
 const FFLColor& GetBeardColor(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_HAIR_COLOR_0 + index];
+    return container.hairColor[index];
 }
 
 const FFLColor& GetEyebrowColor(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_HAIR_COLOR_0 + index];
+    return container.hairColor[index];
 }
 
 const FFLColor& GetMustacheColor(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_HAIR_COLOR_0 + index];
+    return container.hairColor[index];
 }
 
 const FFLColor& GetHairColor(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_HAIR_COLOR_0 + index];
+    return container.hairColor[index];
 }
 
 const FFLColor& GetEyeColorR(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_EYE_COLOR_R_0 + 2];
+    return container.eyeColorR[2];
 }
 
 const FFLColor& GetEyeColorG(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_EYE_COLOR_G];
+    return container.eyeColorG;
 }
 
 const FFLColor& GetEyeColorB(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_EYE_COLOR_B_0 + index];
+    return container.eyeColorB[index];
 }
 
 const FFLColor& GetGlassColor(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_GLASS_COLOR_0 + index];
+    return container.glassColor[index];
 }
 
 const FFLColor& GetMouthColorR(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_MOUTH_COLOR_R_0 + index];
+    return container.mouthColorR[index];
 }
 
 const FFLColor& GetMouthColorG(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_MOUTH_COLOR_G_0 + index];
+    return container.mouthColorG[index];
 }
 
 const FFLColor& GetMouthColorB(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_MOUTH_COLOR_B];
+    return container.mouthColorB;
 }
 
 const FFLColor& GetMoleColor(const FFLiColorContainer& container)
 {
-    return container.colors[FFLI_COLOR_TYPE_MOLE_COLOR];
+    return container.moleColor;
 }
 
 const FFLColor& GetFavoriteColor(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_FAVORITE_COLOR_0 + index];
+    return container.favoriteColor[index];
 }
 
 const FFLColor& GetFaceLine(const FFLiColorContainer& container)
 {
-    return container.colors[FFLI_COLOR_TYPE_FACE_LINE];
+    return container.faceLine;
 }
 
 const FFLColor& GetCapColor(const FFLiColorContainer& container, s32 index)
 {
-    return container.colors[FFLI_COLOR_TYPE_FAVORITE_COLOR_0 + index];
+    return container.favoriteColor[index];
 }
 
 const FFLColor& GetNoselineColor(const FFLiColorContainer& container)
 {
-    return container.colors[FFLI_COLOR_TYPE_FACE_LINE];
+    return container.faceLine;
 }
 
 }

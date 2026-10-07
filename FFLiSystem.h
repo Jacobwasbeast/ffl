@@ -5,6 +5,14 @@
 
 struct FFLiAuthorID;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 const FFLiAuthorID* FFLiGetUserID();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // FFLI_SYSTEM_H_

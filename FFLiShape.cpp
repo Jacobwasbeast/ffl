@@ -112,7 +112,7 @@ FFLResult FFLiLoadShape(FFLDrawParam* pDrawParam, FFLBoundingBox* pBoundingBox, 
         std::memcpy(pBoundingBox, FFLiGetResourceShapeElement(&size, pData, partsType, FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_BOUNDING_BOX), sizeof(FFLBoundingBox));
     }
 
-    return FFL_RESULT_OK;
+    return result;
 }
 
 void FFLiAdjustShape(FFLDrawParam* pDrawParam, FFLBoundingBox* pBoundingBox, f32 scaleX, f32 scaleY, const FFLVec3* pTranslate, bool flipX, const FFLiCoordinate* pCoordinate, FFLiShapePartsType partsType, bool limitNoseScaleZ)
@@ -251,10 +251,10 @@ u32 GetStride(FFLAttributeBufferType type, u32 size)
         break;
     }
 
-    if (stride >= size)
-        stride = 0;
-    
-    return stride;
+    if (stride < size)
+        return stride;
+
+    return 0;
 }
 
 void EndianSwap(void* ptr, u32 size)

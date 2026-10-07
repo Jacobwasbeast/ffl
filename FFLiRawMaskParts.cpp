@@ -103,8 +103,8 @@ void InitPrimitive(FFLPrimitiveParam* pPrimitive, FFLiBufferAllocator* pAllocato
     NN_STATIC_ASSERT(sizeof(INDEX_BUFFER) == INDEX_BUFFER_SIZE);
 
     pPrimitive->primitiveType = GX2_PRIMITIVE_TRIANGLE_STRIP;
-    pPrimitive->indexCount = 4;
     pPrimitive->indexFormat = GX2_INDEX_FORMAT_U16;
+    pPrimitive->indexCount = 4;
     pPrimitive->pIndexBuffer = FFLiBugVgtFixedIndexPtr(Allocate(pAllocator, FFLiBugCanVgtFixedIndexSize(FFLiBugCanSwapSize(INDEX_BUFFER_SIZE)), GX2_INDEX_BUFFER_ALIGNMENT));
 
     std::memcpy(pPrimitive->pIndexBuffer, INDEX_BUFFER, INDEX_BUFFER_SIZE);
@@ -197,12 +197,13 @@ void InvalidateAttributes(FFLAttributeBufferParam* pAttributes)
 {
     for (u32 i = 0; i < FFL_ATTRIBUTE_BUFFER_TYPE_MAX; i++)
     {
-        void* ptr = pAttributes->attributeBuffers[i].ptr;
+        FFLAttributeBuffer* pBuffer = &pAttributes->attributeBuffers[i];
+        void* ptr = pBuffer->ptr;
         if (ptr != NULL)
             FFLiInvalidate(
                 GX2_INVALIDATE_CPU_ATTRIB_BUFFER,
                 ptr,
-                pAttributes->attributeBuffers[i].size
+                pBuffer->size
             );
     }
 }

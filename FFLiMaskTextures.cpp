@@ -18,21 +18,32 @@
 
 namespace {
 
-u32 ExpressionFlagCount(u32 expressionFlag);
+u32 ExpressionFlagCount(u32 expressionFlag)
+{
+    u32 ret = 0;
 
-u32 GetTextureBufferSize(u32 resolution, u32 numMips, bool compressTexture);
+    for (u32 i = 0; i < FFL_EXPRESSION_MAX; i++)
+    {
+        u32 bit = 1 << i;
+        if (expressionFlag & bit)
+            ret++;
+    }
 
-GX2SurfaceFormat GetTextureFormat(bool compressTexture, bool useOffScreenSrgbFetch);
+    return ret;
+}
 
-FFLiRenderTexture* FFLiRenderTextureAllocate(FFLiBufferAllocator* pAllocator);
+u32 GetTextureBufferSize(u32 resolution, u32 numMips, bool compressTexture)
+{
+    u32 ret = 0;
 
-bool CanUseExpression(u32 expressionFlag, FFLExpression expression);
+    if (compressTexture)
+        ret = FFLiCompressorImplBC3::GetTextureBufferSize(resolution, resolution, numMips);
 
-void InitRawMask(FFLiMaskTexturesTempObject* pObject, u32 expressionFlag, FFLiBufferAllocator* pAllocator);
+    else
+        ret = FFLiGetBufferRenderTexture(resolution, resolution, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, numMips);
 
-void SetupExpressionCharInfo(FFLiCharInfo* pExpressionCharInfo, const FFLiCharInfo* pCharInfo, FFLExpression expression);
-
-void Compress(FFLiCompressorImplBC3* pCompressorImpl, FFLiRenderTexture* pDst, const FFLiRenderTexture* pSrc, const FFLiCompressorParam* pParam);
+    return ret;
+}
 
 }
 
@@ -41,8 +52,9 @@ u32 FFLiGetBufferSizeMaskTextures(u32 expressionFlag, u32 resolution, bool enabl
     u32 count = ExpressionFlagCount(expressionFlag);
 
     u32 numMips = enableMipMap ? FFLiGetMipMapNum(resolution, resolution) : 1;
+    u32 textureSize = GetTextureBufferSize(resolution, numMips, compressTexture);
 
-    u32 ret  = FFLiRoundUp(GetTextureBufferSize(resolution, numMips, compressTexture) * count, 4);
+    u32 ret  = FFLiRoundUp(textureSize * count, 4);
     ret     += FFLiRoundUp(sizeof(FFLiRenderTexture), 4) * count;
 
     return ret;
@@ -82,166 +94,7 @@ u32 FFLiGetCompressBufferSizeMaskTexture(u32 resolution, bool enableMipMap)
     return GetTextureBufferSize(resolution, numMips, false); // Did they mean to put true here?
 }
 
-FFLExpression FFLiInitMaskTextures(FFLiMaskTextures* pMaskTextures, u32 expressionFlag, u32 resolution, bool enableMipMap, bool compressTexture, FFLiBufferAllocator* pAllocator)
-{
-    FFLExpression expression = FFL_EXPRESSION_MAX;
-
-    u32 numMips = enableMipMap ? FFLiGetMipMapNum(resolution, resolution) : 1;
-
-    for (u32 i = 0; i < FFL_EXPRESSION_MAX; i++)
-    {
-        if ((expressionFlag & 1 << i) == 0)
-        {
-            pMaskTextures->pRenderTextures[i] = NULL;
-            continue;
-        }
-
-        if (expression == FFL_EXPRESSION_MAX)
-            expression = FFLExpression(i);
-
-        pMaskTextures->pRenderTextures[i] = FFLiRenderTextureAllocate(pAllocator);
-        GX2SurfaceFormat format = GetTextureFormat(compressTexture, FFLiUseOffScreenSrgbFetch());
-        FFLiInitRenderTexture(pMaskTextures->pRenderTextures[i], resolution, resolution, format, numMips, pAllocator);
-    }
-
-    return expression;
-}
-
-FFLResult FFLiInitTempObjectMaskTextures(FFLiMaskTexturesTempObject* pObject, const FFLiMaskTextures* pMaskTextures, const FFLiCharInfo* pCharInfo, u32 expressionFlag, u32 resolution, bool enableMipMap, bool compressTexture, bool compressUseUB, FFLiResourceLoader* pResLoader, FFLiBufferAllocator* pAllocator, FFLiRenderTextureBuffer* pRenderTextureBuffer)
-{
-    std::memset(pObject, 0, sizeof(FFLiMaskTexturesTempObject));
-
-    FFLResult result = FFLiLoadPartsTextures(&pObject->partsTextures, pCharInfo, expressionFlag, pResLoader, pAllocator);
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    InitRawMask(pObject, expressionFlag, pAllocator);
-
-    u32 numMips = enableMipMap ? FFLiGetMipMapNum(resolution, resolution) : 1;
-
-    for (u32 i = 0; i < FFL_EXPRESSION_MAX; i++)
-    {
-        if (CanUseExpression(expressionFlag, FFLExpression(i)))
-        {
-            FFLiRawMaskTextureDesc desc;
-            FFLiCharInfo expressionCharInfo = *pCharInfo;
-            const FFLiEyeMouthTypeElement& element = FFLiGetEyeMouthTypeElement(FFLExpression(i));
-
-            SetupExpressionCharInfo(&expressionCharInfo, pCharInfo, FFLExpression(i));
-
-            desc.pTexturesEye[0] = pObject->partsTextures.pTexturesEye[element.eyeTextureType[0]];
-            desc.pTexturesEye[1] = pObject->partsTextures.pTexturesEye[element.eyeTextureType[1]];
-
-            desc.pTexturesEyebrow[0] = pObject->partsTextures.pTextureEyebrow;
-            desc.pTexturesEyebrow[1] = pObject->partsTextures.pTextureEyebrow;
-
-            desc.pTextureMouth = pObject->partsTextures.pTexturesMouth[element.mouthTextureType];
-
-            desc.pTexturesMustache[0] = pObject->partsTextures.pTextureMustache;
-            desc.pTexturesMustache[1] = pObject->partsTextures.pTextureMustache;
-
-            desc.pTextureMole = pObject->partsTextures.pTextureMole;
-
-            FFLiInitDrawParamRawMask(
-                pObject->pRawMaskDrawParam[i],
-                &expressionCharInfo,
-                resolution,
-                FFLiCharInfoAndTypeToEyeIndex(pCharInfo, element.eyeTextureType[0]),
-                FFLiCharInfoAndTypeToEyeIndex(pCharInfo, element.eyeTextureType[1]),
-                &desc,
-                pAllocator
-            );
-
-            if (compressTexture)
-                pObject->pCompressorParam[i] = FFLiCompressorParam::Create(numMips, compressUseUB, pAllocator);
-        }
-    }
-
-    if (compressTexture)
-    {
-        pObject->pRenderTexture = FFLiRenderTextureAllocate(pAllocator);
-        FFLiInitByBufferRenderTexture(pObject->pRenderTexture, resolution, resolution, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, numMips, pRenderTextureBuffer);
-    }
-
-    return FFL_RESULT_OK;
-}
-
-void FFLiRenderMaskTextures(FFLiMaskTextures* pMaskTextures, FFLiMaskTexturesTempObject* pObject, const FFLiShaderCallback* pCallback, FFLiCopySurface* pCopySurface, FFLiCompressorImplBC3* pCompressorImpl)
-{
-    static const FFLColor BLACK = { };
-
-    FFLiInvalidatePartsTextures(&pObject->partsTextures);
-
-    bool useTempRenderTexture = pObject->pRenderTexture != NULL;
-
-    for (u32 i = 0; i < FFL_EXPRESSION_MAX; i++)
-    {
-        if (pMaskTextures->pRenderTextures[i] != NULL && pObject->pRawMaskDrawParam[i] != NULL)
-        {
-            FFLiInvalidateRawMask(pObject->pRawMaskDrawParam[i]);
-
-            FFLiRenderTexture& renderTexture = *(useTempRenderTexture ? pObject->pRenderTexture : pMaskTextures->pRenderTextures[i]);
-
-            FFLiInvalidateRenderTexture(&renderTexture);
-            FFLiSetupRenderTexture(&renderTexture, &BLACK, NULL, 0, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, pCallback);
-
-            FFLiDrawRawMask(pObject->pRawMaskDrawParam[i], pCallback);
-
-            if (renderTexture.gx2Texture.surface.numMips > 1)
-            {
-                pCopySurface->Begin();
-                for (u32 i = 1; i < renderTexture.gx2Texture.surface.numMips; i++)
-                    pCopySurface->Execute(&renderTexture.gx2Texture.surface, i, &renderTexture.gx2Texture.surface, i - 1);
-            }
-
-            pCallback->CallSetContextState();
-
-            FFLiFlushRenderTexture(&renderTexture);
-
-            if (useTempRenderTexture)
-            {
-                const FFLiRenderTexture* pSrc = &renderTexture;
-                FFLiRenderTexture* pDst = pMaskTextures->pRenderTextures[i];
-                FFLiCompressorParam* pParam = pObject->pCompressorParam[i];
-                
-                FFLiInvalidateTexture(&pDst->gx2Texture);
-                pParam->SetTexture(&pSrc->gx2Texture);
-            
-                Compress(pCompressorImpl, pDst, pSrc, pParam);
-
-                FFLiFlushRenderTexture(pDst);
-
-                pCallback->CallSetContextState();
-            }
-        }
-    }
-}
-
 namespace {
-
-u32 ExpressionFlagCount(u32 expressionFlag)
-{
-    u32 ret = 0;
-
-    for (u32 i = 0; i < FFL_EXPRESSION_MAX; i++)
-        if (expressionFlag & 1 << i)
-            ret++;
-
-    return ret;
-}
-
-u32 GetTextureBufferSize(u32 resolution, u32 numMips, bool compressTexture)
-{
-    u32 ret = 0;
-
-    if (compressTexture)
-        ret = FFLiCompressorImplBC3::GetTextureBufferSize(resolution, resolution, numMips);
-
-    else
-        ret = FFLiGetBufferRenderTexture(resolution, resolution, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, numMips);
-
-    return ret;
-}
 
 GX2SurfaceFormat GetTextureFormat(bool compressTexture, bool useOffScreenSrgbFetch)
 {
@@ -267,6 +120,35 @@ FFLiRenderTexture* FFLiRenderTextureAllocate(FFLiBufferAllocator* pAllocator)
 {
     return static_cast<FFLiRenderTexture*>(FFLiAllocateBufferAllocator(pAllocator, sizeof(FFLiRenderTexture), 4));
 }
+
+}
+
+FFLExpression FFLiInitMaskTextures(FFLiMaskTextures* pMaskTextures, u32 expressionFlag, u32 resolution, bool enableMipMap, bool compressTexture, FFLiBufferAllocator* pAllocator)
+{
+    FFLExpression expression = FFL_EXPRESSION_MAX;
+
+    u32 numMips = enableMipMap ? FFLiGetMipMapNum(resolution, resolution) : 1;
+
+    for (u32 i = 0; i < FFL_EXPRESSION_MAX; i++)
+    {
+        if ((expressionFlag & 1 << i) == 0)
+        {
+            pMaskTextures->pRenderTextures[i] = NULL;
+            continue;
+        }
+
+        if (expression == FFL_EXPRESSION_MAX)
+            expression = FFLExpression(i);
+
+        pMaskTextures->pRenderTextures[i] = FFLiRenderTextureAllocate(pAllocator);
+        GX2SurfaceFormat format = GetTextureFormat(compressTexture, FFLiUseOffScreenSrgbFetch());
+        FFLiInitRenderTexture(pMaskTextures->pRenderTextures[i], resolution, resolution, format, numMips, pAllocator);
+    }
+
+    return expression;
+}
+
+namespace {
 
 bool CanUseExpression(u32 expressionFlag, FFLExpression expression)
 {
@@ -377,9 +259,115 @@ void SetupExpressionCharInfo(FFLiCharInfo* pExpressionCharInfo, const FFLiCharIn
     }
 }
 
-void Compress(FFLiCompressorImplBC3* pCompressorImpl, FFLiRenderTexture* pDst, const FFLiRenderTexture* pSrc, const FFLiCompressorParam* pParam)
-{
-    pCompressorImpl->CompressImpl(&pDst->gx2Texture, &pSrc->gx2Texture, pParam);
 }
 
+FFLResult FFLiInitTempObjectMaskTextures(FFLiMaskTexturesTempObject* pObject, const FFLiMaskTextures* pMaskTextures, const FFLiCharInfo* pCharInfo, u32 expressionFlag, u32 resolution, bool enableMipMap, bool compressTexture, bool compressUseUB, FFLiResourceLoader* pResLoader, FFLiBufferAllocator* pAllocator, FFLiRenderTextureBuffer* pRenderTextureBuffer)
+{
+    std::memset(pObject, 0, sizeof(FFLiMaskTexturesTempObject));
+
+    FFLResult result = FFLiLoadPartsTextures(&pObject->partsTextures, pCharInfo, expressionFlag, pResLoader, pAllocator);
+    if (result != FFL_RESULT_OK)
+        return result;
+
+    InitRawMask(pObject, expressionFlag, pAllocator);
+
+    u32 numMips = enableMipMap ? FFLiGetMipMapNum(resolution, resolution) : 1;
+
+    for (u32 i = 0; i < FFL_EXPRESSION_MAX; i++)
+    {
+        FFLExpression expression = FFLExpression(i);
+        if (CanUseExpression(expressionFlag, expression))
+        {
+            FFLiRawMaskTextureDesc desc;
+            FFLiCharInfo expressionCharInfo = *pCharInfo;
+            const FFLiEyeMouthTypeElement& element = FFLiGetEyeMouthTypeElement(expression);
+
+            SetupExpressionCharInfo(&expressionCharInfo, pCharInfo, expression);
+
+            desc.pTexturesEye[0] = pObject->partsTextures.pTexturesEye[element.eyeTextureType[1]];
+            desc.pTexturesEye[1] = pObject->partsTextures.pTexturesEye[element.eyeTextureType[0]];
+
+            desc.pTexturesEyebrow[0] = pObject->partsTextures.pTextureEyebrow;
+            desc.pTexturesEyebrow[1] = pObject->partsTextures.pTextureEyebrow;
+
+            desc.pTextureMouth = pObject->partsTextures.pTexturesMouth[element.mouthTextureType];
+
+            desc.pTexturesMustache[0] = pObject->partsTextures.pTextureMustache;
+            desc.pTexturesMustache[1] = pObject->partsTextures.pTextureMustache;
+
+            desc.pTextureMole = pObject->partsTextures.pTextureMole;
+
+            FFLiInitDrawParamRawMask(
+                pObject->pRawMaskDrawParam[i],
+                &expressionCharInfo,
+                resolution,
+                FFLiCharInfoAndTypeToEyeIndex(pCharInfo, element.eyeTextureType[1]),
+                FFLiCharInfoAndTypeToEyeIndex(pCharInfo, element.eyeTextureType[0]),
+                &desc,
+                pAllocator
+            );
+
+            if (compressTexture)
+                pObject->pCompressorParam[i] = FFLiCompressorParam::Create(numMips, compressUseUB, pAllocator);
+        }
+    }
+
+    if (compressTexture)
+    {
+        pObject->pRenderTexture = FFLiRenderTextureAllocate(pAllocator);
+        FFLiInitByBufferRenderTexture(pObject->pRenderTexture, resolution, resolution, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, numMips, pRenderTextureBuffer);
+    }
+
+    return result;
+}
+
+void FFLiRenderMaskTextures(FFLiMaskTextures* pMaskTextures, FFLiMaskTexturesTempObject* pObject, const FFLiShaderCallback* pCallback, FFLiCopySurface* pCopySurface, FFLiCompressorImplBC3* pCompressorImpl)
+{
+    static const FFLColor BLACK = { };
+
+    FFLiInvalidatePartsTextures(&pObject->partsTextures);
+
+    bool useTempRenderTexture = pObject->pRenderTexture != NULL;
+
+    for (u32 i = 0; i < FFL_EXPRESSION_MAX; i++)
+    {
+        if (pMaskTextures->pRenderTextures[i] != NULL && pObject->pRawMaskDrawParam[i] != NULL)
+        {
+            FFLiInvalidateRawMask(pObject->pRawMaskDrawParam[i]);
+
+            FFLiRenderTexture& renderTexture = *(useTempRenderTexture ? pObject->pRenderTexture : pMaskTextures->pRenderTextures[i]);
+
+            FFLiInvalidateRenderTexture(&renderTexture);
+            FFLiSetupRenderTexture(&renderTexture, &BLACK, NULL, 0, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, pCallback);
+
+            FFLiDrawRawMask(pObject->pRawMaskDrawParam[i], pCallback);
+
+            if (renderTexture.gx2Texture.surface.numMips > 1)
+            {
+                pCopySurface->Begin();
+                for (u32 j = 0; j < renderTexture.gx2Texture.surface.numMips - 1; j++)
+                    pCopySurface->Execute(&renderTexture.gx2Texture.surface, j + 1, &renderTexture.gx2Texture.surface, j);
+            }
+
+            pCallback->CallSetContextState();
+
+            FFLiFlushRenderTexture(&renderTexture);
+
+            if (useTempRenderTexture)
+            {
+                const FFLiRenderTexture* pSrc = &renderTexture;
+                FFLiRenderTexture* pDst = pMaskTextures->pRenderTextures[i];
+                FFLiCompressorParam* pParam = pObject->pCompressorParam[i];
+                
+                FFLiInvalidateTexture(&pDst->gx2Texture);
+                pParam->SetTexture(&pSrc->gx2Texture);
+            
+                pCompressorImpl->CompressImpl(&pDst->gx2Texture, &pSrc->gx2Texture, pParam);
+
+                FFLiFlushRenderTexture(pDst);
+
+                pCallback->CallSetContextState();
+            }
+        }
+    }
 }

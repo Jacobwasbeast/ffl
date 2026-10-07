@@ -12,12 +12,12 @@ void FFLiGetDateTimeNow(FFLiDateTime* pDateTime)
     OSCalendarTime calendarTime;
     OSTicksToCalendarTime(FFLiGetTick(), &calendarTime);
 
-    pDateTime->year = calendarTime.tm_year;
+    pDateTime->second = calendarTime.tm_sec;
     pDateTime->month = calendarTime.tm_mon + 1;
-    pDateTime->day = calendarTime.tm_mday;
     pDateTime->hour = calendarTime.tm_hour;
     pDateTime->minute = calendarTime.tm_min;
-    pDateTime->second = calendarTime.tm_sec;
+    pDateTime->year = calendarTime.tm_year;
+    pDateTime->day = calendarTime.tm_mday;
 }
 
 void FFLiGetNowDateTime(s32* pYear, s32* pMonth, s32* pDay, s32* pHour, s32* pMinute, s32* pSecond)
@@ -62,20 +62,20 @@ static const s32 MONTH_OF_DAY[12 + 1] = {
 
 s32 FFLiGetMonthOfDay(s32 month)
 {
+    s32 days = 0;
     if (1 <= month && month <= 12)
-        return MONTH_OF_DAY[month];
-
-    return 0;
+        days = MONTH_OF_DAY[month];
+    return days;
 }
 
 s32 FFLiDateToDays(s32 year, s32 month, s32 day)
 {
-    year -= 2000;
+    s32 y = year - 2000;
     day--;
 
     if (month <= 2)
     {
-        year--;
+        y = year - 2001;
         month += 9;
     }
     else
@@ -84,11 +84,11 @@ s32 FFLiDateToDays(s32 year, s32 month, s32 day)
     }
 
     s32 leap_year_add_day = 1;
-    if (year < 0)
-        leap_year_add_day = s32(FFLiIsLeapYear(year));
+    if (y < 0)
+        leap_year_add_day = s32(FFLiIsLeapYear(y));
 
-    s32 ret  = year / 100 * 146097 / 4;
-    ret     += year % 100 * 1461  / 4;
+    s32 ret  = y / 100 * 146097 / 4;
+    ret     += y % 100 * 1461  / 4;
     ret     += (month * 153 + 2) / 5;
     ret     += day;
     ret     += leap_year_add_day;

@@ -20,11 +20,10 @@ FSStatus FFLiFsFile::Open(const char* path, const char* mode, u32 errHandling)
 FSStatus FFLiFsFile::Close(u32 errHandling)
 {
     FSStatus status = FSCloseFile(&m_pFsCommand->GetClient()->GetFSClient(), &m_pFsCommand->GetFSCmdBlock(), m_Handle, static_cast<FSErrorFlag>(errHandling));
-    if (status != FS_STATUS_OK)
-        return status;
+    if (status == FS_STATUS_OK)
+        m_Handle = FS_INVALID_HANDLE_VALUE;
 
-    m_Handle = FS_INVALID_HANDLE_VALUE;
-    return FS_STATUS_OK;
+    return status;
 }
 
 FSStatus FFLiFsFile::Read(void* dst, u32 size, u32 count, u32 errHandling, FSFlag flag)

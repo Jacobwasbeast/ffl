@@ -41,8 +41,6 @@ void InvalidatePrimitive(FFLPrimitiveParam* pPrimitive);
 void InvalidateAttributes(FFLAttributeBufferParam* pAttributes);
 void InvalidateDrawParam(FFLDrawParam* pDrawParam);
 
-void Compress(FFLiCompressorImplBC1* pCompressorImpl, FFLiRenderTexture* pDst, const FFLiRenderTexture* pSrc, const FFLiCompressorParam* pParam);
-
 }
 
 u32 FFLiGetBufferSizeFacelineTexture(u32 resolution, bool enableMipMap, bool compressTexture)
@@ -96,44 +94,39 @@ FFLResult FFLiInitTempObjectFacelineTexture(FFLiFacelineTextureTempObject* pObje
     std::memset(pObject, 0, sizeof(FFLiFacelineTextureTempObject));
 
     FFLResult result = FFLiLoadTextureWithAllocate(&pObject->pTextureFaceLine, FFLI_TEXTURE_PARTS_TYPE_FACELINE, pCharInfo->parts.faceLine, pResLoader, pAllocator);
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    result = FFLiLoadTextureWithAllocate(&pObject->pTextureFaceMake, FFLI_TEXTURE_PARTS_TYPE_FACE_MAKEUP, pCharInfo->parts.faceMakeup, pResLoader, pAllocator);
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    s32 beardType = pCharInfo->parts.beardType;
-    bool enableBeardTexture = beardType >= 4;
-
-    if (enableBeardTexture)
+    if (result == FFL_RESULT_OK)
     {
-        result = FFLiLoadTextureWithAllocate(&pObject->pTextureFaceBeard, FFLI_TEXTURE_PARTS_TYPE_BEARD, beardType - 3, pResLoader, pAllocator);
-        if (result != FFL_RESULT_OK)
-            return result;
+        result = FFLiLoadTextureWithAllocate(&pObject->pTextureFaceMake, FFLI_TEXTURE_PARTS_TYPE_FACE_MAKEUP, pCharInfo->parts.faceMakeup, pResLoader, pAllocator);
+        if (result == FFL_RESULT_OK)
+        {
+            s32 beardType = pCharInfo->parts.beardType;
+            bool enableBeardTexture = beardType >= 4;
+
+            if (!enableBeardTexture || (result = FFLiLoadTextureWithAllocate(&pObject->pTextureFaceBeard, FFLI_TEXTURE_PARTS_TYPE_BEARD, beardType - 3, pResLoader, pAllocator)) == FFL_RESULT_OK)
+            {
+                InitDrawParamWithoutModulate(&pObject->drawParamFaceLine, resolution, pAllocator);
+                InitDrawParamWithoutModulate(&pObject->drawParamFaceMake, resolution, pAllocator);
+                InitDrawParamWithoutModulate(&pObject->drawParamFaceBeard, resolution, pAllocator);
+
+                FFLiInitModulateFaceLine(&pObject->drawParamFaceLine.modulateParam, *pObject->pTextureFaceLine);
+                FFLiInitModulateFaceMake(&pObject->drawParamFaceMake.modulateParam, *pObject->pTextureFaceMake);
+                if (enableBeardTexture)
+                    FFLiInitModulateFaceBeard(&pObject->drawParamFaceBeard.modulateParam, pCharInfo->parts.beardColor, *pObject->pTextureFaceBeard);
+
+                if (compressTexture)
+                {
+                    u32 width = GetWidth(resolution);
+                    u32 numMips = GetNumMips(width, resolution, enableMipMap);
+                    pObject->pRenderTexture = static_cast<FFLiRenderTexture*>(pAllocator->Allocate(sizeof(FFLiRenderTexture), 4));
+                    FFLiInitByBufferRenderTexture(pObject->pRenderTexture, width, resolution, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, numMips, pRenderTextureBuffer);
+
+                    pObject->pCompressorParam = FFLiCompressorParam::Create(numMips, compressUseUB, pAllocator);
+                }
+            }
+        }
     }
 
-    InitDrawParamWithoutModulate(&pObject->drawParamFaceLine, resolution, pAllocator);
-    InitDrawParamWithoutModulate(&pObject->drawParamFaceMake, resolution, pAllocator);
-    InitDrawParamWithoutModulate(&pObject->drawParamFaceBeard, resolution, pAllocator);
-
-    FFLiInitModulateFaceLine(&pObject->drawParamFaceLine.modulateParam, *pObject->pTextureFaceLine);
-    FFLiInitModulateFaceMake(&pObject->drawParamFaceMake.modulateParam, *pObject->pTextureFaceMake);
-    if (enableBeardTexture)
-        FFLiInitModulateFaceBeard(&pObject->drawParamFaceBeard.modulateParam, pCharInfo->parts.beardColor, *pObject->pTextureFaceBeard);
-
-    if (compressTexture)
-    {
-        u32 width = GetWidth(resolution);
-        u32 height = GetHeight(resolution);
-        u32 numMips = GetNumMips(width, height, enableMipMap);
-        pObject->pRenderTexture = static_cast<FFLiRenderTexture*>(pAllocator->Allocate(sizeof(FFLiRenderTexture), 4));
-        FFLiInitByBufferRenderTexture(pObject->pRenderTexture, width, height, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, numMips, pRenderTextureBuffer);
-
-        pObject->pCompressorParam = FFLiCompressorParam::Create(numMips, compressUseUB, pAllocator);
-    }
-
-    return FFL_RESULT_OK;
+    return result;
 }
 
 void FFLiRenderFacelineTexture(FFLiRenderTexture* pRenderTexture, const FFLiCharInfo* pCharInfo, u32 resolution, FFLiFacelineTextureTempObject* pObject, const FFLiShaderCallback* pCallback, FFLiCopySurface* pCopySurface, FFLiCompressorImplBC1* pCompressorImpl)
@@ -171,7 +164,7 @@ void FFLiRenderFacelineTexture(FFLiRenderTexture* pRenderTexture, const FFLiChar
         GX2_BLEND_COMBINE_MAX
     );
 
-    FFLiRenderTexture& renderTexture = *(useTempRenderTexture ? pObject->pRenderTexture : pRenderTexture);
+    FFLiRenderTexture& renderTexture = useTempRenderTexture ? *pObject->pRenderTexture : *pRenderTexture;
 
     FFLiInvalidateRenderTexture(&renderTexture);
     FFLiSetupRenderTexture(&renderTexture, &facelineColor, NULL, 0, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, pCallback);
@@ -184,8 +177,8 @@ void FFLiRenderFacelineTexture(FFLiRenderTexture* pRenderTexture, const FFLiChar
     if (renderTexture.gx2Texture.surface.numMips > 1)
     {
         pCopySurface->Begin();
-        for (u32 i = 1; i < renderTexture.gx2Texture.surface.numMips; i++)
-            pCopySurface->Execute(&renderTexture.gx2Texture.surface, i, &renderTexture.gx2Texture.surface, i - 1);
+        for (u32 i = 0; i < renderTexture.gx2Texture.surface.numMips - 1; i++)
+            pCopySurface->Execute(&renderTexture.gx2Texture.surface, i + 1, &renderTexture.gx2Texture.surface, i);
     }
 
     pCallback->CallSetContextState();
@@ -197,11 +190,11 @@ void FFLiRenderFacelineTexture(FFLiRenderTexture* pRenderTexture, const FFLiChar
         const FFLiRenderTexture* pSrc = pObject->pRenderTexture;
         FFLiRenderTexture* pDst = pRenderTexture;
         FFLiCompressorParam* pParam = pObject->pCompressorParam;
-        
+
         FFLiInvalidateTexture(&pDst->gx2Texture);
         pParam->SetTexture(&pSrc->gx2Texture);
-    
-        Compress(pCompressorImpl, pDst, pSrc, pParam);
+
+        pCompressorImpl->CompressImpl(&pDst->gx2Texture, &pSrc->gx2Texture, pParam);
 
         FFLiFlushRenderTexture(pDst);
 
@@ -282,7 +275,7 @@ GX2SurfaceFormat GetTextureFormat(bool compressTexture, bool useOffScreenSrgbFet
 
 void* Allocate(FFLiBufferAllocator* pAllocator, u32 size, u32 alignment)
 {
-    return pAllocator->Allocate(size, alignment);
+    return FFLiAllocateBufferAllocator(pAllocator, size, alignment);
 }
 
 void EndianSwap(void* ptr, u32 size)
@@ -331,8 +324,8 @@ void InitAttributes(FFLAttributeBufferParam* pAttributes, u32 resolution, FFLiBu
     pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].stride = sizeof(FFLVec4);
     pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr = Allocate(pAllocator, FFLiBugCanSwapSize(POSITION_BUFFER_SIZE), GX2_VERTEX_BUFFER_ALIGNMENT);
 
-    std::memcpy(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr, POSITION_BUFFER, POSITION_BUFFER_SIZE);
-    EndianSwap(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr, POSITION_BUFFER_SIZE);
+    std::memcpy(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr, POSITION_BUFFER, pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].size);
+    EndianSwap(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr, pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].size);
 
     pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].size = TEXCOORD_BUFFER_SIZE;
     pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].stride = sizeof(FFLVec2);
@@ -374,12 +367,12 @@ void InvalidateAttributes(FFLAttributeBufferParam* pAttributes)
 {
     for (u32 i = 0; i < FFL_ATTRIBUTE_BUFFER_TYPE_MAX; i++)
     {
-        void* ptr = pAttributes->attributeBuffers[i].ptr;
-        if (ptr != NULL)
+        FFLAttributeBuffer* pBuffer = &pAttributes->attributeBuffers[i];
+        if (pBuffer->ptr != NULL)
             FFLiInvalidate(
                 GX2_INVALIDATE_CPU_ATTRIB_BUFFER,
-                ptr,
-                pAttributes->attributeBuffers[i].size
+                pBuffer->ptr,
+                pBuffer->size
             );
     }
 }
@@ -388,11 +381,6 @@ void InvalidateDrawParam(FFLDrawParam* pDrawParam)
 {
     InvalidatePrimitive(&pDrawParam->primitiveParam);
     InvalidateAttributes(&pDrawParam->attributeBufferParam);
-}
-
-void Compress(FFLiCompressorImplBC1* pCompressorImpl, FFLiRenderTexture* pDst, const FFLiRenderTexture* pSrc, const FFLiCompressorParam* pParam)
-{
-    pCompressorImpl->CompressImpl(&pDst->gx2Texture, &pSrc->gx2Texture, pParam);
 }
 
 }

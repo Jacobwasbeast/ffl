@@ -30,10 +30,12 @@ void FFLiSystemContext::Init(u32 seed)
 
     m_RandomContext.Init(seed);
 
-    static const FFLiCreateIDBase DEFAULT_CREATE_ID_BASE = {
-        0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
-    };
-    std::memcpy(&m_CreateIDBase, &DEFAULT_CREATE_ID_BASE, sizeof(FFLiCreateIDBase));
+    m_CreateIDBase.data[0] = 0xFF;
+    m_CreateIDBase.data[1] = 0xFF;
+    m_CreateIDBase.data[2] = 0xFF;
+    m_CreateIDBase.data[3] = 0xFF;
+    m_CreateIDBase.data[4] = 0xFF;
+    m_CreateIDBase.data[5] = 0xFF;
 
     m_TitleID = 0;
 }

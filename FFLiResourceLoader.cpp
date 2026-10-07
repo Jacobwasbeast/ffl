@@ -19,8 +19,7 @@ bool Uncompress(void* pDst, const void* pSrc, FFLiResourceUncompressBuffer* pBuf
 FFLiResourceLoader::FFLiResourceLoader(FFLiResourceManager* pResourceManager, FFLiResourceLoaderBuffer* pResLoaderBuffer, FFLResourceType resourceType)
     : m_pResourceManager(pResourceManager)
     , m_pBuffer(pResLoaderBuffer)
-    , m_pFsCommand(FFLiFsCommand::PlacementNew(pResLoaderBuffer->GetCommandBuffer(), pResourceManager->GetClient()))
-    , m_FsFile(m_pFsCommand)
+    , m_FsFile(m_pFsCommand = FFLiFsCommand::PlacementNew(pResLoaderBuffer->GetCommandBuffer(), pResourceManager->GetClient()))
     , m_ResourceType(resourceType)
 {
 }
@@ -90,23 +89,13 @@ FFLResult FFLiResourceLoader::Load(void* pData, u32* pSize, const FFLiResourcePa
 {
     *pSize = partsInfo.dataSize;
 
-    if (partsInfo.dataSize != 0)
-    {
-        if (IsCached())
-        {
-            FFLResult result = LoadFromCache(pData, partsInfo);
-            if (result != FFL_RESULT_OK)
-                return result;
-        }
-        else
-        {
-            FFLResult result = LoadFromFile(pData, partsInfo);
-            if (result != FFL_RESULT_OK)
-                return result;
-        }
-    }
+    if (partsInfo.dataSize == 0)
+        return FFL_RESULT_OK;
 
-    return FFL_RESULT_OK;
+    if (IsCached())
+        return LoadFromCache(pData, partsInfo);
+
+    return LoadFromFile(pData, partsInfo);
 }
 
 FFLResult FFLiResourceLoader::LoadFromCache(void* pData, const FFLiResourcePartsInfo& partsInfo)
@@ -122,7 +111,8 @@ FFLResult FFLiResourceLoader::LoadFromCache(void* pData, const FFLiResourceParts
     }
     else
     {
-        if (!Uncompress(pData, ptr, &m_pBuffer->GetUncompressBuffer(), partsInfo))
+        FFLiResourceUncompressBuffer* pBuffer = &m_pBuffer->GetUncompressBuffer();
+        if (!Uncompress(pData, ptr, pBuffer, partsInfo))
             return FFL_RESULT_FILE_LOAD_ERROR;
     }
 
@@ -144,7 +134,8 @@ FFLResult FFLiResourceLoader::LoadFromFile(void* pData, const FFLiResourcePartsI
         if (ReadWithPos(m_pBuffer->GetUncompressBuffer().Buffer(), partsInfo.dataPos, partsInfo.compressedSize) != 1)
             return FFL_RESULT_RES_FS_ERROR;
 
-        if (!Uncompress(pData, m_pBuffer->GetUncompressBuffer().Buffer(), &m_pBuffer->GetUncompressBuffer(), partsInfo))
+        FFLiResourceUncompressBuffer* pBuffer = &m_pBuffer->GetUncompressBuffer();
+        if (!Uncompress(pData, pBuffer->Buffer(), pBuffer, partsInfo))
             return FFL_RESULT_FILE_LOAD_ERROR;
     }
 
@@ -180,10 +171,11 @@ FSStatus FFLiResourceLoader::ReadWithPos(void* pDst, u32 pos, u32 size)
 
 FSStatus FFLiResourceLoader::Close()
 {
-    if (!m_FsFile.IsOpened())
-        return FS_STATUS_OK;
+    FSStatus status = FS_STATUS_OK;
+    if (m_FsFile.IsOpened())
+        status = m_FsFile.Close();
 
-    return m_FsFile.Close();
+    return status;
 }
 
 namespace {
@@ -193,11 +185,10 @@ bool Uncompress(void* pDst, const void* pSrc, FFLiResourceUncompressBuffer* pBuf
     FFLiBufferAllocatorForZlib allocator(pBuffer->TempBuffer(), pBuffer->TempBufferSize()); 
     FFLiZlibInflator inflator(allocator, FFLiResourceWindowBitsToZlibWindowBits(FFLiResourceWindowBits(partsInfo.windowBits)));
 
-    void* dst = pDst;
     u32 dstSize = partsInfo.dataSize;
-
-    const void* src = pSrc;
     u32 srcSize = partsInfo.compressedSize;
+    void* dst = pDst;
+    const void* src = pSrc;
 
     return inflator.Process(&dst, &dstSize, &src, &srcSize, Z_FINISH) == Z_STREAM_END;
 }

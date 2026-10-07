@@ -36,9 +36,7 @@ void SetCullingModeWraper(GX2FrontFaceMode frontFaceMode, GX2Boolean cullFront, 
 
 void SetupCulling(FFLCullMode cullMode, const FFLModulateParam& modulateParam, BOOL cullBack)
 {
-    bool reverse = false;
-    if (modulateParam.type < FFL_MODULATE_TYPE_SHAPE_MAX && cullBack)
-        reverse = true;
+    bool reverse = modulateParam.type < FFL_MODULATE_TYPE_SHAPE_MAX && cullBack;
 
     switch (cullMode)
     {
@@ -52,10 +50,10 @@ void SetupCulling(FFLCullMode cullMode, const FFLModulateParam& modulateParam, B
             SetCullingModeWraper(GX2_FRONT_FACE_CCW, GX2_FALSE, GX2_TRUE);
         break;
     case FFL_CULL_MODE_FRONT:
-        if (reverse)
-            SetCullingModeWraper(GX2_FRONT_FACE_CCW, GX2_FALSE, GX2_TRUE);
-        else
+        if (!reverse)
             SetCullingModeWraper(GX2_FRONT_FACE_CCW, GX2_TRUE, GX2_FALSE);
+        else
+            SetCullingModeWraper(GX2_FRONT_FACE_CCW, GX2_FALSE, GX2_TRUE);
         break;
     }
 }
@@ -167,22 +165,32 @@ void SetupMaterial(const FFLiDefaultShader* pShader, const FFLDrawParam& drawPar
 void ShaderCallbackDraw(void* pObj, const FFLDrawParam* pDrawParam)
 {
     FFLiDefaultShader* pShader = static_cast<FFLiDefaultShader*>(pObj);
+    const FFLDrawParam& drawParam = *pDrawParam;
 
-    SetupCulling(pDrawParam->cullMode, pDrawParam->modulateParam, pShader->param.cullBack);
-    SetupModulate(pShader, pDrawParam->modulateParam);
-    SetupMaterial(pShader, *pDrawParam);
+    SetupCulling(drawParam.cullMode, drawParam.modulateParam, pShader->param.cullBack);
+    SetupModulate(pShader, drawParam.modulateParam);
+    SetupMaterial(pShader, drawParam);
 
-    const FFLPrimitiveParam& primitiveParam = pDrawParam->primitiveParam;
-    if (primitiveParam.pIndexBuffer != NULL)
+    if (drawParam.primitiveParam.pIndexBuffer != NULL)
     {
-        for (u32 i = 0; i < FFL_ATTRIBUTE_BUFFER_TYPE_MAX; i++)
-        {
-            const FFLAttributeBuffer& buffer = pDrawParam->attributeBufferParam.attributeBuffers[i];
-            GX2SetAttribBuffer(i, buffer.size, buffer.stride, buffer.ptr);
-        }
+        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_POSITION, drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].size,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].stride,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr);
+        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD, drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].size,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].stride,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].ptr);
+        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL, drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL].size,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL].stride,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL].ptr);
+        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT, drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT].size,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT].stride,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT].ptr);
+        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_COLOR, drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_COLOR].size,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_COLOR].stride,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_COLOR].ptr);
 
-        GX2DrawIndexedEx(primitiveParam.primitiveType, primitiveParam.indexCount, primitiveParam.indexFormat,
-                         primitiveParam.pIndexBuffer, 0, 1);
+        GX2DrawIndexedEx(drawParam.primitiveParam.primitiveType, drawParam.primitiveParam.indexCount,
+                         drawParam.primitiveParam.indexFormat, drawParam.primitiveParam.pIndexBuffer, 0, 1);
     }
 }
 
@@ -418,7 +426,12 @@ void FFLiSetupInitCharModelDefaultShader(const FFLiDefaultShader* pShader)
 
 void FFLiSetupDrawDefaultShaderNoSetCallback(const FFLiDefaultShader* pShader)
 {
-    FFLiSetDefaultShader(pShader);
+    GX2VertexShader* pVertexShader = pShader->pVertexShader;
+    GX2PixelShader* pPixelShader = pShader->pPixelShader;
+
+    GX2SetFetchShader(&pShader->fetchShader.fetchShader);
+    GX2SetVertexShader(pVertexShader);
+    GX2SetPixelShader(pPixelShader);
     SetupUniformParam(pShader);
 }
 

@@ -70,9 +70,12 @@ void FFLiCopySurfaceShader::SetupGPU()
 
 void FFLiCopySurfaceShader::Bind() const
 {
+    GX2VertexShader* pVertexShader = m_pVertexShader;
+    GX2PixelShader* pPixelShader = m_pPixelShader;
+
     GX2SetFetchShader(&m_FetchShader.fetchShader);
-    GX2SetVertexShader(m_pVertexShader);
-    GX2SetPixelShader(m_pPixelShader);
+    GX2SetVertexShader(pVertexShader);
+    GX2SetPixelShader(pPixelShader);
 }
 
 void FFLiCopySurfaceShader::SetTexture(const GX2Texture* pGX2Texture, u32 mipLevel)

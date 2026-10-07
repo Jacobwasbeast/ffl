@@ -26,7 +26,7 @@ void FFLiCompressUniform::Setup(FFLiBufferAllocator* pAllocator, u32 compressUse
     const u32 VERTEX_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1) & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
     const u32 PIXEL_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1) & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
 
-    m_IsUB = compressUseUB;
+    m_IsUB = compressUseUB != 0;
 
     m_pVertexUniform = static_cast<f32*>(pAllocator->Allocate(VERTEX_UNIFORM_MAX_SIZE, GX2_UNIFORM_BLOCK_ALIGNMENT));
     m_pPixelUniform  = static_cast<f32*>(pAllocator->Allocate(PIXEL_UNIFORM_MAX_SIZE, GX2_UNIFORM_BLOCK_ALIGNMENT));
@@ -36,32 +36,33 @@ void FFLiCompressUniform::SetResolution(u32 width, u32 height)
 {
     const u32 VERTEX_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1) & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
 
-    f32 widthf  = width;
+    f32 widthf = width;
+    f32 alignedWidth = GetBlockAlignedSize(width) / widthf;
     f32 heightf = height;
-
-    f32 alignedWidth  = GetBlockAlignedSize(width)  / widthf;
     f32 alignedHeight = GetBlockAlignedSize(height) / heightf;
 
-    m_pVertexUniform[0] = 1 / widthf;
-    m_pVertexUniform[1] = 1 / heightf;
-    m_pVertexUniform[2] = alignedWidth;
-    m_pVertexUniform[3] = alignedHeight;
+    f32* pUniform = m_pVertexUniform;
+    pUniform[0] = 1 / widthf;
+    pUniform[1] = 1 / heightf;
+    pUniform[2] = alignedWidth;
+    pUniform[3] = alignedHeight;
 
     if (m_IsUB)
-        SetupUniformBlock(m_pVertexUniform, 4, VERTEX_UNIFORM_MAX_SIZE);
+        SetupUniformBlock(pUniform, 4, VERTEX_UNIFORM_MAX_SIZE);
 }
 
 void FFLiCompressUniform::SetMipLevel(u32 mipLevel)
 {
     const u32 PIXEL_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1) & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
 
-    m_pPixelUniform[0] = mipLevel;
-    m_pPixelUniform[1] = 0;
-    m_pPixelUniform[2] = 0;
-    m_pPixelUniform[3] = 0;
+    f32* pUniform = m_pPixelUniform;
+    pUniform[0] = mipLevel;
+    pUniform[1] = 0;
+    pUniform[2] = 0;
+    pUniform[3] = 0;
 
     if (m_IsUB)
-        SetupUniformBlock(m_pPixelUniform, 4, PIXEL_UNIFORM_MAX_SIZE);
+        SetupUniformBlock(pUniform, 4, PIXEL_UNIFORM_MAX_SIZE);
 }
 
 u32 FFLiCompressUniform::GetBufferSize()

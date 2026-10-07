@@ -26,16 +26,16 @@ FSStateChangeParams s_Param = {
 FSStatus FFLiFsClient::Init(const FSStateChangeParams* pChangeParams, u32 errHandling)
 {
     FSStatus status = FSAddClient(&m_FSClient, static_cast<FSErrorFlag>(errHandling));
-    if (status != FS_STATUS_OK)
-        return status;
+    if (status == FS_STATUS_OK)
+    {
+        if (pChangeParams == NULL)
+            pChangeParams = &s_Param;
 
-    if (pChangeParams == NULL)
-        pChangeParams = &s_Param;
+        SetStateChangeNotification(const_cast<FSStateChangeParams*>(pChangeParams));
+        m_IsValid = true;
+    }
 
-    SetStateChangeNotification(const_cast<FSStateChangeParams*>(pChangeParams));
-    m_IsValid = true;
-
-    return FS_STATUS_OK;
+    return status;
 }
 
 void FFLiFsClient::SetStateChangeNotification(FSStateChangeParams* pChangeParams)
