@@ -48,4 +48,4 @@ private:
 };
 NN_STATIC_ASSERT(sizeof(FFLiDatabaseManager) == 0xFD8);
 
-#endif // FFLI_DATABASE_MANAGER_H_
+#endif

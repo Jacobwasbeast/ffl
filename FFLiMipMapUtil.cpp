@@ -2,17 +2,10 @@
 
 s32 FFLiGetMipMapNum(s32 width, s32 height)
 {
-    s32 num = 0;
+    if (width <= 32u || height <= 32u)
+        return 1;
 
-    while (width > 32 && height > 32)
-    {
-        num++;
-
-        width /= 2;
-        height /= 2;
-    }
-
-    return num + 1;
+    return FFLiGetMipMapNum(width / 2, height / 2) + 1;
 }
 
 u32 FFLiGetMipMapLevelSize(u32 size, u32 mipLevel)

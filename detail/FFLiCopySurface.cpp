@@ -95,15 +95,15 @@ void FFLiCopySurface::SetupDstSurface(GX2Surface* pSurface, u32 mipLevel)
     GX2SetViewport(
         0.0f,
         0.0f,
-        f32(FFLiGetMipMapLevelSize(colorBuffer.surface.width, mipLevel)),
-        f32(FFLiGetMipMapLevelSize(colorBuffer.surface.height, mipLevel)),
+        f32(FFLiGetMipMapLevelSize(pSurface->width, mipLevel)),
+        f32(FFLiGetMipMapLevelSize(pSurface->height, mipLevel)),
         0.0f,
         1.0f
     );
     GX2SetScissor(
         0.0f,
         0.0f,
-        f32(FFLiGetMipMapLevelSize(colorBuffer.surface.width, mipLevel)),
-        f32(FFLiGetMipMapLevelSize(colorBuffer.surface.height, mipLevel))
+        f32(FFLiGetMipMapLevelSize(pSurface->width, mipLevel)),
+        f32(FFLiGetMipMapLevelSize(pSurface->height, mipLevel))
     );
 }

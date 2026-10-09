@@ -15,6 +15,7 @@ FFLiDatabaseManager::FFLiDatabaseManager(FFLiDatabaseFile* pFile, FFLiFileWriteB
     , m_DatabaseRandom(pContext->RandomContext())
     , m_pAllocator(pAllocator)
 {
+    m_IsEnabledSpecialMii = false;
     m_DatabaseFileAccessor.Init();
 }
 
@@ -28,11 +29,7 @@ FFLResult FFLiDatabaseManager::AfterConstruct()
     if (result != FFL_RESULT_OK)
         return result;
 
-    result = m_DatabaseFileAccessor.BootLoad();
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    return FFL_RESULT_OK;
+    return m_DatabaseFileAccessor.BootLoad();
 }
 
 FFLResult FFLiDatabaseManager::BeforeDestruct()
@@ -50,11 +47,7 @@ FFLResult FFLiDatabaseManager::FlushQuota(bool force)
     if (result != FFL_RESULT_OK)
         return result;
 
-    result = m_DatabaseFileAccessor.FlushQuota(force);
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    return FFL_RESULT_OK;
+    return m_DatabaseFileAccessor.FlushQuota(force);
 }
 
 void FFLiDatabaseManager::EnableSpecialMii(u32 key)
@@ -69,7 +62,8 @@ bool FFLiDatabaseManager::IsEnabledSpecialMii() const
 
 FFLResult FFLiDatabaseManager::GetCharInfoFromOfficial(FFLiCharInfo* pCharInfo, u16 index)
 {
-    if (!m_DatabaseFileAccessor.GetDatabaseFile()->official.Get(pCharInfo, index, true, IsEnabledSpecialMii()))
+    const FFLiDatabaseFileOfficial& official = m_DatabaseFileAccessor.GetDatabaseFile()->official;
+    if (!official.Get(pCharInfo, index, true, IsEnabledSpecialMii()))
         return FFL_RESULT_FILE_INVALID;
 
     return FFL_RESULT_OK;
@@ -86,18 +80,14 @@ FFLResult FFLiDatabaseManager::GetCharInfoFromDefault(FFLiCharInfo* pCharInfo, u
 FFLResult FFLiDatabaseManager::GetCharInfoFromStoreData(FFLiCharInfo* pCharInfo, FFLDataSource dataSource, const FFLiStoreDataCFL* pStoreDataCFL, u16 index)
 {
     FFLResult result = FFLiStoreDataCFLToCharInfo(pCharInfo, pStoreDataCFL[index]);
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    u16 miiDataIndex;
-    if (dataSource == FFL_DATA_SOURCE_STORE_DATA_OFFICIAL && m_DatabaseFileAccessor.GetDatabaseFile()->official.Search(&miiDataIndex, pCharInfo->creatorID))
+    if (result == FFL_RESULT_OK)
     {
-        result = GetCharInfoFromOfficial(pCharInfo, miiDataIndex);
-        if (result != FFL_RESULT_OK)
-            return result;
+        u16 miiDataIndex;
+        if (dataSource == FFL_DATA_SOURCE_STORE_DATA_OFFICIAL && m_DatabaseFileAccessor.GetDatabaseFile()->official.Search(&miiDataIndex, pCharInfo->creatorID))
+            result = GetCharInfoFromOfficial(pCharInfo, miiDataIndex);
     }
 
-    return FFL_RESULT_OK;
+    return result;
 }
 
 namespace {
@@ -108,7 +98,7 @@ void ReplaceNameIfAccord(u16* s, u32 size)
 
     for (u32 i = 0; i < size; i++)
     {
-        if (s[i] == L'@' || s[i] == 0xFF20)   // 0xFF20 == L'＠', but I can't get it working with GHS
+        if (s[i] == L'@' || s[i] == 0xFF20)
         {
             found = true;
             break;
@@ -159,10 +149,7 @@ FFLResult FFLiDatabaseManager::PickupCharInfo(FFLiCharInfo* pCharInfo, FFLDataSo
 
     ReplaceNameAndCreatorIfAccord(pCharInfo);
 
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    if (FFLiIsNullMiiID(&pCharInfo->creatorID) || !FFLiiVerifyCharInfo(pCharInfo, true))
+    if (result == FFL_RESULT_OK && (FFLiIsNullMiiID(&pCharInfo->creatorID) || !FFLiiVerifyCharInfo(pCharInfo, true)))
         result = FFL_RESULT_FILE_INVALID;
 
     return result;

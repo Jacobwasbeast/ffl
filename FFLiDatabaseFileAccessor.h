@@ -46,7 +46,7 @@ private:
     FFLiDatabaseFile*       m_pDatabaseFile;
     FFLiFileWriteBuffer*    m_pFileWriteBuffer;
     FFLiAllocator*          m_pAllocator;
-    u32                     _a94;               // Unused?
+    u32                     _a94;
     char                    m_PathOfficial[FFL_PATH_MAX_LEN];
     char                    m_PathBackup[FFL_PATH_MAX_LEN];
     char                    m_PathHidden[FFL_PATH_MAX_LEN];
@@ -59,4 +59,4 @@ private:
 };
 NN_STATIC_ASSERT(sizeof(FFLiDatabaseFileAccessor) == 0xDA0);
 
-#endif // FFLI_DATABASE_FILE_ACCESSOR_H_
+#endif

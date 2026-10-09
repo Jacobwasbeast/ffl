@@ -10,6 +10,6 @@ u64 FFLiGetMiiStudioTitleID();
 FSStatus FFLiGetResourcePath(char* pDst, u32 size, const char* filename);
 FSStatus FFLiGetDatabasePath(char* pDst, u32 size, u64 titleID, const char* filename);
 
-FFLResult FFLiConvertFSStatusToFFLResult(FSStatus status);
+FFLResult FFLiConvertFSStatusToFFLResult(s32 status);
 
 #endif // FFLI_PATH_H_

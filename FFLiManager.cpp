@@ -22,7 +22,7 @@
 
 // --------------------------------------------------------------------------
 
-static void SetResultIfError(FFLResult* pDst, FFLResult src)
+static inline void SetResultIfError(FFLResult* pDst, FFLResult src)
 {
     if (*pDst == FFL_RESULT_OK || *pDst == FFL_RESULT_ODB_EMPTY)
         if (src != FFL_RESULT_OK)
@@ -175,6 +175,9 @@ FFLiManager::~FFLiManager()
 
 FFLResult FFLiManager::AfterConstruct(const FFLInitDesc* pInitDesc, const FFLResourceDesc* pResDesc)
 {
+    FFLResult result;
+    u32 i;
+
     if (!m_SystemContext.AfterConstruct())
         return FFL_RESULT_UNKNOWN_17;
 
@@ -185,7 +188,7 @@ FFLResult FFLiManager::AfterConstruct(const FFLInitDesc* pInitDesc, const FFLRes
         if (!m_pCompressor->SetupCPU(pInitDesc->pShaderData))
             return FFL_RESULT_ERROR;
 
-    FFLResult result = m_ResourceManager.AfterConstruct();
+    result = m_ResourceManager.AfterConstruct();
     if (result != FFL_RESULT_OK)
         return result;
 
@@ -202,7 +205,7 @@ FFLResult FFLiManager::AfterConstruct(const FFLInitDesc* pInitDesc, const FFLRes
     }
     else
     {
-        for (u32 i = 0; i < FFL_RESOURCE_TYPE_MAX; i++)
+        for (i = 0; i < FFL_RESOURCE_TYPE_MAX; i++)
         {
             if (pResDesc->pData[i] == NULL)
                 continue;
@@ -268,13 +271,19 @@ FFLResult InitResImpl(void* pBuffer, const FFLInitDesc* pInitDesc, const FFLReso
     return FFLiManager::Create(pBuffer, pInitDesc, pResDesc);
 }
 
+const u32 TEMP_MEMORY_SIZE_SMALL = 0x0A0000;
+const u32 TEMP_MEMORY_SIZE_LARGE = 0x520000;
+
 u32 TempMemorySize(bool b)
 {
-    // ???
-    return b ? 0x0A0000 : 0x520000;
+    u32 size = TEMP_MEMORY_SIZE_SMALL;
+    if (!b)
+        size = TEMP_MEMORY_SIZE_LARGE;
+
+    return size;
 }
 
-FFLiFileWriteBuffer* CreateFileWriteBuffer(FFLiBufferAllocator* pAllocator)
+inline FFLiFileWriteBuffer* CreateFileWriteBuffer(FFLiBufferAllocator* pAllocator)
 {
     if (!pAllocator->CanAllocate(sizeof(FFLiFileWriteBuffer), FS_IO_BUFFER_ALIGN))
         return NULL;

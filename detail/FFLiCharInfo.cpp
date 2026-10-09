@@ -241,6 +241,7 @@ s32 FFLiiGetEyebrowRotateOffset(s32 type)
 
 f32 FFLiiGetAdjustedMouthH(f32 height, s32 type)
 {
+    f32 ret = height;
     switch (type)
     {
     case 3:
@@ -250,20 +251,18 @@ f32 FFLiiGetAdjustedMouthH(f32 height, s32 type)
     case 21:
     case 23:
     case 25:
-        if (height < 12)
-            height = 12;
+        if (height < 12.0f)
+            ret = 12.0f;
     }
-    return height;
+    return ret;
 }
 
 f32 FFLiiGetAdjustedEyeH(f32 height, s32 type)
 {
-    switch (type)
+    if (type == 14 || type == 26)
     {
-    case 14:
-    case 26:
-        if (height < 12)
-            height = 12;
+        if (height < 12.0f)
+            height = 12.0f;
     }
     return height;
 }

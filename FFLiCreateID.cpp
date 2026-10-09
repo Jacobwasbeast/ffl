@@ -14,26 +14,22 @@ const FFLiCreateID* GetCreateID(const FFLCreateID* pCreateID)
 
 BOOL FFLiIsNullMiiID(const FFLCreateID* pCreateID)
 {
-    if (pCreateID != NULL)
+    if (pCreateID == NULL)
+        return false;
+
+    const u32 count = FFL_CREATE_ID_SIZE / sizeof(u16);
+    NN_STATIC_ASSERT(count == 5);
+
+    BOOL ret = false;
+    if (pCreateID->value16[0] == 0 &&
+        pCreateID->value16[1] == 0 &&
+        pCreateID->value16[2] == 0 &&
+        pCreateID->value16[3] == 0 &&
+        pCreateID->value16[4] == 0)
     {
-        const u32 count = FFL_CREATE_ID_SIZE / sizeof(u16);
-        NN_STATIC_ASSERT(count == 5);
-
-        if (pCreateID->value16[0] == 0 &&
-            pCreateID->value16[1] == 0 &&
-            pCreateID->value16[2] == 0 &&
-            pCreateID->value16[3] == 0 &&
-            pCreateID->value16[4] == 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        ret = true;
     }
-
-    return false;
+    return ret;
 }
 
 void FFLiGetTemporaryMiiID(FFLCreateID* pCreateID)
@@ -58,15 +54,13 @@ BOOL FFLiIsSpecialMiiID(const FFLCreateID* pCreateID)
 
 BOOL FFLiIsNTRMiiID(const FFLCreateID* pCreateID)
 {
-    u8 flags = GetCreateID(pCreateID)->flags;
-    
-    if (flags & FFLI_CREATE_ID_FLAG_UNKNOWN_0)
-        return false;
-    
-    if (!(flags & FFLI_CREATE_ID_FLAG_UNKNOWN_2))
-        return false;
-    
-    return true;
+    const FFLiCreateID* pID = GetCreateID(pCreateID);
+    BOOL ret = false;
+
+    if (!(pID->flags & FFLI_CREATE_ID_FLAG_UNKNOWN_0) && (pID->flags & FFLI_CREATE_ID_FLAG_UNKNOWN_2))
+        ret = true;
+
+    return ret;
 }
 
 BOOL FFLiIsTemporaryMiiID(const FFLCreateID* pCreateID)
@@ -87,18 +81,19 @@ BOOL FFLiIsSameMiiID(const FFLCreateID* a, const FFLCreateID* b)
         const u32 count = FFL_CREATE_ID_SIZE / sizeof(u16);
         NN_STATIC_ASSERT(count == 5);
 
-        if (a->value16[0] == b->value16[0] &&
-            a->value16[1] == b->value16[1] &&
-            a->value16[2] == b->value16[2] &&
-            a->value16[3] == b->value16[3] &&
-            a->value16[4] == b->value16[4])
+        const u16* pA = a->value16;
+        const u16* pB = b->value16;
+
+        BOOL ret = false;
+        if (pA[0] == pB[0] &&
+            pA[1] == pB[1] &&
+            pA[2] == pB[2] &&
+            pA[3] == pB[3] &&
+            pA[4] == pB[4])
         {
-            return true;
+            ret = true;
         }
-        else
-        {
-            return false;
-        }
+        return ret;
     }
 
     return false;

@@ -47,6 +47,16 @@ public:
     static bool GetUniformBlockLocation(u32* pLocation, const GX2VertexShader* pShader, const char* name);
 
     static bool GetSamplerLocation(u32* pLocation, const GX2PixelShader* pShader, const char* name);
+
+private:
+    template <typename T, typename Shader>
+    static bool BuildShaderImpl(Shader** ppShader, FFLiUtilShaderAllocator* pAllocator, const void* pShaderData, u32 shaderIndex, bool invalidate);
+
+    static const GX2UniformVar* GetUniformVar(const GX2PixelShader* pShader, const char* name);
+    static const GX2UniformVar* GetUniformVar(const GX2VertexShader* pShader, const char* name);
+
+    static const GX2UniformBlock* GetUniformBlock(const GX2PixelShader* pShader, const char* name);
+    static const GX2UniformBlock* GetUniformBlock(const GX2VertexShader* pShader, const char* name);
 };
 
 #endif // FFLI_UTIL_SHADER_H_

@@ -43,7 +43,8 @@ FFLResult MakeIconImpl(GX2Texture* pTexture, const FFLiCharModel* pModel, FFLExp
     FFLiRenderTexture* pRenderTexture = static_cast<FFLiRenderTexture*>(tempAllocator.Allocate(sizeof(FFLiRenderTexture), 4));
     FFLiInitRenderTexture(pRenderTexture, pSetting->width, pSetting->height, pSetting->format, 1, &allocator);
 
-    void* pDepthBuffer = tempAllocator.Allocate(FFLiGetDepthBufferSizeRenderTexture(pSetting->width, pSetting->height));
+    u32 depthBufferSize = FFLiGetDepthBufferSizeRenderTexture(pSetting->width, pSetting->height);
+    void* pDepthBuffer = tempAllocator.Allocate(depthBufferSize);
 
     FFLColor clearColor = { 0.0f, 0.0f, 0.0f, 0.0f };
     switch (pSetting->backgroundType)
@@ -106,15 +107,12 @@ FFLResult FFLiMakeIconEx(GX2Texture* pTexture, const FFLiCharModel* pModel, FFLE
 void FFLiGetIconMatrix(Mat44* pProjection, Mat34* pView, u16 width, u16 height)
 {
     f32 aspect = f32(width) / f32(height);
-    f32 scale = 1.0f;
-    if (width < height)
-        scale = aspect;
-
-    f32 fovy = RadianToDegree(atan2f(43.2f / scale, 500.0f)) * 2.0f;
+    f32 heightScale = 43.2f / (width < height ? aspect : 1.0f);
+    f32 fovy = RadianToDegree(atan2f(heightScale, 500.0f)) * 2.0f;
     MTXPerspective(pProjection->mtx, fovy, aspect, 500.0f, 700.0f);
 
+    static const Vec cameraUp = { 0.0f, 1.0f, 0.0f };
+    static const Vec target = { 0.0f, 34.5f, 0.0f };
     Vec cameraPosition = { 0.0f, 34.5f, 600.0f };
-    Vec cameraUp = { 0.0f, 1.0f, 0.0f };
-    Vec target = { 0.0f, 34.5f, 0.0f };
     MTXLookAt(pView->mtx, &cameraPosition, &cameraUp, &target);
 }

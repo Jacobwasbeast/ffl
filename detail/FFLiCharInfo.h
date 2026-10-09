@@ -60,22 +60,22 @@ typedef struct FFLiCharInfo
         s32             molePositionX;
         s32             molePositionY;
     } parts;
-    u32                 height;
-    u32                 build;
+    s32                 height;
+    s32                 build;
     u16                 name[10 + 1];
     u16                 creatorName[10 + 1];
     FFLGender           gender;
     u32                 birthMonth;
     u32                 birthDay;
-    u32                 favoriteColor;
+    s32                 favoriteColor;
     u8                  favoriteMii;
     u8                  copyable;
     u8                  ngWord;
     u8                  localOnly;
-    u32                 regionMove;
+    s32                 regionMove;
     FFLFontRegion       fontRegion;
-    u32                 pageIndex;
-    u32                 slotIndex;
+    s32                 pageIndex;
+    s32                 slotIndex;
     FFLBirthPlatform    birthPlatform;
     FFLCreateID         creatorID;
     u16                 _112;   // Set to zero

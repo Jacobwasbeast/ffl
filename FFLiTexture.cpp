@@ -29,18 +29,14 @@ FFLResult FFLiLoadTextureWithAllocate(GX2Texture** ppGX2Texture, FFLiTexturePart
 
     *ppGX2Texture = static_cast<GX2Texture*>(pAllocator->Allocate(sizeof(GX2Texture), 4));
 
+    FFLResult result;
     if (!pResLoader->IsExpand())
-    {
-        FFLResult result = pResLoader->LoadTexture(pData, &size, partsType, index);
-        if (result != FFL_RESULT_OK)
-            return result;
-    }
+        result = pResLoader->LoadTexture(pData, &size, partsType, index);
     else
-    {
-        FFLResult result = pResLoader->GetPointerTextureByExpandCache(&pData, &size, partsType, index);
-        if (result != FFL_RESULT_OK)
-            return result;
-    }
+        result = pResLoader->GetPointerTextureByExpandCache(&pData, &size, partsType, index);
+
+    if (result != FFL_RESULT_OK)
+        return result;
 
     const FFLiResourceTextureFooter& footer = FFLiResourceTextureFooter::GetFooterImpl(pData, size);
 
@@ -55,7 +51,7 @@ FFLResult FFLiLoadTextureWithAllocate(GX2Texture** ppGX2Texture, FFLiTexturePart
     );
     GX2InitTexturePtrs(*ppGX2Texture, footer.GetImagePtrImpl(size), footer.GetMipPtrImpl(size));
 
-    return FFL_RESULT_OK;
+    return result;
 }
 
 void FFLiInvalidateTexture(GX2Texture* pGX2Texture)

@@ -33,7 +33,7 @@ FSStatus FFLiGetDatabasePath(char* pDst, u32 size, u64 titleID, const char* file
     return SAVEGetSharedSaveDataPath(titleID, filename, pDst, size);
 }
 
-FFLResult FFLiConvertFSStatusToFFLResult(FSStatus status)
+FFLResult FFLiConvertFSStatusToFFLResult(s32 status)
 {
     if (status == FS_STATUS_OK)
         return FFL_RESULT_OK;

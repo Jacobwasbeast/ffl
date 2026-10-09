@@ -652,27 +652,17 @@ public:
     void SwapEndian();
 
 private:
-    union
-    {
-        struct
-        {
-            u32                 : 1;    // Unused (MSB)
-            u32 m_BirthPlatform : 3;
-            u32 _0_24_27        : 4;
-
-            u32 m_SlotIndex     : 4;
-            u32 m_PageIndex     : 4;
-
-            u32                 : 2;    // Unused
-            u32 m_FontRegion    : 2;
-            u32 m_RegionMove    : 2;
-            u32 m_NgWord        : 1;    // bool
-            u32 m_Copyable      : 1;    // bool
-            u32 m_MiiVersion    : 8;    // (LSB)
-        };
-
-        u32 _0;
-    };
+    u32                     : 1;
+    u32 m_BirthPlatform     : 3;
+    u32 _0_24_27            : 4;
+    u32 m_SlotIndex         : 4;
+    u32 m_PageIndex         : 4;
+    u32                     : 2;
+    u32 m_FontRegion        : 2;
+    u32 m_RegionMove        : 2;
+    u32 m_NgWord            : 1;
+    u32 m_Copyable          : 1;
+    u32 m_MiiVersion        : 8;
 
     union
     {
@@ -689,173 +679,74 @@ private:
     };
     u8  _padding1[2];
 
-    union
-    {
-        struct
-        {
-            u16 m_PlaceHolder   : 1;    // Unused (MSB)
-            u16 m_FavoriteMii   : 1;    // bool
-            u16 m_FavoriteColor : 4;
-            u16 m_BirthDay      : 5;
-            u16 m_BirthMonth    : 4;
-            u16 m_Gender        : 1;    // (LSB)
-        };
+    u16 m_PlaceHolder       : 1;
+    u16 m_FavoriteMii       : 1;
+    u16 m_FavoriteColor     : 4;
+    u16 m_BirthDay          : 5;
+    u16 m_BirthMonth        : 4;
+    u16 m_Gender            : 1;
 
-        u16 _18;
-    };
-
-    u16 m_Name[10]; // Wstring
+    u16 m_Name[10];
 
     u8  m_Height;
     u8  m_Build;
 
-    union
-    {
-        struct
-        {
-            u16 m_FaceMakeup    : 4;    // (MSB)
-            u16 m_FaceLine      : 4;
-            u16 m_FacelineColor : 3;
-            u16 m_FaceType      : 4;
-            u16 m_LocalOnly     : 1;    // bool (LSB)
-        };
+    u16 m_FaceMakeup        : 4;
+    u16 m_FaceLine          : 4;
+    u16 m_FacelineColor     : 3;
+    u16 m_FaceType          : 4;
+    u16 m_LocalOnly         : 1;
+    u16                     : 4;
+    u16 m_HairDir           : 1;
+    u16 m_HairColor         : 3;
+    u16 m_HairType          : 8;
 
-        u16 _30;
-    };
-    union
-    {
-        struct
-        {
-            u16             : 4;    // Unused (MSB)
-            u16 m_HairDir   : 1;
-            u16 m_HairColor : 3;
-            u16 m_HairType  : 8;    // (LSB)
-        };
+    u16 m_EyeScaleY         : 3;
+    u16 m_EyeScale          : 4;
+    u16 m_EyeColor          : 3;
+    u16 m_EyeType           : 6;
+    u16                     : 2;
+    u16 m_EyePositionY      : 5;
+    u16 m_EyeSpacingX       : 4;
+    u16 m_EyeRotate         : 5;
 
-        u16 _32;
-    };
-    union
-    {
-        struct
-        {
-            u16 m_EyeScaleY : 3;    // (MSB)
-            u16 m_EyeScale  : 4;
-            u16 m_EyeColor  : 3;
-            u16 m_EyeType   : 6;    // (LSB)
-        };
+    u16                     : 1;
+    u16 m_EyebrowScaleY     : 3;
+    u16 m_EyebrowScale      : 4;
+    u16 m_EyebrowColor      : 3;
+    u16 m_EyebrowType       : 5;
+    u16                     : 2;
+    u16 m_EyebrowPositionY  : 5;
+    u16 m_EyebrowSpacingX   : 4;
+    u16 m_EyebrowRotate     : 5;
 
-        u16 _34;
-    };
-    union
-    {
-        struct
-        {
-            u16                     : 2;    // Unused (MSB)
-            u16 m_EyePositionY      : 5;
-            u16 m_EyeSpacingX       : 4;
-            u16 m_EyeRotate         : 5;    // (LSB)
-        };
+    u16                     : 2;
+    u16 m_NosePositionY     : 5;
+    u16 m_NoseScale         : 4;
+    u16 m_NoseType          : 5;
+    u16 m_MouthScaleY       : 3;
+    u16 m_MouthScale        : 4;
+    u16 m_MouthColor        : 3;
+    u16 m_MouthType         : 6;
 
-        u16 _36;
-    };
-    union
-    {
-        struct
-        {
-            u16                 : 1;    // Unused (MSB)
-            u16 m_EyebrowScaleY : 3;
-            u16 m_EyebrowScale  : 4;
-            u16 m_EyebrowColor  : 3;
-            u16 m_EyebrowType   : 5;    // (LSB)
-        };
+    u16                     : 8;
+    u16 m_MustacheType      : 3;
+    u16 m_MouthPositionY    : 5;
+    u16                     : 1;
+    u16 m_MustachePositionY : 5;
+    u16 m_MustacheScale     : 4;
+    u16 m_BeardColor        : 3;
+    u16 m_BeardType         : 3;
 
-        u16 _38;
-    };
-    union
-    {
-        struct
-        {
-            u16                         : 2;    // Unused (MSB)
-            u16 m_EyebrowPositionY      : 5;
-            u16 m_EyebrowSpacingX       : 4;
-            u16 m_EyebrowRotate         : 5;    // (LSB)
-        };
-
-        u16 _3A;
-    };
-    union
-    {
-        struct
-        {
-            u16                 : 2;    // Unused (MSB)
-            u16 m_NosePositionY : 5;
-            u16 m_NoseScale     : 4;
-            u16 m_NoseType      : 5;    // (LSB)
-        };
-
-        u16 _3C;
-    };
-    union
-    {
-        struct
-        {
-            u16 m_MouthScaleY   : 3;    // (MSB)
-            u16 m_MouthScale    : 4;
-            u16 m_MouthColor    : 3;
-            u16 m_MouthType     : 6;    // (LSB)
-        };
-
-        u16 _3E;
-    };
-    union
-    {
-        struct
-        {
-            u16                     : 8;    // Unused (MSB)
-            u16 m_MustacheType      : 3;
-            u16 m_MouthPositionY    : 5;    // (LSB)
-        };
-
-        u16 _40;
-    };
-    union
-    {
-        struct
-        {
-            u16                     : 1;    // Unused (MSB)
-            u16 m_MustachePositionY : 5;
-            u16 m_MustacheScale     : 4;
-            u16 m_BeardColor        : 3;
-            u16 m_BeardType         : 3;    // (LSB)
-        };
-
-        u16 _42;
-    };
-    union
-    {
-        struct
-        {
-            u16 m_GlassPositionY    : 5;    // (MSB)
-            u16 m_GlassScale        : 4;
-            u16 m_GlassColor        : 3;
-            u16 m_GlassType         : 4;    // (LSB)
-        };
-
-        u16 _44;
-    };
-    union
-    {
-        struct
-        {
-            u16                 : 1;    // Unused (MSB)
-            u16 m_MolePositionY : 5;
-            u16 m_MolePositionX : 5;
-            u16 m_MoleScale     : 4;
-            u16 m_MoleType      : 1;    // (LSB)
-        };
-
-        u16 _46;
-    };
+    u16 m_GlassPositionY    : 5;
+    u16 m_GlassScale        : 4;
+    u16 m_GlassColor        : 3;
+    u16 m_GlassType         : 4;
+    u16                     : 1;
+    u16 m_MolePositionY     : 5;
+    u16 m_MolePositionX     : 5;
+    u16 m_MoleScale         : 4;
+    u16 m_MoleType          : 1;
 };
 NN_STATIC_ASSERT_IS_POD(FFLiMiiDataCore);
 NN_STATIC_ASSERT(sizeof(FFLiMiiDataCore) == 0x48);
@@ -918,32 +809,32 @@ class FFLiMiiDataCoreRFL
 public:
     bool LocalOnly() const
     {
-        return m_FaceFlag >> 2 & 1;
+        return m_LocalOnly;
     }
 
     u16 Gender() const
     {
-        return m_Flag >> 14 & 1;
+        return m_Gender;
     }
 
     u16 BirthMonth() const
     {
-        return m_Flag >> 10 & 0xF;
+        return m_BirthMonth;
     }
 
     u16 BirthDay() const
     {
-        return m_Flag >> 5 & 0x1F;
+        return m_BirthDay;
     }
 
     u16 FavoriteColor() const
     {
-        return m_Flag >> 1 & 0xF;
+        return m_FavoriteColor;
     }
 
     bool FavoriteMii() const
     {
-        return m_Flag & 1;
+        return m_FavoriteMii;
     }
 
     const u16* Name() const
@@ -963,210 +854,262 @@ public:
 
     u16 FaceType() const
     {
-        return m_FaceFlag >> 13;
+        return m_FaceType;
     }
 
     u16 FacelineColor() const
     {
-        return m_FaceFlag >> 10 & 7;
+        return m_FacelineColor;
     }
 
     u16 FaceLineAndMake() const
     {
-        return m_FaceFlag >> 6 & 0xF;
+        return m_FaceLineAndMake;
     }
 
     u16 HairType() const
     {
-        return m_HairFlag >> 9;
+        return m_HairType;
     }
 
     u16 HairColor() const
     {
-        return m_HairFlag >> 6 & 7;
+        return m_HairColor;
     }
 
     u16 HairDir() const
     {
-        return m_HairFlag >> 5 & 1;
+        return m_HairDir;
     }
 
     u16 EyebrowType() const
     {
-        return m_EyebrowFlag[0] >> 11;
+        return m_EyebrowType;
     }
 
     u16 EyebrowRotate() const
     {
-        return m_EyebrowFlag[0] >> 6 & 0x1F;
+        return m_EyebrowRotate;
     }
 
     u16 EyebrowColor() const
     {
-        return m_EyebrowFlag[1] >> 13;
+        return m_EyebrowColor;
     }
 
     u16 EyebrowScale() const
     {
-        return m_EyebrowFlag[1] >> 9 & 0xF;
+        return m_EyebrowScale;
     }
 
     u16 EyebrowPosition() const
     {
-        return m_EyebrowFlag[1] >> 4 & 0x1F;
+        return m_EyebrowPositionY;
     }
 
     u16 EyebrowSpacing() const
     {
-        return m_EyebrowFlag[1] & 0xF;
+        return m_EyebrowSpacingX;
     }
 
     u16 EyeType() const
     {
-        return m_EyeFlag[0] >> 10;
+        return m_EyeType;
     }
 
     u16 EyeRotate() const
     {
-        return m_EyeFlag[0] >> 5 & 0x1F;
+        return m_EyeRotate;
     }
 
     u16 EyePosition() const
     {
-        return m_EyeFlag[0] & 0x1F;
+        return m_EyePositionY;
     }
 
     u16 EyeColor() const
     {
-        return m_EyeFlag[1] >> 13;
+        return m_EyeColor;
     }
 
     u16 EyeScale() const
     {
-        return m_EyeFlag[1] >> 9 & 0xF;
+        return m_EyeScale;
     }
 
     u16 EyeSpacing() const
     {
-        return m_EyeFlag[1] >> 5 & 0xF;
+        return m_EyeSpacingX;
     }
 
     u16 NoseType() const
     {
-        return m_NoseFlag >> 12;
+        return m_NoseType;
     }
 
     u16 NoseScale() const
     {
-        return m_NoseFlag >> 8 & 0xF;
+        return m_NoseScale;
     }
 
     u16 NosePosition() const
     {
-        return m_NoseFlag >> 3 & 0x1F;
+        return m_NosePositionY;
     }
 
     u16 MouthType() const
     {
-        return m_MouthFlag >> 11;
+        return m_MouthType;
     }
 
     u16 MouthColor() const
     {
-        return m_MouthFlag >> 9 & 3;
+        return m_MouthColor;
     }
 
     u16 MouthScale() const
     {
-        return m_MouthFlag >> 5 & 0xF;
+        return m_MouthScale;
     }
 
     u16 MouthPosition() const
     {
-        return m_MouthFlag & 0x1F;
+        return m_MouthPositionY;
     }
 
     u16 MustacheType() const
     {
-        return m_BeardFlag >> 14;
+        return m_MustacheType;
     }
 
     u16 BeardType() const
     {
-        return m_BeardFlag >> 12 & 3;
+        return m_BeardType;
     }
 
     u16 BeardColor() const
     {
-        return m_BeardFlag >> 9 & 7;
+        return m_BeardColor;
     }
 
     u16 MustacheScale() const
     {
-        return m_BeardFlag >> 5 & 0xF;
+        return m_MustacheScale;
     }
 
     u16 MustachePosition() const
     {
-        return m_BeardFlag & 0x1F;
+        return m_MustachePositionY;
     }
 
     u16 GlassType() const
     {
-        return m_GlassFlag >> 12;
+        return m_GlassType;
     }
 
     u16 GlassColor() const
     {
-        return m_GlassFlag >> 9 & 7;
+        return m_GlassColor;
     }
 
     u16 GlassScale() const
     {
-        return m_GlassFlag >> 5 & 0xF;
+        return m_GlassScale;
     }
 
     u16 GlassPosition() const
     {
-        return m_GlassFlag & 0x1F;
+        return m_GlassPositionY;
     }
 
     u16 MoleType() const
     {
-        return m_MoleFlag >> 15;
+        return m_MoleType;
     }
 
     u16 MoleScale() const
     {
-        return m_MoleFlag >> 11 & 0xF;
+        return m_MoleScale;
     }
 
     u16 MolePositionY() const
     {
-        return m_MoleFlag >> 6 & 0x1F;
+        return m_MolePositionY;
     }
 
     u16 MolePositionX() const
     {
-        return m_MoleFlag >> 1 & 0x1F;
+        return m_MolePositionX;
     }
 
 public:
-    u16 m_Flag;
+    u16                     : 1;
+    u16 m_Gender            : 1;
+    u16 m_BirthMonth        : 4;
+    u16 m_BirthDay          : 5;
+    u16 m_FavoriteColor     : 4;
+    u16 m_FavoriteMii       : 1;
+
     u16 m_Name[10];
     u8  m_Height;
     u8  m_Build;
     u8  m_CreatorID[4];
     u8  m_SystemID[4];
-    u16 m_FaceFlag;
-    u16 m_HairFlag;
-    u16 m_EyebrowFlag[2];
-    u16 m_EyeFlag[2];
-    u16 m_NoseFlag;
-    u16 m_MouthFlag;
-    u16 m_GlassFlag;
-    u16 m_BeardFlag;
-    u16 m_MoleFlag;
+
+    u16 m_FaceType          : 3;
+    u16 m_FacelineColor     : 3;
+    u16 m_FaceLineAndMake   : 4;
+    u16                     : 3;
+    u16 m_LocalOnly         : 1;
+    u16                     : 2;
+
+    u16 m_HairType          : 7;
+    u16 m_HairColor         : 3;
+    u16 m_HairDir           : 1;
+    u16                     : 5;
+
+    u16 m_EyebrowType       : 5;
+    u16 m_EyebrowRotate     : 5;
+    u16                     : 6;
+    u16 m_EyebrowColor      : 3;
+    u16 m_EyebrowScale      : 4;
+    u16 m_EyebrowPositionY  : 5;
+    u16 m_EyebrowSpacingX   : 4;
+
+    u16 m_EyeType           : 6;
+    u16 m_EyeRotate         : 5;
+    u16 m_EyePositionY      : 5;
+    u16 m_EyeColor          : 3;
+    u16 m_EyeScale          : 4;
+    u16 m_EyeSpacingX       : 4;
+    u16 m_EyeUnknown        : 5;
+
+    u16 m_NoseType          : 4;
+    u16 m_NoseScale         : 4;
+    u16 m_NosePositionY     : 5;
+    u16 m_NoseUnknown       : 3;
+
+    u16 m_MouthType         : 5;
+    u16 m_MouthColor        : 2;
+    u16 m_MouthScale        : 4;
+    u16 m_MouthPositionY    : 5;
+
+    u16 m_GlassType         : 4;
+    u16 m_GlassColor        : 3;
+    u16 m_GlassScale        : 4;
+    u16 m_GlassPositionY    : 5;
+
+    u16 m_MustacheType      : 2;
+    u16 m_BeardType         : 2;
+    u16 m_BeardColor        : 3;
+    u16 m_MustacheScale     : 4;
+    u16 m_MustachePositionY : 5;
+
+    u16 m_MoleType          : 1;
+    u16 m_MoleScale         : 4;
+    u16 m_MolePositionY     : 5;
+    u16 m_MolePositionX     : 5;
+    u16                     : 1;
 };
 NN_STATIC_ASSERT_IS_POD(FFLiMiiDataCoreRFL);
 NN_STATIC_ASSERT(sizeof(FFLiMiiDataCoreRFL) == 0x36);

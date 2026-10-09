@@ -16,18 +16,17 @@ u32 FFLiGetBufferRenderTexture(u32 width, u32 height, GX2SurfaceFormat format, u
 {
     GX2Texture texture;
     GX2InitTexture(&texture, width, height, 0, numMips, format, GX2_SURFACE_DIM_2D);
-    return (
-        texture.surface.alignment +
-        FFLiRoundUp(texture.surface.imageSize, texture.surface.alignment) +
-        FFLiRoundUp(texture.surface.mipSize, texture.surface.alignment)
-    );
+    u32 size = texture.surface.alignment;
+    size += FFLiRoundUp(texture.surface.imageSize, texture.surface.alignment);
+    size += FFLiRoundUp(texture.surface.mipSize, texture.surface.alignment);
+    return size;
 }
 
 u32 FFLiGetDepthBufferSizeRenderTexture(u32 width, u32 height)
 {
     GX2DepthBuffer depthBuffer;
     GX2InitDepthBuffer(&depthBuffer, width, height, GX2_SURFACE_FORMAT_TCD_R16_UNORM, GX2_AA_MODE_1X);
-    return depthBuffer.surface.imageSize + depthBuffer.surface.alignment;
+    return depthBuffer.surface.alignment + depthBuffer.surface.imageSize;
 }
 
 void FFLiInitRenderTexture(FFLiRenderTexture* pRenderTexture, u32 width, u32 height, GX2SurfaceFormat format, u32 numMips, FFLiBufferAllocator* pAllocator)
@@ -36,11 +35,13 @@ void FFLiInitRenderTexture(FFLiRenderTexture* pRenderTexture, u32 width, u32 hei
 
     GX2InitTexture(&pRenderTexture->gx2Texture, width, height, 0, numMips, format, GX2_SURFACE_DIM_2D);
 
-    void* imagePtr = FFLiAllocateBufferAllocator(pAllocator, pRenderTexture->gx2Texture.surface.imageSize, pRenderTexture->gx2Texture.surface.alignment);
+    const GX2Surface& surface = pRenderTexture->gx2Texture.surface;
+
+    void* imagePtr = FFLiAllocateBufferAllocator(pAllocator, surface.imageSize, surface.alignment);
 
     void* mipPtr =
-        pRenderTexture->gx2Texture.surface.mipSize != 0
-            ? FFLiAllocateBufferAllocator(pAllocator, pRenderTexture->gx2Texture.surface.mipSize, pRenderTexture->gx2Texture.surface.alignment)
+        surface.mipSize != 0
+            ? FFLiAllocateBufferAllocator(pAllocator, surface.mipSize, surface.alignment)
             : NULL;
 
     GX2InitTexturePtrs(&pRenderTexture->gx2Texture, imagePtr, mipPtr);
@@ -78,7 +79,7 @@ void FFLiSetupRenderTexture(GX2Texture* pGX2Texture, const FFLColor* pClearColor
     GX2CalcSurfaceSizeAndAlignment(&colorBuffer.surface);
     GX2InitColorBufferRegs(&colorBuffer);
 
-    colorBuffer.surface.imagePtr = pGX2Texture->surface.imagePtr;
+    GX2InitColorBufferPtr(&colorBuffer, pGX2Texture->surface.imagePtr);
     colorBuffer.surface.mipPtr = pGX2Texture->surface.mipPtr;
     GX2SetColorBuffer(&colorBuffer, GX2_RENDER_TARGET_0);
 
@@ -86,7 +87,7 @@ void FFLiSetupRenderTexture(GX2Texture* pGX2Texture, const FFLColor* pClearColor
     {
         GX2InitDepthBuffer(&depthBuffer, pGX2Texture->surface.width, pGX2Texture->surface.height, GX2_SURFACE_FORMAT_TCD_R16_UNORM, GX2_AA_MODE_1X);
 
-        depthBuffer.surface.imagePtr = FFLiRoundUpPtr(pDepthBuffer, depthBuffer.surface.alignment);
+        GX2InitDepthBufferPtr(&depthBuffer, FFLiRoundUpPtr(pDepthBuffer, depthBuffer.surface.alignment));
         GX2SetDepthBuffer(&depthBuffer);
     }
     else
@@ -121,7 +122,8 @@ void FFLiSetupRenderTexture(GX2Texture* pGX2Texture, const FFLColor* pClearColor
 
 void FFLiFlushRenderTexture(FFLiRenderTexture* pRenderTexture)
 {
-    FFLiInvalidate(GX2_INVALIDATE_COLOR_BUFFER, pRenderTexture->gx2Texture.surface.imagePtr, pRenderTexture->gx2Texture.surface.imageSize);
-    if (pRenderTexture->gx2Texture.surface.mipPtr != NULL)
-        FFLiInvalidate(GX2_INVALIDATE_COLOR_BUFFER, pRenderTexture->gx2Texture.surface.mipPtr, pRenderTexture->gx2Texture.surface.mipSize);
+    const GX2Surface& surface = pRenderTexture->gx2Texture.surface;
+    FFLiInvalidate(GX2_INVALIDATE_COLOR_BUFFER, surface.imagePtr, surface.imageSize);
+    if (surface.mipPtr != NULL)
+        FFLiInvalidate(GX2_INVALIDATE_COLOR_BUFFER, surface.mipPtr, surface.mipSize);
 }

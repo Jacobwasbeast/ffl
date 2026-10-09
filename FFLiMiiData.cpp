@@ -8,19 +8,6 @@
 
 #include <cstring>
 
-static inline bool IsInvalidCharCode(u16 c)
-{
-    if (c == L'%'                       ||
-        c == L'@'                       ||
-        c == L'\\'                      ||
-        c == 0xFF20                     ||  // 0xFF20 == L'＠', but I can't get it working with GHS
-        (0xE000 <= c && c <= 0xF8FF))       // Private-use characters
-    {
-        return true;
-    }
-    return false;
-}
-
 namespace {
 
 const s32* RflToFaceLineAndMake(s32 type);
@@ -116,9 +103,11 @@ bool FFLiMiiDataCoreRFL2CharInfo(FFLiCharInfo* pCharInfo, const FFLiMiiDataCoreR
 
     std::memcpy(pCharInfo->name, miiDataCoreRFL.Name(), sizeof(u16) * 10);
     pCharInfo->name[10] = L'\0';
-    bool nameReplaced = replaceName ? ReplaceNameFromRFL(pCharInfo->name, 10, 5) : false;
+    bool nameReplaced = false;
+    if (replaceName)
+        nameReplaced = ReplaceNameFromRFL(pCharInfo->name, 10, 5);
 
-    std::memset(&pCharInfo->creatorID, 0, sizeof(FFLCreateID));                         // Create ID is cleared here...
+    std::memset(&pCharInfo->creatorID, 0, sizeof(FFLCreateID));
 
     pCharInfo->birthMonth = miiDataCoreRFL.BirthMonth();
     pCharInfo->birthDay = miiDataCoreRFL.BirthDay();
@@ -128,10 +117,12 @@ bool FFLiMiiDataCoreRFL2CharInfo(FFLiCharInfo* pCharInfo, const FFLiMiiDataCoreR
     else
         std::memset(pCharInfo->creatorName, 0, sizeof(u16) * (10 + 1));
     pCharInfo->creatorName[10] = L'\0';
-    bool creatorNameReplaced = replaceName ? ReplaceNameFromRFL(pCharInfo->creatorName, 10, 0) : false;
+    bool creatorNameReplaced = false;
+    if (replaceName)
+        creatorNameReplaced = ReplaceNameFromRFL(pCharInfo->creatorName, 10, 0);
 
     bool isNTR = FFLiIsNTRMiiID(&pCharInfo->creatorID);
-    pCharInfo->birthPlatform = isNTR ? FFL_BIRTH_PLATFORM_NTR : FFL_BIRTH_PLATFORM_WII; //  ... yet they still check it LOL
+    pCharInfo->birthPlatform = isNTR ? FFL_BIRTH_PLATFORM_NTR : FFL_BIRTH_PLATFORM_WII;
 
     pCharInfo->_112 = 0;
 
@@ -376,11 +367,19 @@ bool VerifyNameFromRFL(u16* s, s32 size, s32 maxNumberCharCount)
 
     for (s32 i = 0; i < size; i++)
     {
-        u16 c = s[i];
-        if (c == L'\0')
-            break;
+        switch (s[i])
+        {
+        case L'\0':
+            return true;
+        case L'%':
+        case L'@':
+        case L'\\':
+        case 0xFF20:
+            return false;
+        }
 
-        if (IsInvalidCharCode(c))
+        u16 c = s[i];
+        if (0xE000 <= c && c <= 0xF8FF)
             return false;
 
         if (FFLiIsNumberCharCode(c) && ++numberCharCount > maxNumberCharCount)

@@ -20,7 +20,7 @@ T FFLiMax(T a, T b)
 template <typename T>
 bool FFLiRange(T min, T max, T value)
 {
-    return min <= value && value <= max;
+    return value >= min && value <= max;
 }
 
 u32 FFLiRoundUp(u32 value, u32 alignment);

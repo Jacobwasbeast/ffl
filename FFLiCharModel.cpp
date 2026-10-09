@@ -20,8 +20,7 @@ FFLResult FFLiInitCharModelCPUStep(FFLiCharModel* pModel, const FFLCharModelSour
     if (!pManager->CanInitCharModel())
         return FFL_RESULT_ERROR;
 
-    FFLiCharModelCreator creator(&pManager->GetCharModelCreateParam(), pManager);
-    return creator.ExecuteCPUStep(pModel, pSource, pDesc, pBuffer);
+    return FFLiCharModelCreator(&pManager->GetCharModelCreateParam(), pManager).ExecuteCPUStep(pModel, pSource, pDesc, pBuffer);
 }
 
 u32 FFLiGetTempBufferSizeCharModel(const FFLCharModelDesc* pDesc)
@@ -38,8 +37,7 @@ void FFLiInitCharModelGPUStep(FFLiCharModel* pModel, const FFLShaderCallback* pC
         return;
 
     FFLiManager* pManager = FFLiManager::GetInstance();
-    FFLiCharModelCreator creator(&pManager->GetCharModelCreateParam(), pManager);
-    return creator.ExecuteGPUStep(pModel, pCallback);
+    FFLiCharModelCreator(&pManager->GetCharModelCreateParam(), pManager).ExecuteGPUStep(pModel, pCallback);
 }
 
 void FFLiDeleteCharModel(FFLiCharModel* pModel)
@@ -99,16 +97,17 @@ struct FFLiShapeTypeInfo
     FFLiShapeType   capIndex;
 };
 
-static const FFLiShapeTypeInfo SHAPE_TYPE_INFO_0 = {
-    FFLI_SHAPE_TYPE_OPA_HAIR_1,
-    FFLI_SHAPE_TYPE_OPA_FOREHEAD_1,
-    FFLI_SHAPE_TYPE_OPA_CAP_1
-};
-
-static const FFLiShapeTypeInfo SHAPE_TYPE_INFO_1 = {
-    FFLI_SHAPE_TYPE_OPA_HAIR_2,
-    FFLI_SHAPE_TYPE_OPA_FOREHEAD_2,
-    FFLI_SHAPE_TYPE_OPA_CAP_2
+const FFLiShapeTypeInfo SHAPE_TYPE_INFO[2] = {
+    {
+        FFLI_SHAPE_TYPE_OPA_HAIR_1,
+        FFLI_SHAPE_TYPE_OPA_FOREHEAD_1,
+        FFLI_SHAPE_TYPE_OPA_CAP_1
+    },
+    {
+        FFLI_SHAPE_TYPE_OPA_HAIR_2,
+        FFLI_SHAPE_TYPE_OPA_FOREHEAD_2,
+        FFLI_SHAPE_TYPE_OPA_CAP_2
+    }
 };
 
 const FFLiShapeTypeInfo& GetShapeTypeInfo(FFLModelType type)
@@ -116,36 +115,30 @@ const FFLiShapeTypeInfo& GetShapeTypeInfo(FFLModelType type)
     switch (type)
     {
     case FFL_MODEL_TYPE_0:
-        return SHAPE_TYPE_INFO_0;
+        return SHAPE_TYPE_INFO[0];
     case FFL_MODEL_TYPE_1:
-        return SHAPE_TYPE_INFO_1;
+        return SHAPE_TYPE_INFO[1];
     }
 
-    return SHAPE_TYPE_INFO_0;
+    return SHAPE_TYPE_INFO[0];
 }
 
 }
 
 const FFLDrawParam* FFLiGetDrawParamOpaForeheadFromCharModel(const FFLiCharModel* pModel)
 {
-    const FFLDrawParam* pDrawParam = NULL;
-    if (pModel->modelType != FFL_MODEL_TYPE_2)
-    {
-        const FFLDrawParam* drawParam = pModel->drawParam;
-        pDrawParam = &(drawParam[GetShapeTypeInfo(pModel->modelType).foreheadIndex]);
-    }
-    return pDrawParam;
+    return
+        pModel->modelType == FFL_MODEL_TYPE_2
+            ? NULL
+            : &(pModel->drawParam[GetShapeTypeInfo(pModel->modelType).foreheadIndex]);
 }
 
 const FFLDrawParam* FFLiGetDrawParamOpaHairFromCharModel(const FFLiCharModel* pModel)
 {
-    const FFLDrawParam* pDrawParam = NULL;
-    if (pModel->modelType != FFL_MODEL_TYPE_2)
-    {
-        const FFLDrawParam* drawParam = pModel->drawParam;
-        pDrawParam = &(drawParam[GetShapeTypeInfo(pModel->modelType).hairIndex]);
-    }
-    return pDrawParam;
+    return
+        pModel->modelType == FFL_MODEL_TYPE_2
+            ? NULL
+            : &(pModel->drawParam[GetShapeTypeInfo(pModel->modelType).hairIndex]);
 }
 
 const FFLDrawParam* FFLiGetDrawParamOpaCapFromCharModel(const FFLiCharModel* pModel)
@@ -153,8 +146,7 @@ const FFLDrawParam* FFLiGetDrawParamOpaCapFromCharModel(const FFLiCharModel* pMo
     if (pModel->modelType == FFL_MODEL_TYPE_2 || pModel->pCapTexture == NULL)
         return NULL;
 
-    const FFLDrawParam* drawParam = pModel->drawParam;
-    return &(drawParam[GetShapeTypeInfo(pModel->modelType).capIndex]);
+    return &(pModel->drawParam[GetShapeTypeInfo(pModel->modelType).capIndex]);
 }
 
 const FFLDrawParam* FFLiGetDrawParamXluMaskFromCharModel(const FFLiCharModel* pModel)

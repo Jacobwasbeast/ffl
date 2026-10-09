@@ -32,18 +32,16 @@ union F32BitCast
     u32 u;
     struct
     {
-        u32 sign        : 1;    // (MSB)
+        u32 sign        : 1;
         u32 exponent    : 8;
-        u32 mantissa    : 23;   // (LSB)
+        u32 mantissa    : 23;
     };
 };
 NN_STATIC_ASSERT(sizeof(F32BitCast) == 4);
 
-static bool IsNaN(f32 value)
+static inline bool IsNaN(f32 value)
 {
     F32BitCast x = { value };
-    // Basically:
-    // return x.exponent == 0xff && x.mantissa > 0;
     return (x.u << 1) > 0xff000000;
 }
 
@@ -59,106 +57,6 @@ FFLiCharModelCreator::~FFLiCharModelCreator()
 
 namespace {
 
-FFLModelType ModelFlagToModelType(u32 flag);
-FFLResult InitShapes(FFLiCharModel* pModel, FFLiResourceLoader * pResLoader, FFLiBufferAllocator* pAllocator, const FFLiCoordinate* pCoordinate);
-FFLResult InitTextures(FFLiCharModel* pModel, FFLiResourceLoader* pResLoader, FFLiBufferAllocator* pAllocator);
-void AdjustPartsTransform(FFLiCharModel* pModel, const FFLiCoordinate* pCoordinate);
-void SetupDrawParam(FFLiCharModel* pModel);
-
-}
-
-FFLResult FFLiCharModelCreator::ExecuteCPUStep(FFLiCharModel* pModel, const FFLCharModelSource* pSource, const FFLCharModelDesc* pDesc, FFLCharModelBuffer* pBuffer)
-{
-    if (!FFLiCharModelCreateParam::CheckModelDesc(pDesc, m_pManager->GetCompressor() != NULL))
-        return FFL_RESULT_ERROR;
-
-    std::memset(pModel, 0, sizeof(FFLiCharModel));
-
-    pModel->charModelDesc = *pDesc;
-    pModel->pBuffer = pBuffer->pBuffer;
-    pModel->bufferSize = pBuffer->bufferSize;
-    pModel->modelType = ModelFlagToModelType(pModel->charModelDesc.modelFlag);
-
-    FFLResult result = m_pCharModelCreateParam->GetDatabaseManager()->PickupCharInfo(&pModel->charInfo, pSource->dataSource, pSource->pBuffer, pSource->index);
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    u32 resolution = FFLiCharModelCreateParam::GetResolution(pDesc->resolution);
-    bool isEnabledMipMap = FFLiCharModelCreateParam::IsEnabledMipMap(pDesc->resolution);
-
-    FFLiBufferAllocator tempAllocator;
-    FFLiBufferAllocator allocator;
-
-    allocator.Init(pBuffer->pBuffer, pBuffer->bufferSize);
-    tempAllocator.Init(pBuffer->pTempBuffer, pBuffer->tempBufferSize);
-
-    FFLResourceType resourceType = pDesc->resourceType;
-
-    if (!m_pCharModelCreateParam->GetResourceManager()->IsValid(resourceType))
-        return FFL_RESULT_ERROR;
-
-    FFLiResourceLoaderBuffer resLoaderBuffer(m_pCharModelCreateParam->GetResourceManager(), &tempAllocator, resourceType);
-    FFLiResourceLoader resLoader(m_pCharModelCreateParam->GetResourceManager(), &resLoaderBuffer, resourceType);
-
-    pModel->pTextureTempObject = static_cast<FFLiTextureTempObject*>(tempAllocator.Allocate(sizeof(FFLiTextureTempObject), 4));
-
-    FFLiRenderTextureBuffer renderTextureBuffer;
-    SetupRenderTextureBuffer(renderTextureBuffer, pDesc, &tempAllocator);
-
-    pModel->expression = FFLiInitMaskTextures(&pModel->maskTextures, pDesc->expressionFlag, resolution, isEnabledMipMap, pDesc->compressTexture, &allocator);
-
-    bool compressUseUB = false;
-    if (m_pManager->GetCompressor() != NULL)
-        compressUseUB = m_pManager->GetCompressor()->UseUB();
-
-    result = FFLiInitTempObjectMaskTextures(&pModel->pTextureTempObject->maskTextures, &pModel->maskTextures, &pModel->charInfo, pDesc->expressionFlag, resolution, isEnabledMipMap, pDesc->compressTexture, compressUseUB, &resLoader, &tempAllocator, &renderTextureBuffer);
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    FFLiInitFacelineTexture(&pModel->facelineRenderTexture, resolution, isEnabledMipMap, pDesc->compressTexture, &allocator);
-
-    result = FFLiInitTempObjectFacelineTexture(&pModel->pTextureTempObject->facelineTexture, &pModel->facelineRenderTexture, &pModel->charInfo, resolution, isEnabledMipMap, pDesc->compressTexture, compressUseUB, &resLoader, &tempAllocator, &renderTextureBuffer);
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    result = InitShapes(pModel, &resLoader, &allocator, &m_pCharModelCreateParam->GetCoordinate());
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    result = InitTextures(pModel, &resLoader, &allocator);
-    if (result != FFL_RESULT_OK)
-        return result;
-
-    AdjustPartsTransform(pModel, &m_pCharModelCreateParam->GetCoordinate());
-    SetupDrawParam(pModel);
-
-    return FFL_RESULT_OK;
-}
-
-void FFLiCharModelCreator::ExecuteGPUStep(FFLiCharModel* pModel, const FFLShaderCallback* pCallback)
-{
-    u32 resolution = FFLiCharModelCreateParam::GetResolution(pModel->charModelDesc.resolution);
-    bool isEnabledMipMap = FFLiCharModelCreateParam::IsEnabledMipMap(pModel->charModelDesc.resolution);
-
-    FFLiShaderCallback shaderCallback;
-    shaderCallback.Set(pCallback);
-
-    shaderCallback.CallSetContextState();
-
-    Mat44 mat;
-    MAT44Identity(&mat);
-    shaderCallback.CallSetMatrix(mat);
-
-    FFLiRenderMaskTextures(&pModel->maskTextures, &pModel->pTextureTempObject->maskTextures, &shaderCallback, &m_pManager->GetCopySurface(), &m_pManager->GetCompressor()->GetCompressorImplBC3());
-    FFLiRenderFacelineTexture(&pModel->facelineRenderTexture, &pModel->charInfo, resolution, &pModel->pTextureTempObject->facelineTexture, &shaderCallback, &m_pManager->GetCopySurface(), &m_pManager->GetCompressor()->GetCompressorImplBC1());
-
-    AfterExecuteGPUStep(pModel);
-
-    pModel->pTextureTempObject = NULL;
-}
-
-namespace {
-
 FFLModelType ModelFlagToModelType(u32 flag)
 {
     for (u32 i = 0; i < FFL_MODEL_TYPE_MAX; ++i)
@@ -167,6 +65,21 @@ FFLModelType ModelFlagToModelType(u32 flag)
 
     return FFL_MODEL_TYPE_0;
 }
+
+}
+
+void FFLiCharModelCreator::SetupRenderTextureBuffer(FFLiRenderTextureBuffer& renderTextureBuffer, const FFLCharModelDesc* pDesc, FFLiBufferAllocator* pAllocator) const
+{
+    std::memset(&renderTextureBuffer, 0, sizeof(FFLiRenderTextureBuffer));
+
+    if (pDesc->compressTexture)
+    {
+        renderTextureBuffer.size = m_pCharModelCreateParam->GetCompressBufferSize(pDesc);
+        renderTextureBuffer.pBuffer = pAllocator->Allocate(renderTextureBuffer.size);
+    }
+}
+
+namespace {
 
 FFLiShapeType ConvertShapePartsTypeToShapeType(FFLiShapePartsType partsType)
 {
@@ -253,7 +166,8 @@ FFLResult InitShape(FFLiCharModel* pModel, FFLiShapePartsType partsType, u32 ind
     if (result != FFL_RESULT_OK)
         return result;
 
-    FFLiAdjustShape(pDrawParam, &boundingBox, scaleX, scaleY, pTranslate, flipX, pCoordinate, partsType, pModel->charModelDesc.modelFlag >> 3 & 1);
+    bool limitNoseScaleZ = pModel->charModelDesc.modelFlag >> 3 & 1;
+    FFLiAdjustShape(pDrawParam, &boundingBox, scaleX, scaleY, pTranslate, flipX, pCoordinate, partsType, limitNoseScaleZ);
     CalcluateBoundingBox(pModel->boundingBox, &boundingBox, partsType);
     return FFL_RESULT_OK;
 }
@@ -272,18 +186,16 @@ FFLResult InitShapes(FFLiCharModel* pModel, FFLiResourceLoader * pResLoader, FFL
         bool modelType0Enable = modelFlag & 1 << FFL_MODEL_TYPE_0;
         bool modelType1Enable = modelFlag & 1 << FFL_MODEL_TYPE_1;
 
-        bool flipHair = pModel->charInfo.parts.hairDir > 0;
+        bool flipHair = pModel->charInfo.parts.hairDir != 0;
 
-        struct
+        struct ShapePartsInfo
         {
             bool                enable;
             FFLiShapePartsType  partsType;
         } modelTypeShapePartsInfo[2 * 3] = {
-            // FFL_MODEL_TYPE_0
             { false, FFLI_SHAPE_PARTS_TYPE_HAIR_1 },
             { false, FFLI_SHAPE_PARTS_TYPE_CAP_1 },
             { false, FFLI_SHAPE_PARTS_TYPE_FOREHEAD_1 },
-            // FFL_MODEL_TYPE_1
             { false, FFLI_SHAPE_PARTS_TYPE_HAIR_2 },
             { false, FFLI_SHAPE_PARTS_TYPE_CAP_2 },
             { false, FFLI_SHAPE_PARTS_TYPE_FOREHEAD_2 }
@@ -299,9 +211,10 @@ FFLResult InitShapes(FFLiCharModel* pModel, FFLiResourceLoader * pResLoader, FFL
 
         for (u32 i = 0; i < 2 * 3; i++)
         {
-            if (modelTypeShapePartsInfo[i].enable)
+            const ShapePartsInfo& info = modelTypeShapePartsInfo[i];
+            if (info.enable)
             {
-                result = InitShape(pModel, modelTypeShapePartsInfo[i].partsType, pModel->charInfo.parts.hairType, 1.0f, 1.0f, &pModel->hairPos, flipHair, pResLoader, pAllocator, pCoordinate);
+                result = InitShape(pModel, info.partsType, pModel->charInfo.parts.hairType, 1.0f, 1.0f, &pModel->hairPos, flipHair, pResLoader, pAllocator, pCoordinate);
                 if (result != FFL_RESULT_OK)
                     return result;
             }
@@ -337,7 +250,7 @@ FFLResult InitShapes(FFLiCharModel* pModel, FFLiResourceLoader * pResLoader, FFL
     if (result != FFL_RESULT_OK)
         return result;
 
-    if (pModel->charInfo.parts.glassType > 0)
+    if (pModel->charInfo.parts.glassType != 0)
     {
         f32 glassScale = pModel->charInfo.parts.glassScale * 0.15f + 0.4f;
 
@@ -373,7 +286,7 @@ FFLResult InitTextures(FFLiCharModel* pModel, FFLiResourceLoader* pResLoader, FF
             return result;
     }
 
-    if (pModel->charInfo.parts.glassType > 0)
+    if (pModel->charInfo.parts.glassType != 0)
     {
         result = FFLiLoadTextureWithAllocate(&pModel->pGlassTexture, FFLI_TEXTURE_PARTS_TYPE_GLASS, pModel->charInfo.parts.glassType, pResLoader, pAllocator);
         if (result != FFL_RESULT_OK)
@@ -392,17 +305,19 @@ void AddVec3(FFLVec3* pDst, FFLVec3 vec)
 
 void AdjustPartsTransform(FFLiCharModel* pModel, const FFLiCoordinate* pCoordinate)
 {
-    AddVec3(&pModel->partsTransform._18, pModel->hairPos);
-    AddVec3(&pModel->partsTransform._30, pModel->hairPos);
-    AddVec3(&pModel->partsTransform._48, pModel->hairPos);
+    FFLPartsTransform& partsTransform = pModel->partsTransform;
+    const FFLVec3& hairPos = pModel->hairPos;
+    AddVec3(&partsTransform._18, hairPos);
+    AddVec3(&partsTransform._30, hairPos);
+    AddVec3(&partsTransform._48, hairPos);
 
-    pCoordinate->Transform              (&pModel->partsTransform._0);
-    pCoordinate->TransformWithoutScale  (&pModel->partsTransform._c);
-    pCoordinate->Transform              (&pModel->partsTransform._18);
-    pCoordinate->TransformWithoutScale  (&pModel->partsTransform._24);
-    pCoordinate->Transform              (&pModel->partsTransform._30);
-    pCoordinate->TransformWithoutScale  (&pModel->partsTransform._3c);
-    pCoordinate->Transform              (&pModel->partsTransform._48);
+    pCoordinate->Transform(&partsTransform._0);
+    pCoordinate->TransformWithoutScale(&partsTransform._c);
+    pCoordinate->Transform(&partsTransform._18);
+    pCoordinate->TransformWithoutScale(&partsTransform._24);
+    pCoordinate->Transform(&partsTransform._30);
+    pCoordinate->TransformWithoutScale(&partsTransform._3c);
+    pCoordinate->Transform(&partsTransform._48);
 }
 
 struct FFLiShapeTypeInfo
@@ -412,16 +327,17 @@ struct FFLiShapeTypeInfo
     FFLiShapeType   capIndex;
 };
 
-static const FFLiShapeTypeInfo SHAPE_TYPE_INFO_0 = {
-    FFLI_SHAPE_TYPE_OPA_HAIR_1,
-    FFLI_SHAPE_TYPE_OPA_FOREHEAD_1,
-    FFLI_SHAPE_TYPE_OPA_CAP_1
-};
-
-static const FFLiShapeTypeInfo SHAPE_TYPE_INFO_1 = {
-    FFLI_SHAPE_TYPE_OPA_HAIR_2,
-    FFLI_SHAPE_TYPE_OPA_FOREHEAD_2,
-    FFLI_SHAPE_TYPE_OPA_CAP_2
+const FFLiShapeTypeInfo SHAPE_TYPE_INFO[2] = {
+    {
+        FFLI_SHAPE_TYPE_OPA_HAIR_1,
+        FFLI_SHAPE_TYPE_OPA_FOREHEAD_1,
+        FFLI_SHAPE_TYPE_OPA_CAP_1
+    },
+    {
+        FFLI_SHAPE_TYPE_OPA_HAIR_2,
+        FFLI_SHAPE_TYPE_OPA_FOREHEAD_2,
+        FFLI_SHAPE_TYPE_OPA_CAP_2
+    }
 };
 
 const FFLiShapeTypeInfo& GetShapeTypeInfo(FFLModelType type)
@@ -429,15 +345,15 @@ const FFLiShapeTypeInfo& GetShapeTypeInfo(FFLModelType type)
     switch (type)
     {
     case FFL_MODEL_TYPE_0:
-        return SHAPE_TYPE_INFO_0;
+        return SHAPE_TYPE_INFO[0];
     case FFL_MODEL_TYPE_1:
-        return SHAPE_TYPE_INFO_1;
+        return SHAPE_TYPE_INFO[1];
     }
 
-    return SHAPE_TYPE_INFO_0;
+    return SHAPE_TYPE_INFO[0];
 }
 
-static const FFLModelType MODEL_TYPE[2] = {
+const FFLModelType MODEL_TYPE[2] = {
     FFL_MODEL_TYPE_0,
     FFL_MODEL_TYPE_1
 };
@@ -445,6 +361,7 @@ static const FFLModelType MODEL_TYPE[2] = {
 void SetupDrawParam(FFLiCharModel* pModel)
 {
     FFLCullMode hairCullMode = FFL_CULL_MODE_BACK;
+    FFLDrawParam* drawParam = pModel->drawParam;
 
     pModel->drawParam[FFLI_SHAPE_TYPE_OPA_FACELINE].cullMode = FFL_CULL_MODE_BACK;
     FFLiInitModulateShapeFaceline(&pModel->drawParam[FFLI_SHAPE_TYPE_OPA_FACELINE].modulateParam, pModel->facelineRenderTexture.gx2Texture);
@@ -455,27 +372,28 @@ void SetupDrawParam(FFLiCharModel* pModel)
     pModel->drawParam[FFLI_SHAPE_TYPE_OPA_NOSE].cullMode = FFL_CULL_MODE_BACK;
     FFLiInitModulateShapeNose(&pModel->drawParam[FFLI_SHAPE_TYPE_OPA_NOSE].modulateParam, pModel->charInfo.parts.facelineColor);
 
-    if (pModel->charInfo.parts.hairDir > 0)
+    if (pModel->charInfo.parts.hairDir != 0)
         hairCullMode = FFL_CULL_MODE_FRONT;
 
     for (u32 i = 0; i < 2; i++)
     {
-        if (pModel->charModelDesc.modelFlag & 1 << MODEL_TYPE[i])
+        FFLModelType modelType = MODEL_TYPE[i];
+        if (pModel->charModelDesc.modelFlag & 1 << modelType)
         {
-            const FFLiShapeTypeInfo& shapeTypeInfo = GetShapeTypeInfo(MODEL_TYPE[i]);
+            const FFLiShapeTypeInfo& shapeTypeInfo = GetShapeTypeInfo(modelType);
 
-            FFLDrawParam& drawParamForehead = pModel->drawParam[shapeTypeInfo.foreheadIndex];
+            FFLDrawParam& drawParamForehead = drawParam[shapeTypeInfo.foreheadIndex];
             drawParamForehead.cullMode = hairCullMode;
             FFLiInitModulateShapeForehead(&drawParamForehead.modulateParam, pModel->charInfo.parts.facelineColor);
 
-            FFLDrawParam& drawParamHair = pModel->drawParam[shapeTypeInfo.hairIndex];
+            FFLDrawParam& drawParamHair = drawParam[shapeTypeInfo.hairIndex];
             drawParamHair.cullMode = hairCullMode;
             FFLiInitModulateShapeHair(&drawParamHair.modulateParam, pModel->charInfo.parts.hairColor);
 
             const GX2Texture* pCapTexture = pModel->pCapTexture;
             if (pCapTexture != NULL)
             {
-                FFLDrawParam& drawParamCap = pModel->drawParam[shapeTypeInfo.capIndex];
+                FFLDrawParam& drawParamCap = drawParam[shapeTypeInfo.capIndex];
                 drawParamCap.cullMode = hairCullMode;
                 FFLiInitModulateShapeCap(&drawParamCap.modulateParam, pModel->charInfo.favoriteColor, *pCapTexture);
             }
@@ -504,6 +422,74 @@ void SetupDrawParam(FFLiCharModel* pModel)
     }
 }
 
+}
+
+FFLResult FFLiCharModelCreator::ExecuteCPUStep(FFLiCharModel* pModel, const FFLCharModelSource* pSource, const FFLCharModelDesc* pDesc, FFLCharModelBuffer* pBuffer)
+{
+    if (!FFLiCharModelCreateParam::CheckModelDesc(pDesc, m_pManager->GetCompressor() != NULL))
+        return FFL_RESULT_ERROR;
+
+    std::memset(pModel, 0, sizeof(FFLiCharModel));
+
+    pModel->charModelDesc = *pDesc;
+    pModel->pBuffer = pBuffer->pBuffer;
+    pModel->bufferSize = pBuffer->bufferSize;
+    pModel->modelType = ModelFlagToModelType(pModel->charModelDesc.modelFlag);
+
+    FFLResult result = m_pCharModelCreateParam->GetDatabaseManager()->PickupCharInfo(&pModel->charInfo, pSource->dataSource, pSource->pBuffer, pSource->index);
+    if (result != FFL_RESULT_OK)
+        return result;
+
+    u32 resolution = FFLiCharModelCreateParam::GetResolution(pDesc->resolution);
+    bool isEnabledMipMap = FFLiCharModelCreateParam::IsEnabledMipMap(pDesc->resolution);
+
+    FFLiBufferAllocator tempAllocator;
+    FFLiBufferAllocator allocator;
+
+    allocator.Init(pBuffer->pBuffer, pBuffer->bufferSize);
+    tempAllocator.Init(pBuffer->pTempBuffer, pBuffer->tempBufferSize);
+
+    FFLResourceType resourceType = pDesc->resourceType;
+
+    if (!m_pCharModelCreateParam->GetResourceManager()->IsValid(resourceType))
+        return FFL_RESULT_ERROR;
+
+    FFLiResourceLoaderBuffer resLoaderBuffer(m_pCharModelCreateParam->GetResourceManager(), &tempAllocator, resourceType);
+    FFLiResourceLoader resLoader(m_pCharModelCreateParam->GetResourceManager(), &resLoaderBuffer, resourceType);
+
+    pModel->pTextureTempObject = static_cast<FFLiTextureTempObject*>(tempAllocator.Allocate(sizeof(FFLiTextureTempObject), 4));
+
+    FFLiRenderTextureBuffer renderTextureBuffer;
+    SetupRenderTextureBuffer(renderTextureBuffer, pDesc, &tempAllocator);
+
+    pModel->expression = FFLiInitMaskTextures(&pModel->maskTextures, pDesc->expressionFlag, resolution, isEnabledMipMap, pDesc->compressTexture, &allocator);
+
+    bool compressUseUB = false;
+    if (m_pManager->GetCompressor() != NULL)
+        compressUseUB = m_pManager->GetCompressor()->UseUB();
+
+    result = FFLiInitTempObjectMaskTextures(&pModel->pTextureTempObject->maskTextures, &pModel->maskTextures, &pModel->charInfo, pDesc->expressionFlag, resolution, isEnabledMipMap, pDesc->compressTexture, compressUseUB, &resLoader, &tempAllocator, &renderTextureBuffer);
+    if (result != FFL_RESULT_OK)
+        return result;
+
+    FFLiInitFacelineTexture(&pModel->facelineRenderTexture, resolution, isEnabledMipMap, pDesc->compressTexture, &allocator);
+
+    result = FFLiInitTempObjectFacelineTexture(&pModel->pTextureTempObject->facelineTexture, &pModel->facelineRenderTexture, &pModel->charInfo, resolution, isEnabledMipMap, pDesc->compressTexture, compressUseUB, &resLoader, &tempAllocator, &renderTextureBuffer);
+    if (result != FFL_RESULT_OK)
+        return result;
+
+    result = InitShapes(pModel, &resLoader, &allocator, &m_pCharModelCreateParam->GetCoordinate());
+    if (result != FFL_RESULT_OK)
+        return result;
+
+    result = InitTextures(pModel, &resLoader, &allocator);
+    if (result != FFL_RESULT_OK)
+        return result;
+
+    AdjustPartsTransform(pModel, &m_pCharModelCreateParam->GetCoordinate());
+    SetupDrawParam(pModel);
+
+    return result;
 }
 
 void FFLiCharModelCreator::InvalidateShapes(FFLiCharModel* pModel)
@@ -536,13 +522,24 @@ void FFLiCharModelCreator::AfterExecuteGPUStep(FFLiCharModel* pModel)
     FFLiTempSetContextState(NULL);
 }
 
-void FFLiCharModelCreator::SetupRenderTextureBuffer(FFLiRenderTextureBuffer& renderTextureBuffer, const FFLCharModelDesc* pDesc, FFLiBufferAllocator* pAllocator) const
+void FFLiCharModelCreator::ExecuteGPUStep(FFLiCharModel* pModel, const FFLShaderCallback* pCallback)
 {
-    std::memset(&renderTextureBuffer, 0, sizeof(FFLiRenderTextureBuffer));
+    u32 resolution = FFLiCharModelCreateParam::GetResolution(pModel->charModelDesc.resolution);
+    bool isEnabledMipMap = FFLiCharModelCreateParam::IsEnabledMipMap(pModel->charModelDesc.resolution);
 
-    if (pDesc->compressTexture)
-    {
-        renderTextureBuffer.size = m_pCharModelCreateParam->GetCompressBufferSize(pDesc);
-        renderTextureBuffer.pBuffer = pAllocator->Allocate(renderTextureBuffer.size);
-    }
+    FFLiShaderCallback shaderCallback;
+    shaderCallback.Set(pCallback);
+
+    shaderCallback.CallSetContextState();
+
+    Mat44 mat;
+    MAT44Identity(&mat);
+    shaderCallback.CallSetMatrix(mat);
+
+    FFLiRenderMaskTextures(&pModel->maskTextures, &pModel->pTextureTempObject->maskTextures, &shaderCallback, &m_pManager->GetCopySurface(), &m_pManager->GetCompressor()->GetCompressorImplBC3());
+    FFLiRenderFacelineTexture(&pModel->facelineRenderTexture, &pModel->charInfo, resolution, &pModel->pTextureTempObject->facelineTexture, &shaderCallback, &m_pManager->GetCopySurface(), &m_pManager->GetCompressor()->GetCompressorImplBC1());
+
+    AfterExecuteGPUStep(pModel);
+
+    pModel->pTextureTempObject = NULL;
 }

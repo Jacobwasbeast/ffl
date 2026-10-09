@@ -21,17 +21,17 @@ const void* FFLiGetResourceShapeElement(u32* pSize, const void* pShapeData, FFLi
     switch (elementType)
     {
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION:
-        return GetElement(pSize, pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL:
-        return GetElement(pSize, pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD:
-        return GetElement(pSize, pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TANGENT:
-        return GetElement(pSize, pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TANGENT), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TANGENT));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TANGENT), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TANGENT));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_COLOR:
-        return GetElement(pSize, pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_COLOR), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_COLOR));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_COLOR), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_COLOR));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX:
-        return GetElement(pSize, pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TRANSFORM_HAIR_1:
         if (partsType == FFLI_SHAPE_PARTS_TYPE_HAIR_1)
         {
