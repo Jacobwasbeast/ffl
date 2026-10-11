@@ -17,9 +17,32 @@ FFLiCoordinate::~FFLiCoordinate()
 {
 }
 
+f32 FFLiCoordinate::FlipValue(FFLVec3*, f32 value)
+{
+    return -value;
+};
+
+template <typename ValueType, typename VectorType>
+void FFLiCoordinate::TransformImpl(VectorType* pVec) const
+{
+    ValueType values[3] = { pVec->x, pVec->y, pVec->z };
+
+    ValueType x = m_FlipX ? FlipValue(pVec, values[0]) : values[0];
+    ValueType y = m_FlipY ? FlipValue(pVec, values[1]) : values[1];
+    ValueType z = m_FlipZ ? FlipValue(pVec, values[2]) : values[2];
+
+    values[m_SwizzleX] = x;
+    values[m_SwizzleY] = y;
+    values[m_SwizzleZ] = z;
+
+    pVec->x = values[0];
+    pVec->y = values[1];
+    pVec->z = values[2];
+}
+
 void FFLiCoordinate::Transform(FFLVec3* pVec) const
 {
-    TransformCommon<FFLVec3, f32>(pVec);
+    TransformImpl<f32>(pVec);
     pVec->x *= m_Scale;
     pVec->y *= m_Scale;
     pVec->z *= m_Scale;
@@ -30,34 +53,19 @@ void FFLiCoordinate::Transform(FFLVec4* pVec) const
     Transform((FFLVec3*)pVec);
 }
 
-f32 FFLiCoordinate::FlipValue(FFLVec3*, f32 value)
-{
-    return -value;
-};
-
 f32 FFLiCoordinate::FlipValue(FFLVec4*, f32 value)
 {
     return -value;
 };
-
-void FFLiCoordinate::TransformWithoutScale(FFLVec3* pVec) const
-{
-    TransformCommon<FFLVec3, f32>(pVec);
-}
 
 void FFLiCoordinate::TransformWithoutScale(FFLVec4* pVec) const
 {
     TransformWithoutScale((FFLVec3*)pVec);
 }
 
-void FFLiCoordinate::TransformWithoutScale(FFLiSnorm10_10_10_2* pVec) const
+void FFLiCoordinate::TransformWithoutScale(FFLVec3* pVec) const
 {
-    TransformCommon<FFLiSnorm10_10_10_2, u32>(pVec);
-}
-
-void FFLiCoordinate::TransformWithoutScale(FFLiSnorm8_8_8_8* pVec) const
-{
-    TransformCommon<FFLiSnorm8_8_8_8, s8>(pVec);
+    TransformImpl<f32>(pVec);
 }
 
 u32 FFLiCoordinate::FlipValue(FFLiSnorm10_10_10_2* pVec, u32 value)
@@ -73,12 +81,22 @@ u32 FFLiCoordinate::FlipValue(FFLiSnorm10_10_10_2* pVec, u32 value)
     
 }
 
+void FFLiCoordinate::TransformWithoutScale(FFLiSnorm10_10_10_2* pVec) const
+{
+    TransformImpl<u32>(pVec);
+}
+
 s8 FFLiCoordinate::FlipValue(FFLiSnorm8_8_8_8* pVec, s8 value)
 {
     if (value == -128)
         value = 127;
 
     return -value;
+}
+
+void FFLiCoordinate::TransformWithoutScale(FFLiSnorm8_8_8_8* pVec) const
+{
+    TransformImpl<s8>(pVec);
 }
 
 bool FFLiCoordinate::IsDefault() const

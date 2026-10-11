@@ -14,13 +14,12 @@ namespace {
 
 void ReplaceInvalidNameChar(u16* s, s32 len)
 {
-    for (s32 i = 0; i < len; ++i)
+    for (s32 i = 0; i < len; i++)
     {
-        u16 c = s[i];
-        if (c == L'\0')
+        if (s[i] == L'\0')
             return;
 
-        if (c < L' ' || c == 0x7F)
+        if (s[i] < L' ' || s[i] == 0x7F)
             s[i] = L'?';
     }
 }
@@ -32,13 +31,12 @@ bool IsAvailableFontRegion(FFLFontRegion a, FFLFontRegion b)
 
 void ReplaceNonAsciiNameChar(u16* s, s32 len)
 {
-    for (s32 i = 0; i < len; ++i)
+    for (s32 i = 0; i < len; i++)
     {
-        u16 c = s[i];
-        if (c == L'\0')
+        if (s[i] == L'\0')
             return;
 
-        if (c >= 0x80)
+        if (s[i] >= 0x80)
             s[i] = L'?';
     }
 }
@@ -74,22 +72,16 @@ void FFLiGetAdditionalInfo(FFLAdditionalInfo* pAdditionalInfo, const FFLiCharInf
 
     pAdditionalInfo->gender = pCharInfo->gender;
 
-    s32 birthMonth;
-    u8 birthDay;
-
     if (FFLiVerifyBirthday(pCharInfo->birthMonth, pCharInfo->birthDay))
     {
-        birthMonth = pCharInfo->birthMonth;
-        birthDay = pCharInfo->birthDay;
+        pAdditionalInfo->birthMonth = pCharInfo->birthMonth;
+        pAdditionalInfo->birthDay = pCharInfo->birthDay;
     }
     else
     {
-        birthMonth = 0;
-        birthDay = 0;
+        pAdditionalInfo->birthMonth = 0;
+        pAdditionalInfo->birthDay = 0;
     }
-
-    pAdditionalInfo->birthMonth = birthMonth;
-    pAdditionalInfo->birthDay = birthDay;
 
     pAdditionalInfo->favoriteColor = pCharInfo->favoriteColor;
 
@@ -107,8 +99,8 @@ void FFLiGetAdditionalInfo(FFLAdditionalInfo* pAdditionalInfo, const FFLiCharInf
 
     pAdditionalInfo->ngWord = bool(pCharInfo->ngWord);
     pAdditionalInfo->fontRegion = pCharInfo->fontRegion;
-    pAdditionalInfo->hairDir = pCharInfo->parts.hairDir;
     pAdditionalInfo->faceType = pCharInfo->parts.faceType;
+    pAdditionalInfo->hairDir = pCharInfo->parts.hairDir;
     pAdditionalInfo->hairType = pCharInfo->parts.hairType;
     pAdditionalInfo->facelineColor = FFLiGetFacelineColor(pCharInfo->parts.facelineColor);
 }

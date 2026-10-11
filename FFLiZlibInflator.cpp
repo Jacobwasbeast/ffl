@@ -1,6 +1,50 @@
 #include <nn/ffl/FFLiZlibInflator.h>
 
+#include <nn/ffl/detail/FFLiAllocatorInterface.h>
+#include <nn/ffl/detail/FFLiBufferAllocator.h>
+
 #include <cstring>
+
+namespace {
+
+class InflateAllocator : public FFLiAllocatorInterface
+{
+public:
+    InflateAllocator(void* pBuffer, u32 size)
+    {
+        m_BufferAllocator.Init(pBuffer, size);
+    }
+
+    virtual ~InflateAllocator()
+    {
+    }
+
+    virtual void* Allocate(u32 size);
+    virtual void* Allocate(u32 size, u32 alignment);
+    virtual void Free(void* ptr);
+
+private:
+    FFLiBufferAllocator m_BufferAllocator;
+};
+
+void* InflateAllocator::Allocate(u32 size)
+{
+    return Allocate(size, 4);
+}
+
+void* InflateAllocator::Allocate(u32 size, u32 alignment)
+{
+    void* ptr = NULL;
+    if (m_BufferAllocator.CanAllocate(size, alignment))
+        ptr = m_BufferAllocator.Allocate(size, alignment);
+    return ptr;
+}
+
+void InflateAllocator::Free(void* ptr)
+{
+}
+
+}
 
 FFLiZlibInflator::FFLiZlibInflator(FFLiAllocatorInterface& allocatorInterface, s32 windowBits)
     : m_ZlibAllocator(allocatorInterface)

@@ -32,32 +32,8 @@ public:
     bool IsDefault() const;
 
 private:
-    template <typename T, typename ValueT>
-    void TransformCommon(T* pVec) const
-    {
-        ValueT x = pVec->x;
-        ValueT y = pVec->y;
-        ValueT z = pVec->z;
-
-        ValueT values[3] = { x, y, z };
-
-        if (m_FlipX)
-            x = FlipValue(pVec, x);
-
-        if (m_FlipY)
-            y = FlipValue(pVec, y);
-
-        if (m_FlipZ)
-            z = FlipValue(pVec, z);
-
-        values[m_SwizzleX] = x;
-        values[m_SwizzleY] = y;
-        values[m_SwizzleZ] = z;
-
-        pVec->x = values[0];
-        pVec->y = values[1];
-        pVec->z = values[2];
-    }
+    template <typename ValueType, typename VectorType>
+    void TransformImpl(VectorType* pVec) const;
 
 private:
     u8      m_SwizzleY;

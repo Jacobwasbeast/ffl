@@ -49,7 +49,9 @@ FFLResult FFLiLoadTextureWithAllocate(GX2Texture** ppGX2Texture, FFLiTexturePart
         footer.SurfaceFormat(),
         GX2_SURFACE_DIM_2D
     );
-    GX2InitTexturePtrs(*ppGX2Texture, footer.GetImagePtrImpl(size), footer.GetMipPtrImpl(size));
+    void* imagePtr = footer.GetImagePtrImpl(size);
+    void* mipPtr = footer.GetMipPtrImpl(size);
+    GX2InitTexturePtrs(*ppGX2Texture, imagePtr, mipPtr);
 
     return result;
 }
