@@ -8,7 +8,8 @@
 
 #include <cstring>
 
-namespace {
+namespace
+{
 
 bool VerifyName(const u16* s, s32 size);
 
@@ -205,37 +206,16 @@ BOOL FFLiiVerifyCharInfo(const FFLiCharInfo* pCharInfo, BOOL verifyName)
 
 s32 FFLiiGetEyeRotateOffset(s32 type)
 {
-    static const u8 ROTATE[FFL_EYE_TYPE_TRUE_MAX] = {
-        3, 4, 4, 4,
-        3, 4, 4, 4,
-        3, 4, 4, 4,
-        4, 3, 3, 4,
-        4, 4, 3, 3,
-        4, 3, 4, 3,
-        3, 4, 3, 4,
-        4, 3, 4, 4,
-        4, 3, 3, 3,
-        4, 4, 3, 3,
-        3, 4, 4, 3,
-        3, 3, 3, 3,
-        3, 3, 3, 3,
-        4, 4, 4, 4,
-        3, 4, 4, 3,
-        4, 4
-    };
+    static const u8 ROTATE[FFL_EYE_TYPE_TRUE_MAX] = {3, 4, 4, 4, 3, 4, 4, 4, 3, 4, 4, 4, 4, 3, 3, 4, 4, 4, 3, 3, 4,
+                                                     3, 4, 3, 3, 4, 3, 4, 4, 3, 4, 4, 4, 3, 3, 3, 4, 4, 3, 3, 3, 4,
+                                                     4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 3, 4, 4, 3, 4, 4};
     return 32 - ROTATE[type];
 }
 
 s32 FFLiiGetEyebrowRotateOffset(s32 type)
 {
-    static const u8 ROTATE[FFL_EYEBROW_TYPE_MAX] = {
-        6, 6, 5, 7,
-        6, 7, 6, 7,
-        4, 7, 6, 8,
-        5, 5, 6, 6,
-        7, 7, 6, 6,
-        5, 6, 7, 5
-    };
+    static const u8 ROTATE[FFL_EYEBROW_TYPE_MAX] = {6, 6, 5, 7, 6, 7, 6, 7, 4, 7, 6, 8,
+                                                    5, 5, 6, 6, 7, 7, 6, 6, 5, 6, 7, 5};
     return 32 - ROTATE[type];
 }
 
@@ -275,53 +255,55 @@ bool FFLiIsValidCharacterForName(u16 c)
     return true;
 }
 
-bool FFLiCompareCharInfoWithAdditionalInfo(s32* pFlagOut, s32 flagIn, const FFLiCharInfo* pCharInfoA, const FFLiCharInfo* pCharInfoB, const FFLAdditionalInfo* pAdditionalInfoA, const FFLAdditionalInfo* pAdditionalInfoB)
+bool FFLiCompareCharInfoWithAdditionalInfo(s32* pFlagOut, s32 flagIn, const FFLiCharInfo* pCharInfoA,
+                                           const FFLiCharInfo* pCharInfoB, const FFLAdditionalInfo* pAdditionalInfoA,
+                                           const FFLAdditionalInfo* pAdditionalInfoB)
 {
     s32 flag = 0;
     if (flagIn & FFLI_COMPARE_CHAR_INFO_FLAG_PARTS)
     {
-        if (pCharInfoA->parts.faceType != pCharInfoB->parts.faceType ||
-            pCharInfoA->parts.facelineColor != pCharInfoB->parts.facelineColor ||
-            pCharInfoA->parts.faceLine != pCharInfoB->parts.faceLine ||
-            pCharInfoA->parts.faceMakeup != pCharInfoB->parts.faceMakeup ||
-            pCharInfoA->parts.hairType != pCharInfoB->parts.hairType ||
-            pCharInfoA->parts.hairColor != pCharInfoB->parts.hairColor ||
-            pCharInfoA->parts.hairDir != pCharInfoB->parts.hairDir ||
-            pCharInfoA->parts.eyeType != pCharInfoB->parts.eyeType ||
-            pCharInfoA->parts.eyeColor != pCharInfoB->parts.eyeColor ||
-            pCharInfoA->parts.eyeScale != pCharInfoB->parts.eyeScale ||
-            pCharInfoA->parts.eyeScaleY != pCharInfoB->parts.eyeScaleY ||
-            pCharInfoA->parts.eyeRotate != pCharInfoB->parts.eyeRotate ||
-            pCharInfoA->parts.eyeSpacingX != pCharInfoB->parts.eyeSpacingX ||
-            pCharInfoA->parts.eyePositionY != pCharInfoB->parts.eyePositionY ||
-            pCharInfoA->parts.eyebrowType != pCharInfoB->parts.eyebrowType ||
-            pCharInfoA->parts.eyebrowColor != pCharInfoB->parts.eyebrowColor ||
-            pCharInfoA->parts.eyebrowScale != pCharInfoB->parts.eyebrowScale ||
-            pCharInfoA->parts.eyebrowScaleY != pCharInfoB->parts.eyebrowScaleY ||
-            pCharInfoA->parts.eyebrowRotate != pCharInfoB->parts.eyebrowRotate ||
-            pCharInfoA->parts.eyebrowSpacingX != pCharInfoB->parts.eyebrowSpacingX ||
-            pCharInfoA->parts.eyebrowPositionY != pCharInfoB->parts.eyebrowPositionY ||
-            pCharInfoA->parts.noseType != pCharInfoB->parts.noseType ||
-            pCharInfoA->parts.noseScale != pCharInfoB->parts.noseScale ||
-            pCharInfoA->parts.nosePositionY != pCharInfoB->parts.nosePositionY ||
-            pCharInfoA->parts.mouthType != pCharInfoB->parts.mouthType ||
-            pCharInfoA->parts.mouthColor != pCharInfoB->parts.mouthColor ||
-            pCharInfoA->parts.mouthScale != pCharInfoB->parts.mouthScale ||
-            pCharInfoA->parts.mouthScaleY != pCharInfoB->parts.mouthScaleY ||
-            pCharInfoA->parts.mouthPositionY != pCharInfoB->parts.mouthPositionY ||
-            pCharInfoA->parts.mustacheType != pCharInfoB->parts.mustacheType ||
-            pCharInfoA->parts.beardType != pCharInfoB->parts.beardType ||
-            pCharInfoA->parts.beardColor != pCharInfoB->parts.beardColor ||
-            pCharInfoA->parts.mustacheScale != pCharInfoB->parts.mustacheScale ||
-            pCharInfoA->parts.mustachePositionY != pCharInfoB->parts.mustachePositionY ||
-            pCharInfoA->parts.glassType != pCharInfoB->parts.glassType ||
-            pCharInfoA->parts.glassColor != pCharInfoB->parts.glassColor ||
-            pCharInfoA->parts.glassScale != pCharInfoB->parts.glassScale ||
-            pCharInfoA->parts.glassPositionY != pCharInfoB->parts.glassPositionY ||
-            pCharInfoA->parts.moleType != pCharInfoB->parts.moleType ||
-            pCharInfoA->parts.moleScale != pCharInfoB->parts.moleScale ||
-            pCharInfoA->parts.molePositionX != pCharInfoB->parts.molePositionX ||
-            pCharInfoA->parts.molePositionY != pCharInfoB->parts.molePositionY)
+        if (pCharInfoA->parts.faceType != pCharInfoB->parts.faceType
+            || pCharInfoA->parts.facelineColor != pCharInfoB->parts.facelineColor
+            || pCharInfoA->parts.faceLine != pCharInfoB->parts.faceLine
+            || pCharInfoA->parts.faceMakeup != pCharInfoB->parts.faceMakeup
+            || pCharInfoA->parts.hairType != pCharInfoB->parts.hairType
+            || pCharInfoA->parts.hairColor != pCharInfoB->parts.hairColor
+            || pCharInfoA->parts.hairDir != pCharInfoB->parts.hairDir
+            || pCharInfoA->parts.eyeType != pCharInfoB->parts.eyeType
+            || pCharInfoA->parts.eyeColor != pCharInfoB->parts.eyeColor
+            || pCharInfoA->parts.eyeScale != pCharInfoB->parts.eyeScale
+            || pCharInfoA->parts.eyeScaleY != pCharInfoB->parts.eyeScaleY
+            || pCharInfoA->parts.eyeRotate != pCharInfoB->parts.eyeRotate
+            || pCharInfoA->parts.eyeSpacingX != pCharInfoB->parts.eyeSpacingX
+            || pCharInfoA->parts.eyePositionY != pCharInfoB->parts.eyePositionY
+            || pCharInfoA->parts.eyebrowType != pCharInfoB->parts.eyebrowType
+            || pCharInfoA->parts.eyebrowColor != pCharInfoB->parts.eyebrowColor
+            || pCharInfoA->parts.eyebrowScale != pCharInfoB->parts.eyebrowScale
+            || pCharInfoA->parts.eyebrowScaleY != pCharInfoB->parts.eyebrowScaleY
+            || pCharInfoA->parts.eyebrowRotate != pCharInfoB->parts.eyebrowRotate
+            || pCharInfoA->parts.eyebrowSpacingX != pCharInfoB->parts.eyebrowSpacingX
+            || pCharInfoA->parts.eyebrowPositionY != pCharInfoB->parts.eyebrowPositionY
+            || pCharInfoA->parts.noseType != pCharInfoB->parts.noseType
+            || pCharInfoA->parts.noseScale != pCharInfoB->parts.noseScale
+            || pCharInfoA->parts.nosePositionY != pCharInfoB->parts.nosePositionY
+            || pCharInfoA->parts.mouthType != pCharInfoB->parts.mouthType
+            || pCharInfoA->parts.mouthColor != pCharInfoB->parts.mouthColor
+            || pCharInfoA->parts.mouthScale != pCharInfoB->parts.mouthScale
+            || pCharInfoA->parts.mouthScaleY != pCharInfoB->parts.mouthScaleY
+            || pCharInfoA->parts.mouthPositionY != pCharInfoB->parts.mouthPositionY
+            || pCharInfoA->parts.mustacheType != pCharInfoB->parts.mustacheType
+            || pCharInfoA->parts.beardType != pCharInfoB->parts.beardType
+            || pCharInfoA->parts.beardColor != pCharInfoB->parts.beardColor
+            || pCharInfoA->parts.mustacheScale != pCharInfoB->parts.mustacheScale
+            || pCharInfoA->parts.mustachePositionY != pCharInfoB->parts.mustachePositionY
+            || pCharInfoA->parts.glassType != pCharInfoB->parts.glassType
+            || pCharInfoA->parts.glassColor != pCharInfoB->parts.glassColor
+            || pCharInfoA->parts.glassScale != pCharInfoB->parts.glassScale
+            || pCharInfoA->parts.glassPositionY != pCharInfoB->parts.glassPositionY
+            || pCharInfoA->parts.moleType != pCharInfoB->parts.moleType
+            || pCharInfoA->parts.moleScale != pCharInfoB->parts.moleScale
+            || pCharInfoA->parts.molePositionX != pCharInfoB->parts.molePositionX
+            || pCharInfoA->parts.molePositionY != pCharInfoB->parts.molePositionY)
         {
             flag |= FFLI_COMPARE_CHAR_INFO_FLAG_PARTS;
         }
@@ -401,7 +383,8 @@ bool FFLiCompareCharInfoWithAdditionalInfo(s32* pFlagOut, s32 flagIn, const FFLi
     return flag != 0;
 }
 
-namespace {
+namespace
+{
 
 bool VerifyName(const u16* s, s32 size)
 {

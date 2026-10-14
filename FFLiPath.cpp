@@ -2,20 +2,20 @@
 
 #include <nn/save/save_Types.h>
 
-extern "C" {
+extern "C"
+{
 
 // Thanks for deprecating these, Nintendo... :/
 
 typedef enum SysSystemApplicationID
 {
-    SYS_ID_MII_MAKER    = 4
+    SYS_ID_MII_MAKER = 4
 } SysSystemApplicationID;
 
 u64 _SYSGetSystemApplicationTitleId(SysSystemApplicationID id);
 
 SAVEStatus SAVEGetSharedDataTitlePath(u64 titleId, const char* path, char* dst, u32 size);
 SAVEStatus SAVEGetSharedSaveDataPath(u64 titleId, const char* path, char* dst, u32 size);
-
 }
 
 u64 FFLiGetMiiStudioTitleID()

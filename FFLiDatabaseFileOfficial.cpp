@@ -69,17 +69,18 @@ static u32 GetMiiDataNum()
     return 3000;
 }
 
-bool FFLiDatabaseFileOfficial::Get(FFLiCharInfo* pCharInfo, u16 miiDataIndex, bool checkSpecial, bool allowSpecial) const
+bool FFLiDatabaseFileOfficial::Get(FFLiCharInfo* pCharInfo, u16 miiDataIndex, bool checkSpecial,
+                                   bool allowSpecial) const
 {
     if (miiDataIndex >= GetMiiDataNum())
         return false;
 
     const FFLiMiiDataOfficial& official = GetImpl(miiDataIndex);
     const FFLCreateID* pCreateID = &official.CreatorID();
-    
+
     if (FFLiIsNullMiiID(pCreateID))
         return false;
-    
+
     if (FFLiIsTemporaryMiiID(pCreateID))
         return false;
 
@@ -149,7 +150,8 @@ bool FFLiDatabaseFileOfficial::IsRegular(u16 miiDataIndex, bool checkSpecial, bo
     return FindRegularList(NULL, &charInfo.creatorID);
 }
 
-namespace {
+namespace
+{
 
 bool IsExistCreateID(const FFLCreateID& createID, const FFLiDatabaseFileOfficial::AdjustRegularBuffer& buffer)
 {

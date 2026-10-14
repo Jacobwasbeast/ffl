@@ -11,18 +11,17 @@
 
 #include <string.h>
 
-namespace {
+namespace
+{
 
 const u32 NUM_ATTRIBUTES = 5;
 
-const FFLiUtilShader::AttributeStreamDesc ATTRIBUTE_STREAM_DESC[NUM_ATTRIBUTES] =
-{
-    { "a_position", FFL_ATTRIBUTE_BUFFER_TYPE_POSITION, 0, GX2_ATTRIB_FORMAT_32_32_32_FLOAT },
-    { "a_texCoord", FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD, 0, GX2_ATTRIB_FORMAT_32_32_FLOAT },
-    { "a_normal", FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL, 0, GX2_ATTRIB_FORMAT_10_10_10_2_SNORM },
-    { "a_tangent", FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT, 0, GX2_ATTRIB_FORMAT_8_8_8_8_SNORM },
-    { "a_color", FFL_ATTRIBUTE_BUFFER_TYPE_COLOR, 0, GX2_ATTRIB_FORMAT_8_8_8_8_UNORM }
-};
+const FFLiUtilShader::AttributeStreamDesc ATTRIBUTE_STREAM_DESC[NUM_ATTRIBUTES] = {
+    {"a_position", FFL_ATTRIBUTE_BUFFER_TYPE_POSITION, 0, GX2_ATTRIB_FORMAT_32_32_32_FLOAT},
+    {"a_texCoord", FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD, 0, GX2_ATTRIB_FORMAT_32_32_FLOAT},
+    {"a_normal", FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL, 0, GX2_ATTRIB_FORMAT_10_10_10_2_SNORM},
+    {"a_tangent", FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT, 0, GX2_ATTRIB_FORMAT_8_8_8_8_SNORM},
+    {"a_color", FFL_ATTRIBUTE_BUFFER_TYPE_COLOR, 0, GX2_ATTRIB_FORMAT_8_8_8_8_UNORM}};
 
 GX2Boolean s_EnablePolygonMode = GX2_FALSE;
 GX2PolygonMode s_PolygonModeFront = GX2_POLYGON_MODE_TRIANGLE;
@@ -99,7 +98,7 @@ s32 ModulateModeToValue(FFLModulateMode mode)
 
 void SetupModulateMode(FFLiDefaultShader* pShader, FFLModulateMode mode)
 {
-    s32 values[4] = { 0, 0, 0, 0 };
+    s32 values[4] = {0, 0, 0, 0};
     values[0] = ModulateModeToValue(mode);
     GX2SetPixelUniformReg(pShader->modeLocation, 4, values);
 }
@@ -153,10 +152,10 @@ void SetupMaterial(const FFLiDefaultShader* pShader, const FFLDrawParam& drawPar
     GX2SetPixelUniformReg(pShader->materialDiffuseLocation, 4, &material.diffuse);
     GX2SetPixelUniformReg(pShader->materialSpecularLocation, 4, &specular);
 
-    f32 specularPower[4] = { material.specularPower, 0.0f, 0.0f, 0.0f };
+    f32 specularPower[4] = {material.specularPower, 0.0f, 0.0f, 0.0f};
     GX2SetPixelUniformReg(pShader->materialSpecularPowerLocation, 4, specularPower);
 
-    u32 specularMode[4] = { static_cast<u32>(material.specularMode), 0, 0, 0 };
+    u32 specularMode[4] = {static_cast<u32>(material.specularMode), 0, 0, 0};
     if (noTangent)
         specularMode[0] = FFL_SPECULAR_MODE_BLINN;
     GX2SetPixelUniformReg(pShader->materialSpecularModeLocation, 4, specularMode);
@@ -173,19 +172,24 @@ void ShaderCallbackDraw(void* pObj, const FFLDrawParam* pDrawParam)
 
     if (drawParam.primitiveParam.pIndexBuffer != NULL)
     {
-        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_POSITION, drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].size,
+        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_POSITION,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].size,
                            drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].stride,
                            drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr);
-        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD, drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].size,
+        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].size,
                            drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].stride,
                            drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].ptr);
-        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL, drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL].size,
+        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL].size,
                            drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL].stride,
                            drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_NORMAL].ptr);
-        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT, drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT].size,
+        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT].size,
                            drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT].stride,
                            drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TANGENT].ptr);
-        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_COLOR, drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_COLOR].size,
+        GX2SetAttribBuffer(FFL_ATTRIBUTE_BUFFER_TYPE_COLOR,
+                           drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_COLOR].size,
                            drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_COLOR].stride,
                            drawParam.attributeBufferParam.attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_COLOR].ptr);
 
@@ -256,7 +260,7 @@ void InitParam(FFLiDefaultShaderParam* pParam)
 
 void SetUniformLightDisable(const FFLiDefaultShader* pShader)
 {
-    u32 values[4] = { 0, 0, 0, 0 };
+    u32 values[4] = {0, 0, 0, 0};
     GX2SetPixelUniformReg(pShader->lightEnableLocation, 4, values);
 }
 
@@ -264,8 +268,8 @@ void SetupUniformLight(const FFLiDefaultShader* pShader)
 {
     const FFLiDefaultShaderLight& light = pShader->param.light;
 
-    f32 direction[4] = { light.direction.x, light.direction.y, light.direction.z, 0.0f };
-    u32 enable[4] = { light.enable != FALSE, 0, 0, 0 };
+    f32 direction[4] = {light.direction.x, light.direction.y, light.direction.z, 0.0f};
+    u32 enable[4] = {light.enable != FALSE, 0, 0, 0};
 
     GX2SetPixelUniformReg(pShader->lightDirectionLocation, 4, direction);
     GX2SetPixelUniformReg(pShader->lightEnableLocation, 4, enable);
@@ -284,7 +288,7 @@ void SetupUniformParam(const FFLiDefaultShader* pShader)
 
     SetupUniformLight(pShader);
 
-    f32 rimPower[4] = { param.rimPower, 0.0f, 0.0f, 0.0f };
+    f32 rimPower[4] = {param.rimPower, 0.0f, 0.0f, 0.0f};
     GX2SetPixelUniformReg(pShader->rimColorLocation, 4, &param.rimColor);
     GX2SetPixelUniformReg(pShader->rimPowerLocation, 4, rimPower);
 }
@@ -370,13 +374,19 @@ FFLResult FFLiInitDefaultShader(FFLiDefaultShader* pShader, void* pBuffer, const
         || !FFLiUtilShader::GetUniformLocation(&pShader->lightEnableLocation, pShader->pPixelShader, "u_light_enable")
         || !FFLiUtilShader::GetUniformLocation(&pShader->lightAmbientLocation, pShader->pPixelShader, "u_light_ambient")
         || !FFLiUtilShader::GetUniformLocation(&pShader->lightDiffuseLocation, pShader->pPixelShader, "u_light_diffuse")
-        || !FFLiUtilShader::GetUniformLocation(&pShader->lightSpecularLocation, pShader->pPixelShader, "u_light_specular")
+        || !FFLiUtilShader::GetUniformLocation(&pShader->lightSpecularLocation, pShader->pPixelShader,
+                                               "u_light_specular")
         || !FFLiUtilShader::GetUniformLocation(&pShader->lightDirectionLocation, pShader->pPixelShader, "u_light_dir")
-        || !FFLiUtilShader::GetUniformLocation(&pShader->materialAmbientLocation, pShader->pPixelShader, "u_material_ambient")
-        || !FFLiUtilShader::GetUniformLocation(&pShader->materialDiffuseLocation, pShader->pPixelShader, "u_material_diffuse")
-        || !FFLiUtilShader::GetUniformLocation(&pShader->materialSpecularLocation, pShader->pPixelShader, "u_material_specular")
-        || !FFLiUtilShader::GetUniformLocation(&pShader->materialSpecularPowerLocation, pShader->pPixelShader, "u_material_specular_power")
-        || !FFLiUtilShader::GetUniformLocation(&pShader->materialSpecularModeLocation, pShader->pPixelShader, "u_material_specular_mode")
+        || !FFLiUtilShader::GetUniformLocation(&pShader->materialAmbientLocation, pShader->pPixelShader,
+                                               "u_material_ambient")
+        || !FFLiUtilShader::GetUniformLocation(&pShader->materialDiffuseLocation, pShader->pPixelShader,
+                                               "u_material_diffuse")
+        || !FFLiUtilShader::GetUniformLocation(&pShader->materialSpecularLocation, pShader->pPixelShader,
+                                               "u_material_specular")
+        || !FFLiUtilShader::GetUniformLocation(&pShader->materialSpecularPowerLocation, pShader->pPixelShader,
+                                               "u_material_specular_power")
+        || !FFLiUtilShader::GetUniformLocation(&pShader->materialSpecularModeLocation, pShader->pPixelShader,
+                                               "u_material_specular_mode")
         || !FFLiUtilShader::GetUniformLocation(&pShader->rimColorLocation, pShader->pPixelShader, "u_rim_color")
         || !FFLiUtilShader::GetUniformLocation(&pShader->rimPowerLocation, pShader->pPixelShader, "u_rim_power"))
         return FFL_RESULT_ERROR;
@@ -460,7 +470,8 @@ GX2Sampler* FFLiGetSamplerDefaultShader(FFLiDefaultShader* pShader)
     return &pShader->sampler;
 }
 
-void FFLiSetMatrixExDefaultShader(FFLiDefaultShader* pShader, const Mat44* pProjection, const Mat34* pModelView, const Mat34* pInverseTranspose)
+void FFLiSetMatrixExDefaultShader(FFLiDefaultShader* pShader, const Mat44* pProjection, const Mat34* pModelView,
+                                  const Mat34* pInverseTranspose)
 {
     MAT44Transpose(pProjection, &pShader->param.projection);
 

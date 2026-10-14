@@ -7,20 +7,20 @@
 #include <cafe/mat.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef struct FFLDrawParam FFLDrawParam;
 
 typedef struct FFLShaderCallback
 {
-    void*                   pObj;
-    const GX2ContextState*  pContextState;
+    void* pObj;
+    const GX2ContextState* pContextState;
 
     void (*pDrawFunc)(void* pObj, const FFLDrawParam* pDrawParam);
     void (*pSetMatrixFunc)(void* pObj, const Mat44* pMatrix);
-}
-FFLShaderCallback;
+} FFLShaderCallback;
 NN_STATIC_ASSERT(sizeof(FFLShaderCallback) == 0x10);
 
 void FFLSetShaderCallback(const FFLShaderCallback* pCallback);

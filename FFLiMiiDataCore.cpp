@@ -3,15 +3,10 @@
 
 #include <nn/ffl/detail/FFLiCrc.h>
 
-static const FFLiSwapEndianDesc SWAP_ENDIAN_DESC[7] = {
-    { FFLI_SWAP_ENDIAN_TYPE_U32,  1 },
-    { FFLI_SWAP_ENDIAN_TYPE_U8,   8 },
-    { FFLI_SWAP_ENDIAN_TYPE_U8,  10 },
-    { FFLI_SWAP_ENDIAN_TYPE_U8,   2 },
-    { FFLI_SWAP_ENDIAN_TYPE_U16, 11 },
-    { FFLI_SWAP_ENDIAN_TYPE_U8,   2 },
-    { FFLI_SWAP_ENDIAN_TYPE_U16, 12 }
-};
+static const FFLiSwapEndianDesc SWAP_ENDIAN_DESC[7] = {{FFLI_SWAP_ENDIAN_TYPE_U32, 1},  {FFLI_SWAP_ENDIAN_TYPE_U8, 8},
+                                                       {FFLI_SWAP_ENDIAN_TYPE_U8, 10},  {FFLI_SWAP_ENDIAN_TYPE_U8, 2},
+                                                       {FFLI_SWAP_ENDIAN_TYPE_U16, 11}, {FFLI_SWAP_ENDIAN_TYPE_U8, 2},
+                                                       {FFLI_SWAP_ENDIAN_TYPE_U16, 12}};
 
 void FFLiMiiDataCore::SwapEndian()
 {

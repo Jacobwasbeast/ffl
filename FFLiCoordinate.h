@@ -19,9 +19,9 @@ public:
 
     static f32 FlipValue(FFLVec3* pVec, f32 value);
     static f32 FlipValue(FFLVec4* pVec, f32 value);
-    
+
     void TransformWithoutScale(FFLVec3* pVec) const;
-    void TransformWithoutScale(FFLVec4* pVec) const;    // Deleted in NSMBU
+    void TransformWithoutScale(FFLVec4* pVec) const; // Deleted in NSMBU
 
     void TransformWithoutScale(FFLiSnorm10_10_10_2* pVec) const;
     void TransformWithoutScale(FFLiSnorm8_8_8_8* pVec) const;
@@ -36,13 +36,13 @@ private:
     void TransformImpl(VectorType* pVec) const;
 
 private:
-    u8      m_SwizzleY;
-    u8      m_SwizzleZ;
-    u8      m_SwizzleX;
-    bool    m_FlipY;
-    bool    m_FlipZ;
-    bool    m_FlipX;
-    f32     m_Scale;
+    u8 m_SwizzleY;
+    u8 m_SwizzleZ;
+    u8 m_SwizzleX;
+    bool m_FlipY;
+    bool m_FlipZ;
+    bool m_FlipX;
+    f32 m_Scale;
 };
 NN_STATIC_ASSERT(sizeof(FFLiCoordinate) == 0xC);
 

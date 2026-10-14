@@ -6,13 +6,17 @@
 
 #include <cstring>
 
-namespace nn { namespace act {
+namespace nn
+{
+namespace act
+{
 
 // Thanks for deprecating this, Nintendo... :/
 
 Result GetTransferableIdEx(u64* pTransferableId, u32 uniqueId, u8 slotNo);
 
-} } // namespace nn::act
+}
+} // namespace nn::act
 
 
 FFLiSystemContext::FFLiSystemContext()

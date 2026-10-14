@@ -11,7 +11,8 @@ FFLResult FFLiGetStoreData(FFLStoreData* pStoreData, FFLDataSource dataSource, u
     if (!FFLiManager::IsConstruct())
         return FFL_RESULT_MANAGER_NOT_CONSTRUCT;
 
-    return FFLiManager::GetInstance()->GetDatabaseManager().GetStoreData(static_cast<FFLiStoreDataCFL*>(pStoreData), dataSource, index);
+    return FFLiManager::GetInstance()->GetDatabaseManager().GetStoreData(static_cast<FFLiStoreDataCFL*>(pStoreData),
+                                                                         dataSource, index);
 }
 
 u16 FFLGetAvailableOfficialDataNum(void)
@@ -50,7 +51,8 @@ BOOL FFLIsRegularOfficialData(u16 index)
     return false;
 }
 
-FFLResult FFLGetAdditionalInfo(FFLAdditionalInfo* pAdditionalInfo, FFLDataSource dataSource, const void* pBuffer, u16 index, BOOL checkFontRegion)
+FFLResult FFLGetAdditionalInfo(FFLAdditionalInfo* pAdditionalInfo, FFLDataSource dataSource, const void* pBuffer,
+                               u16 index, BOOL checkFontRegion)
 {
     if (!FFLiManager::IsConstruct())
         return FFL_RESULT_MANAGER_NOT_CONSTRUCT;

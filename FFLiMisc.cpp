@@ -13,9 +13,7 @@ bool FFLiVerifyBirthday(s32 month, s32 day)
     }
     else // if (month != 0)
     {
-        if (day != 0 &&
-            1 <= month && month <= 12 &&
-            day <= FFLiGetMonthOfDay(month))
+        if (day != 0 && 1 <= month && month <= 12 && day <= FFLiGetMonthOfDay(month))
         {
             ret = true;
         }

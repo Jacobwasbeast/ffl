@@ -12,7 +12,8 @@ public:
     ~FFLiDatabaseDefault();
 
 private:
-    static void InitElement(FFLiMiiDataOfficial* pMiiDataOfficial, const FFLiMiiDataCoreRFL* pMiiDataCoreRFL, u32 index);
+    static void InitElement(FFLiMiiDataOfficial* pMiiDataOfficial, const FFLiMiiDataCoreRFL* pMiiDataCoreRFL,
+                            u32 index);
 
 public:
     bool Get(FFLiCharInfo* pCharInfo, u32 index) const;

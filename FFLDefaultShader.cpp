@@ -2,7 +2,8 @@
 
 #include <nn/ffl/FFLiDefaultShader.h>
 
-namespace {
+namespace
+{
 
 FFLiDefaultShader* GetShader(FFLDefaultShader* pShader)
 {
@@ -81,7 +82,8 @@ void FFLSetMatrixDefaultShader(FFLDefaultShader* pShader, const Mat44* pProjecti
     FFLiSetMatrixDefaultShader(GetShader(pShader), pProjection, pModelView);
 }
 
-void FFLSetMatrixExDefaultShader(FFLDefaultShader* pShader, const Mat44* pProjection, const Mat34* pModelView, const Mat34* pInverseTranspose)
+void FFLSetMatrixExDefaultShader(FFLDefaultShader* pShader, const Mat44* pProjection, const Mat34* pModelView,
+                                 const Mat34* pInverseTranspose)
 {
     FFLiSetMatrixExDefaultShader(GetShader(pShader), pProjection, pModelView, pInverseTranspose);
 }

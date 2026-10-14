@@ -2,7 +2,8 @@
 
 #include <nn/ffl/detail/FFLiResourceShape.h>
 
-namespace {
+namespace
+{
 
 const void* GetElement(u32* pSize, const void* pShapeData, u32 pos, u32 size);
 
@@ -14,24 +15,31 @@ void SwapEndianFacelineTransform(void* pTransformData);
 
 }
 
-const void* FFLiGetResourceShapeElement(u32* pSize, const void* pShapeData, FFLiShapePartsType partsType, FFLiResourceShapeElementType elementType)
+const void* FFLiGetResourceShapeElement(u32* pSize, const void* pShapeData, FFLiShapePartsType partsType,
+                                        FFLiResourceShapeElementType elementType)
 {
     const FFLiResourceShapeDataHeader* pShape = (const FFLiResourceShapeDataHeader*)pShapeData;
 
     switch (elementType)
     {
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION:
-        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION),
+                          pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL:
-        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL),
+                          pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD:
-        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD),
+                          pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TANGENT:
-        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TANGENT), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TANGENT));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TANGENT),
+                          pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TANGENT));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_COLOR:
-        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_COLOR), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_COLOR));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_COLOR),
+                          pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_COLOR));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX:
-        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX));
+        return GetElement(pSize, pShapeData, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX),
+                          pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX));
     case FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TRANSFORM_HAIR_1:
         if (partsType == FFLI_SHAPE_PARTS_TYPE_HAIR_1)
         {
@@ -63,19 +71,23 @@ void FFLiSwapEndianResourceShapeElement(void* pShapeData, u32, FFLiShapePartsTyp
     FFLiResourceShapeDataHeader* pShape = static_cast<FFLiResourceShapeDataHeader*>(pShapeData);
     pShape->SwapEndian();
 
-    SwapEndianAttribute(pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION));
-    SwapEndianAttribute(pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL));
-    SwapEndianAttribute(pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD));
+    SwapEndianAttribute(pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION),
+                        pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_POSITION));
+    SwapEndianAttribute(pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL),
+                        pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_NORMAL));
+    SwapEndianAttribute(pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD),
+                        pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_TEXCOORD));
     // Tangent and color don't need endianness swap
 
-    SwapEndianIndex(pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX), pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX));
+    SwapEndianIndex(pShape, pShape->GetElementPos(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX),
+                    pShape->GetElementSize(FFLI_RESOURCE_SHAPE_ELEMENT_TYPE_INDEX));
 
     SwapEndianVec3(&(pShape->GetBoundingBox().min));
     SwapEndianVec3(&(pShape->GetBoundingBox().max));
 
     if (partsType == FFLI_SHAPE_PARTS_TYPE_HAIR_1)
         SwapEndianHairTransform(pShape->GetTransform());
-    
+
     else if (partsType == FFLI_SHAPE_PARTS_TYPE_FACELINE)
         SwapEndianFacelineTransform(pShape->GetTransform());
 }
@@ -103,7 +115,8 @@ void FFLiResourceShapeFacelineTransform::SwapEndian()
     SwapEndianVec3(&m_BeardPos);
 }
 
-namespace {
+namespace
+{
 
 const void* GetElement(u32* pSize, const void* pShapeData, u32 pos, u32 size)
 {

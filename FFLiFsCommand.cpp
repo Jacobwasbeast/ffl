@@ -2,8 +2,7 @@
 
 #include <new>
 
-FFLiFsCommand::FFLiFsCommand(FFLiFsClient* pClient)
-    : m_pFsClient(pClient)
+FFLiFsCommand::FFLiFsCommand(FFLiFsClient* pClient) : m_pFsClient(pClient)
 {
     FSInitCmdBlock(&m_FSCmdBlock);
 }

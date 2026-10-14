@@ -8,22 +8,22 @@
 
 enum FFLiEyeTextureType
 {
-    FFLI_EYE_TEXTURE_TYPE_0     = 0,
-    FFLI_EYE_TEXTURE_TYPE_1     = 1,
-    FFLI_EYE_TEXTURE_TYPE_2     = 2,
-    FFLI_EYE_TEXTURE_TYPE_3     = 3,
-    FFLI_EYE_TEXTURE_TYPE_4     = 4,
-    FFLI_EYE_TEXTURE_TYPE_5     = 5,
-    FFLI_EYE_TEXTURE_TYPE_MAX   = 6
+    FFLI_EYE_TEXTURE_TYPE_0 = 0,
+    FFLI_EYE_TEXTURE_TYPE_1 = 1,
+    FFLI_EYE_TEXTURE_TYPE_2 = 2,
+    FFLI_EYE_TEXTURE_TYPE_3 = 3,
+    FFLI_EYE_TEXTURE_TYPE_4 = 4,
+    FFLI_EYE_TEXTURE_TYPE_5 = 5,
+    FFLI_EYE_TEXTURE_TYPE_MAX = 6
 };
 
 enum FFLiMouthTextureType
 {
-    FFLI_MOUTH_TEXTURE_TYPE_0   = 0,
-    FFLI_MOUTH_TEXTURE_TYPE_1   = 1,
-    FFLI_MOUTH_TEXTURE_TYPE_2   = 2,
-    FFLI_MOUTH_TEXTURE_TYPE_3   = 3,
-    FFLI_MOUTH_TEXTURE_TYPE_4   = 4,
+    FFLI_MOUTH_TEXTURE_TYPE_0 = 0,
+    FFLI_MOUTH_TEXTURE_TYPE_1 = 1,
+    FFLI_MOUTH_TEXTURE_TYPE_2 = 2,
+    FFLI_MOUTH_TEXTURE_TYPE_3 = 3,
+    FFLI_MOUTH_TEXTURE_TYPE_4 = 4,
     FFLI_MOUTH_TEXTURE_TYPE_MAX = 5
 };
 
@@ -39,19 +39,20 @@ NN_STATIC_ASSERT(sizeof(FFLiPartsTextures) == 0x38);
 
 struct FFLiEyeMouthTypeElement
 {
-    FFLiEyeTextureType      eyeTextureType[2];
-    FFLiMouthTextureType    mouthTextureType;
+    FFLiEyeTextureType eyeTextureType[2];
+    FFLiMouthTextureType mouthTextureType;
 };
 NN_STATIC_ASSERT(sizeof(FFLiEyeMouthTypeElement) == 0xC);
 
-class   FFLiBufferAllocator;
-struct  FFLiCharInfo;
-class   FFLiResourceLoader;
+class FFLiBufferAllocator;
+struct FFLiCharInfo;
+class FFLiResourceLoader;
 
 s32 FFLiCharInfoAndTypeToEyeIndex(const FFLiCharInfo* pCharInfo, FFLiEyeTextureType type);
 s32 FFLiCharInfoAndTypeToMouthIndex(const FFLiCharInfo* pCharInfo, FFLiMouthTextureType type);
 
-FFLResult FFLiLoadPartsTextures(FFLiPartsTextures* pPartsTextures, const FFLiCharInfo* pCharInfo, u32 expressionFlag, FFLiResourceLoader* pResLoader, FFLiBufferAllocator* pAllocator);
+FFLResult FFLiLoadPartsTextures(FFLiPartsTextures* pPartsTextures, const FFLiCharInfo* pCharInfo, u32 expressionFlag,
+                                FFLiResourceLoader* pResLoader, FFLiBufferAllocator* pAllocator);
 
 void FFLiInvalidatePartsTextures(FFLiPartsTextures* pPartsTextures);
 

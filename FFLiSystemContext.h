@@ -13,10 +13,7 @@ public:
 
     void Init(u32 seed);
 
-    FFLiRandomContext* RandomContext()
-    {
-        return &m_RandomContext;
-    }
+    FFLiRandomContext* RandomContext() { return &m_RandomContext; }
 
     const FFLiAuthorID* UserID() const;
     u64 TitleID() const;
@@ -30,10 +27,10 @@ public:
     bool AfterConstruct();
 
 private:
-    FFLiRandomContext   m_RandomContext;
-    FFLiAuthorID        m_AuthorID;
-    FFLiCreateIDBase    m_CreateIDBase;
-    u64                 m_TitleID;
+    FFLiRandomContext m_RandomContext;
+    FFLiAuthorID m_AuthorID;
+    FFLiCreateIDBase m_CreateIDBase;
+    u64 m_TitleID;
 };
 NN_STATIC_ASSERT(sizeof(FFLiSystemContext) == 0x28);
 

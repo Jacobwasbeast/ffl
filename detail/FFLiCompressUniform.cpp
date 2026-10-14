@@ -5,7 +5,8 @@
 
 #include <cafe/gx2.h>
 
-namespace {
+namespace
+{
 
 u32 GetBlockAlignedSize(u32 size);
 
@@ -14,27 +15,27 @@ void SetupUniformBlock(T* pArray, u32 arraySize, u32 size);
 
 }
 
-FFLiCompressUniform::FFLiCompressUniform()
-    : m_IsUB(false)
-    , m_pVertexUniform(NULL)
-    , m_pPixelUniform(NULL)
+FFLiCompressUniform::FFLiCompressUniform() : m_IsUB(false), m_pVertexUniform(NULL), m_pPixelUniform(NULL)
 {
 }
 
 void FFLiCompressUniform::Setup(FFLiBufferAllocator* pAllocator, u32 compressUseUB)
 {
-    const u32 VERTEX_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1) & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
-    const u32 PIXEL_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1) & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
+    const u32 VERTEX_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1)
+                                        & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
+    const u32 PIXEL_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1)
+                                       & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
 
     m_IsUB = compressUseUB != 0;
 
     m_pVertexUniform = static_cast<f32*>(pAllocator->Allocate(VERTEX_UNIFORM_MAX_SIZE, GX2_UNIFORM_BLOCK_ALIGNMENT));
-    m_pPixelUniform  = static_cast<f32*>(pAllocator->Allocate(PIXEL_UNIFORM_MAX_SIZE, GX2_UNIFORM_BLOCK_ALIGNMENT));
+    m_pPixelUniform = static_cast<f32*>(pAllocator->Allocate(PIXEL_UNIFORM_MAX_SIZE, GX2_UNIFORM_BLOCK_ALIGNMENT));
 }
 
 void FFLiCompressUniform::SetResolution(u32 width, u32 height)
 {
-    const u32 VERTEX_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1) & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
+    const u32 VERTEX_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1)
+                                        & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
 
     f32 widthf = width;
     f32 alignedWidth = GetBlockAlignedSize(width) / widthf;
@@ -53,7 +54,8 @@ void FFLiCompressUniform::SetResolution(u32 width, u32 height)
 
 void FFLiCompressUniform::SetMipLevel(u32 mipLevel)
 {
-    const u32 PIXEL_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1) & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
+    const u32 PIXEL_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1)
+                                       & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
 
     f32* pUniform = m_pPixelUniform;
     pUniform[0] = mipLevel;
@@ -67,17 +69,20 @@ void FFLiCompressUniform::SetMipLevel(u32 mipLevel)
 
 u32 FFLiCompressUniform::GetBufferSize()
 {
-    const u32 VERTEX_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1) & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
-    const u32 PIXEL_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1) & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
+    const u32 VERTEX_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1)
+                                        & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
+    const u32 PIXEL_UNIFORM_MAX_SIZE = (sizeof(f32) * 4) + (GX2_UNIFORM_BLOCK_ALIGNMENT - 1)
+                                       & ~(GX2_UNIFORM_BLOCK_ALIGNMENT - 1);
 
-    u32 ret  = GX2_UNIFORM_BLOCK_ALIGNMENT;
-    ret     += VERTEX_UNIFORM_MAX_SIZE;
-    ret     += PIXEL_UNIFORM_MAX_SIZE;
+    u32 ret = GX2_UNIFORM_BLOCK_ALIGNMENT;
+    ret += VERTEX_UNIFORM_MAX_SIZE;
+    ret += PIXEL_UNIFORM_MAX_SIZE;
 
     return ret;
 }
 
-namespace {
+namespace
+{
 
 u32 GetBlockAlignedSize(u32 size)
 {

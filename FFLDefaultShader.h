@@ -9,31 +9,30 @@
 #include <cafe/mat.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef enum FFLDrawType
 {
-    FFL_DRAW_TYPE_FACELINE  = 0,
-    FFL_DRAW_TYPE_BEARD     = 1,
-    FFL_DRAW_TYPE_NOSE      = 2,
-    FFL_DRAW_TYPE_FOREHEAD  = 3,
-    FFL_DRAW_TYPE_HAIR      = 4,
-    FFL_DRAW_TYPE_CAP       = 5,
-    FFL_DRAW_TYPE_MASK      = 6,
-    FFL_DRAW_TYPE_NOSELINE  = 7,
-    FFL_DRAW_TYPE_GLASS     = 8,
-    FFL_DRAW_TYPE_MAX       = 9
-}
-FFLDrawType;
+    FFL_DRAW_TYPE_FACELINE = 0,
+    FFL_DRAW_TYPE_BEARD = 1,
+    FFL_DRAW_TYPE_NOSE = 2,
+    FFL_DRAW_TYPE_FOREHEAD = 3,
+    FFL_DRAW_TYPE_HAIR = 4,
+    FFL_DRAW_TYPE_CAP = 5,
+    FFL_DRAW_TYPE_MASK = 6,
+    FFL_DRAW_TYPE_NOSELINE = 7,
+    FFL_DRAW_TYPE_GLASS = 8,
+    FFL_DRAW_TYPE_MAX = 9
+} FFLDrawType;
 
 typedef enum FFLSpecularMode
 {
-    FFL_SPECULAR_MODE_BLINN         = 0,
-    FFL_SPECULAR_MODE_ANISOTROPIC   = 1,
-    FFL_SPECULAR_MODE_MAX           = 2
-}
-FFLSpecularMode;
+    FFL_SPECULAR_MODE_BLINN = 0,
+    FFL_SPECULAR_MODE_ANISOTROPIC = 1,
+    FFL_SPECULAR_MODE_MAX = 2
+} FFLSpecularMode;
 
 typedef struct FFLDrawParam FFLDrawParam;
 typedef struct FFLShaderCallback FFLShaderCallback;
@@ -41,8 +40,7 @@ typedef struct FFLShaderCallback FFLShaderCallback;
 typedef struct FFLDefaultShader
 {
     u32 data[0x3A8 / sizeof(u32)];
-}
-FFLDefaultShader;
+} FFLDefaultShader;
 NN_STATIC_ASSERT(sizeof(FFLDefaultShader) == 0x3A8);
 
 u32 FFLGetBufferSizeDefaultShader(const void* pShaderData);
@@ -65,7 +63,8 @@ GX2ContextState* FFLGetContextStateDefaultShader(FFLDefaultShader* pShader);
 GX2Sampler* FFLGetSamplerDefaultShader(FFLDefaultShader* pShader);
 
 void FFLSetMatrixDefaultShader(FFLDefaultShader* pShader, const Mat44* pProjection, const Mat34* pModelView);
-void FFLSetMatrixExDefaultShader(FFLDefaultShader* pShader, const Mat44* pProjection, const Mat34* pModelView, const Mat34* pInverseTranspose);
+void FFLSetMatrixExDefaultShader(FFLDefaultShader* pShader, const Mat44* pProjection, const Mat34* pModelView,
+                                 const Mat34* pInverseTranspose);
 
 void FFLSetCullBackDefaultShader(FFLDefaultShader* pShader, BOOL cullBack);
 

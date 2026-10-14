@@ -2,7 +2,7 @@
 #include <nn/ffl/FFLiSwapEndian.h>
 #include <nn/ffl/FFLiUtil.h>
 
-#define SIZE_OF_MEMBER(cls, member) sizeof( ((cls*)0)->member )
+#define SIZE_OF_MEMBER(cls, member) sizeof(((cls*)0)->member)
 
 u32 FFLiGetTextureResourceNum(FFLiTexturePartsType partsType)
 {
@@ -66,7 +66,8 @@ u32 FFLiGetShapeResourceNum(FFLiShapePartsType partsType)
     return 0;
 }
 
-FFLiResourcePartsInfo* FFLiGetTextureResoucePartsInfos(u32* pNum, FFLiResourceTextureHeader* pHeader, FFLiTexturePartsType partsType)
+FFLiResourcePartsInfo* FFLiGetTextureResoucePartsInfos(u32* pNum, FFLiResourceTextureHeader* pHeader,
+                                                       FFLiTexturePartsType partsType)
 {
     *pNum = FFLiGetTextureResourceNum(partsType);
     switch (partsType)
@@ -97,7 +98,8 @@ FFLiResourcePartsInfo* FFLiGetTextureResoucePartsInfos(u32* pNum, FFLiResourceTe
     return NULL;
 }
 
-FFLiResourcePartsInfo* FFLiGetShapeResoucePartsInfos(u32* pNum, FFLiResourceShapeHeader* pHeader, FFLiShapePartsType partsType)
+FFLiResourcePartsInfo* FFLiGetShapeResoucePartsInfos(u32* pNum, FFLiResourceShapeHeader* pHeader,
+                                                     FFLiShapePartsType partsType)
 {
     *pNum = FFLiGetShapeResourceNum(partsType);
     switch (partsType)
@@ -186,7 +188,8 @@ FFLResult FFLiResourceHeader::GetResult() const
     return FFL_RESULT_OK;
 }
 
-namespace {
+namespace
+{
 
 void SwapEndianResourcePartsInfo(FFLiResourcePartsInfo* pPartsInfo, u32 num)
 {
@@ -220,14 +223,16 @@ void FFLiResourceHeader::SwapEndian()
     for (u32 i = 0; i < FFLI_TEXTURE_PARTS_TYPE_MAX; i++)
     {
         u32 num;
-        FFLiResourcePartsInfo* pPartsInfo = FFLiGetTextureResoucePartsInfos(&num, GetTextureHeader(), FFLiTexturePartsType(i));
+        FFLiResourcePartsInfo* pPartsInfo = FFLiGetTextureResoucePartsInfos(&num, GetTextureHeader(),
+                                                                            FFLiTexturePartsType(i));
         SwapEndianResourcePartsInfo(pPartsInfo, num);
     }
 
     for (u32 i = 0; i < FFLI_SHAPE_PARTS_TYPE_MAX; i++)
     {
         u32 num;
-        FFLiResourcePartsInfo* pPartsInfo = FFLiGetShapeResoucePartsInfos(&num, GetShapeHeader(), FFLiShapePartsType(i));
+        FFLiResourcePartsInfo* pPartsInfo = FFLiGetShapeResoucePartsInfos(&num, GetShapeHeader(),
+                                                                          FFLiShapePartsType(i));
         SwapEndianResourcePartsInfo(pPartsInfo, num);
     }
 

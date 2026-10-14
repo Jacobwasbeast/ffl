@@ -16,7 +16,8 @@
 
 #include <cstring>
 
-namespace {
+namespace
+{
 
 u32 ExpressionFlagCount(u32 expressionFlag)
 {
@@ -54,13 +55,14 @@ u32 FFLiGetBufferSizeMaskTextures(u32 expressionFlag, u32 resolution, bool enabl
     u32 numMips = enableMipMap ? FFLiGetMipMapNum(resolution, resolution) : 1;
     u32 textureSize = GetTextureBufferSize(resolution, numMips, compressTexture);
 
-    u32 ret  = FFLiRoundUp(textureSize * count, 4);
-    ret     += FFLiRoundUp(sizeof(FFLiRenderTexture), 4) * count;
+    u32 ret = FFLiRoundUp(textureSize * count, 4);
+    ret += FFLiRoundUp(sizeof(FFLiRenderTexture), 4) * count;
 
     return ret;
 }
 
-u32 FFLiGetTempBufferSizeMaskTextures(u32 expressionFlag, u32 resolution, bool enableMipMap, bool compressTexture, FFLiResourceManager* pResourceManager, FFLResourceType resourceType)
+u32 FFLiGetTempBufferSizeMaskTextures(u32 expressionFlag, u32 resolution, bool enableMipMap, bool compressTexture,
+                                      FFLiResourceManager* pResourceManager, FFLResourceType resourceType)
 {
     u32 count = ExpressionFlagCount(expressionFlag);
     u32 eyeCount = FFLiGetMaxEyeNum(count);
@@ -68,14 +70,14 @@ u32 FFLiGetTempBufferSizeMaskTextures(u32 expressionFlag, u32 resolution, bool e
 
     u32 numMips = enableMipMap ? FFLiGetMipMapNum(resolution, resolution) : 1;
 
-    u32 ret  = FFLiGetTextureMaxSizeWithAlign(pResourceManager, resourceType, FFLI_TEXTURE_PARTS_TYPE_EYE) * eyeCount;
-    ret     += FFLiGetTextureMaxSizeWithAlign(pResourceManager, resourceType, FFLI_TEXTURE_PARTS_TYPE_MOUTH) * mouthCount;
-    ret     += FFLiGetTextureMaxSizeWithAlign(pResourceManager, resourceType, FFLI_TEXTURE_PARTS_TYPE_EYEBROW);
-    ret     += FFLiGetTextureMaxSizeWithAlign(pResourceManager, resourceType, FFLI_TEXTURE_PARTS_TYPE_MOLE);
-    ret     += FFLiGetTextureMaxSizeWithAlign(pResourceManager, resourceType, FFLI_TEXTURE_PARTS_TYPE_MUSTACHE);
+    u32 ret = FFLiGetTextureMaxSizeWithAlign(pResourceManager, resourceType, FFLI_TEXTURE_PARTS_TYPE_EYE) * eyeCount;
+    ret += FFLiGetTextureMaxSizeWithAlign(pResourceManager, resourceType, FFLI_TEXTURE_PARTS_TYPE_MOUTH) * mouthCount;
+    ret += FFLiGetTextureMaxSizeWithAlign(pResourceManager, resourceType, FFLI_TEXTURE_PARTS_TYPE_EYEBROW);
+    ret += FFLiGetTextureMaxSizeWithAlign(pResourceManager, resourceType, FFLI_TEXTURE_PARTS_TYPE_MOLE);
+    ret += FFLiGetTextureMaxSizeWithAlign(pResourceManager, resourceType, FFLI_TEXTURE_PARTS_TYPE_MUSTACHE);
 
-    ret     += sizeof(FFLiRawMaskDrawParam) * count;
-    ret     += FFLiGetBufferRawMask() * count;
+    ret += sizeof(FFLiRawMaskDrawParam) * count;
+    ret += FFLiGetBufferRawMask() * count;
 
     if (compressTexture)
     {
@@ -94,7 +96,8 @@ u32 FFLiGetCompressBufferSizeMaskTexture(u32 resolution, bool enableMipMap)
     return GetTextureBufferSize(resolution, numMips, false); // Did they mean to put true here?
 }
 
-namespace {
+namespace
+{
 
 GX2SurfaceFormat GetTextureFormat(bool compressTexture, bool useOffScreenSrgbFetch)
 {
@@ -123,7 +126,8 @@ FFLiRenderTexture* FFLiRenderTextureAllocate(FFLiBufferAllocator* pAllocator)
 
 }
 
-FFLExpression FFLiInitMaskTextures(FFLiMaskTextures* pMaskTextures, u32 expressionFlag, u32 resolution, bool enableMipMap, bool compressTexture, FFLiBufferAllocator* pAllocator)
+FFLExpression FFLiInitMaskTextures(FFLiMaskTextures* pMaskTextures, u32 expressionFlag, u32 resolution,
+                                   bool enableMipMap, bool compressTexture, FFLiBufferAllocator* pAllocator)
 {
     FFLExpression expression = FFL_EXPRESSION_MAX;
 
@@ -148,7 +152,8 @@ FFLExpression FFLiInitMaskTextures(FFLiMaskTextures* pMaskTextures, u32 expressi
     return expression;
 }
 
-namespace {
+namespace
+{
 
 bool CanUseExpression(u32 expressionFlag, FFLExpression expression)
 {
@@ -159,7 +164,8 @@ void InitRawMask(FFLiMaskTexturesTempObject* pObject, u32 expressionFlag, FFLiBu
 {
     for (u32 i = 0; i < FFL_EXPRESSION_MAX; i++)
         if (CanUseExpression(expressionFlag, FFLExpression(i)))
-            pObject->pRawMaskDrawParam[i] = static_cast<FFLiRawMaskDrawParam*>(FFLiAllocateBufferAllocator(pAllocator, sizeof(FFLiRawMaskDrawParam)));
+            pObject->pRawMaskDrawParam[i] = static_cast<FFLiRawMaskDrawParam*>(
+                FFLiAllocateBufferAllocator(pAllocator, sizeof(FFLiRawMaskDrawParam)));
 }
 
 struct CorrectParam
@@ -172,7 +178,7 @@ struct CorrectParam
 };
 
 static const CorrectParam CORRECT_PARAM[FFL_EXPRESSION_MAX] = {
-/*
+    /*
     {   -1,   -1,  0,  0,  0 },
     { 0x3C,   -1,  0,  0,  0 },
     {   -1,  0xA,  2,  2,  0 },
@@ -193,26 +199,10 @@ static const CorrectParam CORRECT_PARAM[FFL_EXPRESSION_MAX] = {
     { 0x2F,   -1,  0,  0,  0 },
     { 0x2F,  0xC,  0,  0,  0 }
 */
-    { -1, -1,  0,  0,  0 },
-    { 60, -1,  0,  0,  0 },
-    { -1, 10,  2,  2,  0 },
-    { -1, 12, -2, -2,  0 },
-    { 61, -1,  0,  0, -2 },
-    { 26, -1,  0,  0,  0 },
-    { -1, 36,  0,  0,  0 },
-    { 60, 36,  0,  0,  0 },
-    { -1, 36,  2,  2,  0 },
-    { -1, 36, -2, -2,  0 },
-    { 61, 36,  0,  0, -2 },
-    { 26, 36,  0,  0,  0 },
-    { 47, -1,  0,  0,  0 },
-    { 47, -1,  0,  0,  0 },
-    { 47, 36,  0,  0,  0 },
-    { 47, 36,  0,  0,  0 },
-    { 47, -1,  0,  0,  0 },
-    { 47, -1,  0,  0,  0 },
-    { 47, 12,  0,  0,  0 }
-};
+    {-1, -1, 0, 0, 0},  {60, -1, 0, 0, 0}, {-1, 10, 2, 2, 0}, {-1, 12, -2, -2, 0}, {61, -1, 0, 0, -2},
+    {26, -1, 0, 0, 0},  {-1, 36, 0, 0, 0}, {60, 36, 0, 0, 0}, {-1, 36, 2, 2, 0},   {-1, 36, -2, -2, 0},
+    {61, 36, 0, 0, -2}, {26, 36, 0, 0, 0}, {47, -1, 0, 0, 0}, {47, -1, 0, 0, 0},   {47, 36, 0, 0, 0},
+    {47, 36, 0, 0, 0},  {47, -1, 0, 0, 0}, {47, -1, 0, 0, 0}, {47, 12, 0, 0, 0}};
 
 const CorrectParam& GetCorrectParam(FFLExpression expression)
 {
@@ -261,11 +251,16 @@ void SetupExpressionCharInfo(FFLiCharInfo* pExpressionCharInfo, const FFLiCharIn
 
 }
 
-FFLResult FFLiInitTempObjectMaskTextures(FFLiMaskTexturesTempObject* pObject, const FFLiMaskTextures* pMaskTextures, const FFLiCharInfo* pCharInfo, u32 expressionFlag, u32 resolution, bool enableMipMap, bool compressTexture, bool compressUseUB, FFLiResourceLoader* pResLoader, FFLiBufferAllocator* pAllocator, FFLiRenderTextureBuffer* pRenderTextureBuffer)
+FFLResult FFLiInitTempObjectMaskTextures(FFLiMaskTexturesTempObject* pObject, const FFLiMaskTextures* pMaskTextures,
+                                         const FFLiCharInfo* pCharInfo, u32 expressionFlag, u32 resolution,
+                                         bool enableMipMap, bool compressTexture, bool compressUseUB,
+                                         FFLiResourceLoader* pResLoader, FFLiBufferAllocator* pAllocator,
+                                         FFLiRenderTextureBuffer* pRenderTextureBuffer)
 {
     std::memset(pObject, 0, sizeof(FFLiMaskTexturesTempObject));
 
-    FFLResult result = FFLiLoadPartsTextures(&pObject->partsTextures, pCharInfo, expressionFlag, pResLoader, pAllocator);
+    FFLResult result = FFLiLoadPartsTextures(&pObject->partsTextures, pCharInfo, expressionFlag, pResLoader,
+                                             pAllocator);
     if (result != FFL_RESULT_OK)
         return result;
 
@@ -297,15 +292,10 @@ FFLResult FFLiInitTempObjectMaskTextures(FFLiMaskTexturesTempObject* pObject, co
 
             desc.pTextureMole = pObject->partsTextures.pTextureMole;
 
-            FFLiInitDrawParamRawMask(
-                pObject->pRawMaskDrawParam[i],
-                &expressionCharInfo,
-                resolution,
-                FFLiCharInfoAndTypeToEyeIndex(pCharInfo, element.eyeTextureType[1]),
-                FFLiCharInfoAndTypeToEyeIndex(pCharInfo, element.eyeTextureType[0]),
-                &desc,
-                pAllocator
-            );
+            FFLiInitDrawParamRawMask(pObject->pRawMaskDrawParam[i], &expressionCharInfo, resolution,
+                                     FFLiCharInfoAndTypeToEyeIndex(pCharInfo, element.eyeTextureType[1]),
+                                     FFLiCharInfoAndTypeToEyeIndex(pCharInfo, element.eyeTextureType[0]), &desc,
+                                     pAllocator);
 
             if (compressTexture)
                 pObject->pCompressorParam[i] = FFLiCompressorParam::Create(numMips, compressUseUB, pAllocator);
@@ -315,15 +305,18 @@ FFLResult FFLiInitTempObjectMaskTextures(FFLiMaskTexturesTempObject* pObject, co
     if (compressTexture)
     {
         pObject->pRenderTexture = FFLiRenderTextureAllocate(pAllocator);
-        FFLiInitByBufferRenderTexture(pObject->pRenderTexture, resolution, resolution, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, numMips, pRenderTextureBuffer);
+        FFLiInitByBufferRenderTexture(pObject->pRenderTexture, resolution, resolution,
+                                      GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, numMips, pRenderTextureBuffer);
     }
 
     return result;
 }
 
-void FFLiRenderMaskTextures(FFLiMaskTextures* pMaskTextures, FFLiMaskTexturesTempObject* pObject, const FFLiShaderCallback* pCallback, FFLiCopySurface* pCopySurface, FFLiCompressorImplBC3* pCompressorImpl)
+void FFLiRenderMaskTextures(FFLiMaskTextures* pMaskTextures, FFLiMaskTexturesTempObject* pObject,
+                            const FFLiShaderCallback* pCallback, FFLiCopySurface* pCopySurface,
+                            FFLiCompressorImplBC3* pCompressorImpl)
 {
-    static const FFLColor BLACK = { };
+    static const FFLColor BLACK = {};
 
     FFLiInvalidatePartsTextures(&pObject->partsTextures);
 
@@ -335,10 +328,12 @@ void FFLiRenderMaskTextures(FFLiMaskTextures* pMaskTextures, FFLiMaskTexturesTem
         {
             FFLiInvalidateRawMask(pObject->pRawMaskDrawParam[i]);
 
-            FFLiRenderTexture& renderTexture = *(useTempRenderTexture ? pObject->pRenderTexture : pMaskTextures->pRenderTextures[i]);
+            FFLiRenderTexture& renderTexture = *(useTempRenderTexture ? pObject->pRenderTexture
+                                                                      : pMaskTextures->pRenderTextures[i]);
 
             FFLiInvalidateRenderTexture(&renderTexture);
-            FFLiSetupRenderTexture(&renderTexture, &BLACK, NULL, 0, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM, pCallback);
+            FFLiSetupRenderTexture(&renderTexture, &BLACK, NULL, 0, GX2_SURFACE_FORMAT_TCS_R8_G8_B8_A8_UNORM,
+                                   pCallback);
 
             FFLiDrawRawMask(pObject->pRawMaskDrawParam[i], pCallback);
 
@@ -346,7 +341,8 @@ void FFLiRenderMaskTextures(FFLiMaskTextures* pMaskTextures, FFLiMaskTexturesTem
             {
                 pCopySurface->Begin();
                 for (u32 j = 0; j < renderTexture.gx2Texture.surface.numMips - 1; j++)
-                    pCopySurface->Execute(&renderTexture.gx2Texture.surface, j + 1, &renderTexture.gx2Texture.surface, j);
+                    pCopySurface->Execute(&renderTexture.gx2Texture.surface, j + 1, &renderTexture.gx2Texture.surface,
+                                          j);
             }
 
             pCallback->CallSetContextState();
@@ -358,10 +354,10 @@ void FFLiRenderMaskTextures(FFLiMaskTextures* pMaskTextures, FFLiMaskTexturesTem
                 const FFLiRenderTexture* pSrc = &renderTexture;
                 FFLiRenderTexture* pDst = pMaskTextures->pRenderTextures[i];
                 FFLiCompressorParam* pParam = pObject->pCompressorParam[i];
-                
+
                 FFLiInvalidateTexture(&pDst->gx2Texture);
                 pParam->SetTexture(&pSrc->gx2Texture);
-            
+
                 pCompressorImpl->CompressImpl(&pDst->gx2Texture, &pSrc->gx2Texture, pParam);
 
                 FFLiFlushRenderTexture(pDst);

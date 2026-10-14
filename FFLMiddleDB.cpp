@@ -2,7 +2,8 @@
 
 #include <nn/ffl/FFLiMiddleDB.h>
 
-namespace {
+namespace
+{
 
 FFLiMiddleDB* GetMiddleDB(FFLMiddleDB* pMiddleDB);
 const FFLiMiddleDB* GetMiddleDB(const FFLMiddleDB* pMiddleDB);
@@ -39,7 +40,8 @@ void FFLSetMiddleDBHiddenMask(FFLMiddleDB* pMiddleDB, FFLGender gender)
     FFLiSetMiddleDBHiddenMask(GetMiddleDB(pMiddleDB), gender);
 }
 
-namespace {
+namespace
+{
 
 FFLiMiddleDB* GetMiddleDB(FFLMiddleDB* pMiddleDB)
 {

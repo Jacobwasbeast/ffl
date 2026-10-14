@@ -6,29 +6,29 @@
 
 #include <cstring>
 
-namespace {
+namespace
+{
 
 static const FFLiEyeMouthTypeElement EYE_MOUTH_TYPE_ELEMENT[FFL_EXPRESSION_MAX] = {
-    { { FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_0 }, FFLI_MOUTH_TEXTURE_TYPE_0 },
-    { { FFLI_EYE_TEXTURE_TYPE_1, FFLI_EYE_TEXTURE_TYPE_1 }, FFLI_MOUTH_TEXTURE_TYPE_0 },
-    { { FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_0 }, FFLI_MOUTH_TEXTURE_TYPE_1 },
-    { { FFLI_EYE_TEXTURE_TYPE_2, FFLI_EYE_TEXTURE_TYPE_2 }, FFLI_MOUTH_TEXTURE_TYPE_2 },
-    { { FFLI_EYE_TEXTURE_TYPE_3, FFLI_EYE_TEXTURE_TYPE_3 }, FFLI_MOUTH_TEXTURE_TYPE_0 },
-    { { FFLI_EYE_TEXTURE_TYPE_4, FFLI_EYE_TEXTURE_TYPE_4 }, FFLI_MOUTH_TEXTURE_TYPE_0 },
-    { { FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_0 }, FFLI_MOUTH_TEXTURE_TYPE_3 },
-    { { FFLI_EYE_TEXTURE_TYPE_1, FFLI_EYE_TEXTURE_TYPE_1 }, FFLI_MOUTH_TEXTURE_TYPE_3 },
-    { { FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_0 }, FFLI_MOUTH_TEXTURE_TYPE_3 },
-    { { FFLI_EYE_TEXTURE_TYPE_2, FFLI_EYE_TEXTURE_TYPE_2 }, FFLI_MOUTH_TEXTURE_TYPE_3 },
-    { { FFLI_EYE_TEXTURE_TYPE_3, FFLI_EYE_TEXTURE_TYPE_3 }, FFLI_MOUTH_TEXTURE_TYPE_3 },
-    { { FFLI_EYE_TEXTURE_TYPE_4, FFLI_EYE_TEXTURE_TYPE_4 }, FFLI_MOUTH_TEXTURE_TYPE_3 },
-    { { FFLI_EYE_TEXTURE_TYPE_5, FFLI_EYE_TEXTURE_TYPE_0 }, FFLI_MOUTH_TEXTURE_TYPE_0 },
-    { { FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_5 }, FFLI_MOUTH_TEXTURE_TYPE_0 },
-    { { FFLI_EYE_TEXTURE_TYPE_5, FFLI_EYE_TEXTURE_TYPE_0 }, FFLI_MOUTH_TEXTURE_TYPE_3 },
-    { { FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_5 }, FFLI_MOUTH_TEXTURE_TYPE_3 },
-    { { FFLI_EYE_TEXTURE_TYPE_5, FFLI_EYE_TEXTURE_TYPE_0 }, FFLI_MOUTH_TEXTURE_TYPE_4 },
-    { { FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_5 }, FFLI_MOUTH_TEXTURE_TYPE_4 },
-    { { FFLI_EYE_TEXTURE_TYPE_5, FFLI_EYE_TEXTURE_TYPE_5 }, FFLI_MOUTH_TEXTURE_TYPE_2 }
-};
+    {{FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_0}, FFLI_MOUTH_TEXTURE_TYPE_0},
+    {{FFLI_EYE_TEXTURE_TYPE_1, FFLI_EYE_TEXTURE_TYPE_1}, FFLI_MOUTH_TEXTURE_TYPE_0},
+    {{FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_0}, FFLI_MOUTH_TEXTURE_TYPE_1},
+    {{FFLI_EYE_TEXTURE_TYPE_2, FFLI_EYE_TEXTURE_TYPE_2}, FFLI_MOUTH_TEXTURE_TYPE_2},
+    {{FFLI_EYE_TEXTURE_TYPE_3, FFLI_EYE_TEXTURE_TYPE_3}, FFLI_MOUTH_TEXTURE_TYPE_0},
+    {{FFLI_EYE_TEXTURE_TYPE_4, FFLI_EYE_TEXTURE_TYPE_4}, FFLI_MOUTH_TEXTURE_TYPE_0},
+    {{FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_0}, FFLI_MOUTH_TEXTURE_TYPE_3},
+    {{FFLI_EYE_TEXTURE_TYPE_1, FFLI_EYE_TEXTURE_TYPE_1}, FFLI_MOUTH_TEXTURE_TYPE_3},
+    {{FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_0}, FFLI_MOUTH_TEXTURE_TYPE_3},
+    {{FFLI_EYE_TEXTURE_TYPE_2, FFLI_EYE_TEXTURE_TYPE_2}, FFLI_MOUTH_TEXTURE_TYPE_3},
+    {{FFLI_EYE_TEXTURE_TYPE_3, FFLI_EYE_TEXTURE_TYPE_3}, FFLI_MOUTH_TEXTURE_TYPE_3},
+    {{FFLI_EYE_TEXTURE_TYPE_4, FFLI_EYE_TEXTURE_TYPE_4}, FFLI_MOUTH_TEXTURE_TYPE_3},
+    {{FFLI_EYE_TEXTURE_TYPE_5, FFLI_EYE_TEXTURE_TYPE_0}, FFLI_MOUTH_TEXTURE_TYPE_0},
+    {{FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_5}, FFLI_MOUTH_TEXTURE_TYPE_0},
+    {{FFLI_EYE_TEXTURE_TYPE_5, FFLI_EYE_TEXTURE_TYPE_0}, FFLI_MOUTH_TEXTURE_TYPE_3},
+    {{FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_5}, FFLI_MOUTH_TEXTURE_TYPE_3},
+    {{FFLI_EYE_TEXTURE_TYPE_5, FFLI_EYE_TEXTURE_TYPE_0}, FFLI_MOUTH_TEXTURE_TYPE_4},
+    {{FFLI_EYE_TEXTURE_TYPE_0, FFLI_EYE_TEXTURE_TYPE_5}, FFLI_MOUTH_TEXTURE_TYPE_4},
+    {{FFLI_EYE_TEXTURE_TYPE_5, FFLI_EYE_TEXTURE_TYPE_5}, FFLI_MOUTH_TEXTURE_TYPE_2}};
 
 void ExpressionToEyeUseFlag(bool* pUseFlag, u32 expressionFlag);
 void ExpressionToMouthUseFlag(bool* pUseFlag, u32 expressionFlag);
@@ -37,7 +37,8 @@ void InvalidateTextures(GX2Texture** ppTextures, u32 count);
 
 }
 
-FFLResult FFLiLoadPartsTextures(FFLiPartsTextures* pPartsTextures, const FFLiCharInfo* pCharInfo, u32 expressionFlag, FFLiResourceLoader* pResLoader, FFLiBufferAllocator* pAllocator)
+FFLResult FFLiLoadPartsTextures(FFLiPartsTextures* pPartsTextures, const FFLiCharInfo* pCharInfo, u32 expressionFlag,
+                                FFLiResourceLoader* pResLoader, FFLiBufferAllocator* pAllocator)
 {
     std::memset(pPartsTextures, 0, sizeof(FFLiPartsTextures));
 
@@ -51,7 +52,9 @@ FFLResult FFLiLoadPartsTextures(FFLiPartsTextures* pPartsTextures, const FFLiCha
         {
             if (useFlag[i])
             {
-                result = FFLiLoadTextureWithAllocate(&(pPartsTextures->pTexturesEye[i]), FFLI_TEXTURE_PARTS_TYPE_EYE, FFLiCharInfoAndTypeToEyeIndex(pCharInfo, FFLiEyeTextureType(i)), pResLoader, pAllocator);
+                result = FFLiLoadTextureWithAllocate(&(pPartsTextures->pTexturesEye[i]), FFLI_TEXTURE_PARTS_TYPE_EYE,
+                                                     FFLiCharInfoAndTypeToEyeIndex(pCharInfo, FFLiEyeTextureType(i)),
+                                                     pResLoader, pAllocator);
                 if (result != FFL_RESULT_OK)
                     return result;
             }
@@ -66,22 +69,27 @@ FFLResult FFLiLoadPartsTextures(FFLiPartsTextures* pPartsTextures, const FFLiCha
         {
             if (useFlag[i])
             {
-                result = FFLiLoadTextureWithAllocate(&(pPartsTextures->pTexturesMouth[i]), FFLI_TEXTURE_PARTS_TYPE_MOUTH, FFLiCharInfoAndTypeToMouthIndex(pCharInfo, FFLiMouthTextureType(i)), pResLoader, pAllocator);
+                result = FFLiLoadTextureWithAllocate(
+                    &(pPartsTextures->pTexturesMouth[i]), FFLI_TEXTURE_PARTS_TYPE_MOUTH,
+                    FFLiCharInfoAndTypeToMouthIndex(pCharInfo, FFLiMouthTextureType(i)), pResLoader, pAllocator);
                 if (result != FFL_RESULT_OK)
                     return result;
             }
         }
     }
 
-    result = FFLiLoadTextureWithAllocate(&pPartsTextures->pTextureEyebrow, FFLI_TEXTURE_PARTS_TYPE_EYEBROW, pCharInfo->parts.eyebrowType, pResLoader, pAllocator);
+    result = FFLiLoadTextureWithAllocate(&pPartsTextures->pTextureEyebrow, FFLI_TEXTURE_PARTS_TYPE_EYEBROW,
+                                         pCharInfo->parts.eyebrowType, pResLoader, pAllocator);
     if (result != FFL_RESULT_OK)
         return result;
 
-    result = FFLiLoadTextureWithAllocate(&pPartsTextures->pTextureMustache, FFLI_TEXTURE_PARTS_TYPE_MUSTACHE, pCharInfo->parts.mustacheType, pResLoader, pAllocator);
+    result = FFLiLoadTextureWithAllocate(&pPartsTextures->pTextureMustache, FFLI_TEXTURE_PARTS_TYPE_MUSTACHE,
+                                         pCharInfo->parts.mustacheType, pResLoader, pAllocator);
     if (result != FFL_RESULT_OK)
         return result;
 
-    return FFLiLoadTextureWithAllocate(&pPartsTextures->pTextureMole, FFLI_TEXTURE_PARTS_TYPE_MOLE, pCharInfo->parts.moleType, pResLoader, pAllocator);
+    return FFLiLoadTextureWithAllocate(&pPartsTextures->pTextureMole, FFLI_TEXTURE_PARTS_TYPE_MOLE,
+                                       pCharInfo->parts.moleType, pResLoader, pAllocator);
 }
 
 s32 FFLiCharInfoAndTypeToEyeIndex(const FFLiCharInfo* pCharInfo, FFLiEyeTextureType type)
@@ -151,7 +159,8 @@ u32 FFLiGetMaxEyeNum(u32 expressionFlagCount)
     return FFLiMin<u32>(expressionFlagCount + 1, FFLI_EYE_TEXTURE_TYPE_MAX);
 }
 
-namespace {
+namespace
+{
 
 void ExpressionToEyeUseFlag(bool* pUseFlag, u32 expressionFlag)
 {
@@ -178,7 +187,6 @@ void ExpressionToMouthUseFlag(bool* pUseFlag, u32 expressionFlag)
         if (expressionFlag & 1 << i)
             pUseFlag[element.mouthTextureType] = true;
     }
-
 }
 
 void InvalidateTextures(GX2Texture** ppTextures, u32 count)

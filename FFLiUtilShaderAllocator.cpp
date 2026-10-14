@@ -1,7 +1,8 @@
 #include <nn/ffl/FFLiUtilShader.h>
 #include <nn/ffl/FFLiUtilShaderAllocator.h>
 
-FFLiUtilShaderAllocator::FFLiUtilShaderAllocator(FFLiBufferAllocator* pAllocator, u32 numAttribs, const void* pShaderData, u32 shaderIndex)
+FFLiUtilShaderAllocator::FFLiUtilShaderAllocator(FFLiBufferAllocator* pAllocator, u32 numAttribs,
+                                                 const void* pShaderData, u32 shaderIndex)
 {
     u32 programBufferSize = FFLiUtilShader::GetProgramBufferSize(numAttribs, pShaderData, shaderIndex);
     void* pProgramBuffer = pAllocator->Allocate(programBufferSize, GX2_SHADER_ALIGNMENT);

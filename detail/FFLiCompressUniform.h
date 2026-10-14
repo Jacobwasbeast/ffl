@@ -13,15 +13,9 @@ public:
     FFLiCompressUniform();
     ~FFLiCompressUniform(); // Deleted in NSMBU
 
-    const void* GetVertexUniform() const
-    {
-        return m_pVertexUniform;
-    }
+    const void* GetVertexUniform() const { return m_pVertexUniform; }
 
-    const void* GetPixelUniform() const
-    {
-        return m_pPixelUniform;
-    }
+    const void* GetPixelUniform() const { return m_pPixelUniform; }
 
     void Setup(FFLiBufferAllocator* pAllocator, u32 compressUseUB);
     void SetResolution(u32 width, u32 height);
@@ -30,9 +24,9 @@ public:
     static u32 GetBufferSize();
 
 private:
-    bool    m_IsUB;
-    f32*    m_pVertexUniform;
-    f32*    m_pPixelUniform;
+    bool m_IsUB;
+    f32* m_pVertexUniform;
+    f32* m_pPixelUniform;
 };
 NN_STATIC_ASSERT(sizeof(FFLiCompressUniform) == 0xC);
 

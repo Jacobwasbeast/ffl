@@ -23,8 +23,8 @@ FFLiCopySurface::~FFLiCopySurface()
 
 u32 FFLiCopySurface::GetBufferSize()
 {
-    u32 ret  = FFLiCopySurfaceShader::GetBufferSize();
-    ret     += FFLiCopySurfaceDrawer::GetBufferSize();
+    u32 ret = FFLiCopySurfaceShader::GetBufferSize();
+    ret += FFLiCopySurfaceDrawer::GetBufferSize();
 
     return ret;
 }
@@ -40,16 +40,9 @@ void FFLiCopySurface::Begin()
     FFLiTempSetContextState(NULL);
     GX2SetDefaultState();
     GX2SetDepthOnlyControl(GX2_DISABLE, GX2_DISABLE, GX2_COMPARE_NEVER);
-    GX2SetTargetChannelMasks(
-        GX2_CHANNEL_MASK_RGBA,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE
-    );
+    GX2SetTargetChannelMasks(GX2_CHANNEL_MASK_RGBA, GX2_CHANNEL_MASK_NONE, GX2_CHANNEL_MASK_NONE, GX2_CHANNEL_MASK_NONE,
+                             GX2_CHANNEL_MASK_NONE, GX2_CHANNEL_MASK_NONE, GX2_CHANNEL_MASK_NONE,
+                             GX2_CHANNEL_MASK_NONE);
 
     m_Shader.Bind();
     m_Drawer.SetAttributeBuffer(0, 1);
@@ -73,7 +66,8 @@ bool FFLiCopySurface::CanInitCharModel(bool isSetupGPU, bool compressTexture) co
 void FFLiCopySurface::SetupSrcSurface(const GX2Surface* pSurface, u32 mipLevel)
 {
     GX2Texture texture;
-    GX2InitTexture(&texture, pSurface->width, pSurface->height, pSurface->depth, pSurface->numMips, pSurface->format, pSurface->dim);
+    GX2InitTexture(&texture, pSurface->width, pSurface->height, pSurface->depth, pSurface->numMips, pSurface->format,
+                   pSurface->dim);
     GX2InitTexturePtrs(&texture, pSurface->imagePtr, pSurface->mipPtr);
     m_Shader.SetTexture(&texture, mipLevel);
 }
@@ -92,18 +86,8 @@ void FFLiCopySurface::SetupDstSurface(GX2Surface* pSurface, u32 mipLevel)
     colorBuffer.surface.mipPtr = pSurface->mipPtr;
     GX2SetColorBuffer(&colorBuffer, GX2_RENDER_TARGET_0);
 
-    GX2SetViewport(
-        0.0f,
-        0.0f,
-        f32(FFLiGetMipMapLevelSize(pSurface->width, mipLevel)),
-        f32(FFLiGetMipMapLevelSize(pSurface->height, mipLevel)),
-        0.0f,
-        1.0f
-    );
-    GX2SetScissor(
-        0.0f,
-        0.0f,
-        f32(FFLiGetMipMapLevelSize(pSurface->width, mipLevel)),
-        f32(FFLiGetMipMapLevelSize(pSurface->height, mipLevel))
-    );
+    GX2SetViewport(0.0f, 0.0f, f32(FFLiGetMipMapLevelSize(pSurface->width, mipLevel)),
+                   f32(FFLiGetMipMapLevelSize(pSurface->height, mipLevel)), 0.0f, 1.0f);
+    GX2SetScissor(0.0f, 0.0f, f32(FFLiGetMipMapLevelSize(pSurface->width, mipLevel)),
+                  f32(FFLiGetMipMapLevelSize(pSurface->height, mipLevel)));
 }

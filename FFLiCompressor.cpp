@@ -1,8 +1,8 @@
 #include <nn/ffl/FFLiCompressor.h>
 
 FFLiCompressor::FFLiCompressor(FFLiBufferAllocator* pAllocator, const void* pShaderData)
-    : m_CompressorImplBC1(pAllocator, pShaderData, 0)
-    , m_CompressorImplBC3(pAllocator, pShaderData, 1)
+    : m_CompressorImplBC1(pAllocator, pShaderData, 0),
+      m_CompressorImplBC3(pAllocator, pShaderData, 1)
 {
 }
 

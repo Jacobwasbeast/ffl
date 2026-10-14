@@ -19,11 +19,7 @@ static void InvalidatePixelShader(GX2PixelShader* pShader)
     FFLiInvalidateShader(pShader->shaderPtr, pShader->shaderSize);
 }
 
-FFLiCompressShader::FFLiCompressShader()
-    : m_FetchShader()
-    , m_pVertexShader(NULL)
-    , m_pPixelShader(NULL)
-    , m_Sampler()
+FFLiCompressShader::FFLiCompressShader() : m_FetchShader(), m_pVertexShader(NULL), m_pPixelShader(NULL), m_Sampler()
 {
 }
 
@@ -32,32 +28,21 @@ bool FFLiCompressShader::UseUB() const
     return m_pVertexShader->shaderMode == GX2_SHADER_MODE_UNIFORM_BLOCK;
 }
 
-namespace {
+namespace
+{
 
-const char* TEXTURE_SAMPLER_NAME[1] = {
-    "cTexture"
-};
+const char* TEXTURE_SAMPLER_NAME[1] = {"cTexture"};
 
-const char* VERTEX_UNIFORM_TEX_SIZE_NAME[1] = {
-    "cTexSizeRCP"
-};
+const char* VERTEX_UNIFORM_TEX_SIZE_NAME[1] = {"cTexSizeRCP"};
 
-const char* PIXEL_UNIFORM_REFRER_LEVEL_NAME[1] = {
-    "cReferLevel"
-};
+const char* PIXEL_UNIFORM_REFRER_LEVEL_NAME[1] = {"cReferLevel"};
 
-const char* VERTEX_UNIFORM_BLOCK_NAME[1] = {
-    "cVertexBlock"
-};
+const char* VERTEX_UNIFORM_BLOCK_NAME[1] = {"cVertexBlock"};
 
-const char* PIXEL_UNIFORM_BLOCK_NAME[1] = {
-    "cPixelBlock"
-};
+const char* PIXEL_UNIFORM_BLOCK_NAME[1] = {"cPixelBlock"};
 
-FFLiUtilShader::AttributeStreamDesc FETCH_SHADER_DESC[2] = {
-    { "aPosition", 0, 0, GX2_ATTRIB_FORMAT_32_32_32_FLOAT },
-    { "aTexCoord", 1, 0, GX2_ATTRIB_FORMAT_32_32_FLOAT }
-};
+FFLiUtilShader::AttributeStreamDesc FETCH_SHADER_DESC[2] = {{"aPosition", 0, 0, GX2_ATTRIB_FORMAT_32_32_32_FLOAT},
+                                                            {"aTexCoord", 1, 0, GX2_ATTRIB_FORMAT_32_32_FLOAT}};
 
 }
 
@@ -82,7 +67,8 @@ bool FFLiCompressShader::SetupLocationForUR()
 
 bool FFLiCompressShader::SetupLocationForUB()
 {
-    if (!FFLiUtilShader::GetUniformBlockLocation(&m_VertexUniformLocation, m_pVertexShader, VERTEX_UNIFORM_BLOCK_NAME[0]))
+    if (!FFLiUtilShader::GetUniformBlockLocation(&m_VertexUniformLocation, m_pVertexShader,
+                                                 VERTEX_UNIFORM_BLOCK_NAME[0]))
         return false;
 
     if (!FFLiUtilShader::GetUniformBlockLocation(&m_PixelUniformLocation, m_pPixelShader, PIXEL_UNIFORM_BLOCK_NAME[0]))

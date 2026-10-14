@@ -4,10 +4,11 @@
 #include <nn/ffl/types.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-#define FFL_CREATE_ID_SIZE  (10)
+#define FFL_CREATE_ID_SIZE (10)
 
 typedef struct FFLCreateID
 {
@@ -16,8 +17,7 @@ typedef struct FFLCreateID
         u8 data[FFL_CREATE_ID_SIZE];
         u16 value16[FFL_CREATE_ID_SIZE / sizeof(u16)];
     };
-}
-FFLCreateID;
+} FFLCreateID;
 NN_STATIC_ASSERT(sizeof(FFLCreateID) == FFL_CREATE_ID_SIZE);
 
 #ifdef __cplusplus

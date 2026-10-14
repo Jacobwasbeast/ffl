@@ -8,9 +8,7 @@ class FFLiAllocator;
 class FFLiZlibInterface
 {
 public:
-    virtual ~FFLiZlibInterface()
-    {
-    }
+    virtual ~FFLiZlibInterface() {}
 
     virtual s32 Process(void** ppDst, u32* pDstSize, const void** ppSrc, u32* pSrcSize, s32 flush) = 0;
     virtual u32 TotalInputSize() const = 0;

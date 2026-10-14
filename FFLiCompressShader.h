@@ -34,12 +34,12 @@ public:
 
 private:
     FFLiUtilShader::FetchShader m_FetchShader;
-    GX2VertexShader*            m_pVertexShader;
-    GX2PixelShader*             m_pPixelShader;
-    GX2Sampler                  m_Sampler;
-    u32                         m_VertexUniformLocation;
-    u32                         m_PixelUniformLocation;
-    u32                         m_SamplerLocation;
+    GX2VertexShader* m_pVertexShader;
+    GX2PixelShader* m_pPixelShader;
+    GX2Sampler m_Sampler;
+    u32 m_VertexUniformLocation;
+    u32 m_PixelUniformLocation;
+    u32 m_SamplerLocation;
 };
 NN_STATIC_ASSERT(sizeof(FFLiCompressShader) == 0x44);
 

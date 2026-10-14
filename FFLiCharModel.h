@@ -19,24 +19,24 @@ struct FFLiTextureTempObject;
 
 struct FFLiCharModel
 {
-    FFLiCharInfo            charInfo;
-    FFLCharModelDesc        charModelDesc;
-    void*                   pBuffer;
-    u32                     bufferSize;
-    FFLExpression           expression;
-    FFLiTextureTempObject*  pTextureTempObject;
-    FFLDrawParam            drawParam[FFLI_SHAPE_TYPE_MAX];
-    FFLiRenderTexture       facelineRenderTexture;
-    GX2Texture*             pCapTexture;
-    GX2Texture*             pGlassTexture;
-    GX2Texture*             pNoselineTexture;
-    FFLiMaskTextures        maskTextures;
-    FFLVec3                 beardPos;
-    FFLVec3                 hairPos;
-    FFLVec3                 faceCenterPos;  // Used to calculate nose(line) and glass position
-    FFLPartsTransform       partsTransform;
-    FFLModelType            modelType;
-    FFLBoundingBox          boundingBox[3];
+    FFLiCharInfo charInfo;
+    FFLCharModelDesc charModelDesc;
+    void* pBuffer;
+    u32 bufferSize;
+    FFLExpression expression;
+    FFLiTextureTempObject* pTextureTempObject;
+    FFLDrawParam drawParam[FFLI_SHAPE_TYPE_MAX];
+    FFLiRenderTexture facelineRenderTexture;
+    GX2Texture* pCapTexture;
+    GX2Texture* pGlassTexture;
+    GX2Texture* pNoselineTexture;
+    FFLiMaskTextures maskTextures;
+    FFLVec3 beardPos;
+    FFLVec3 hairPos;
+    FFLVec3 faceCenterPos; // Used to calculate nose(line) and glass position
+    FFLPartsTransform partsTransform;
+    FFLModelType modelType;
+    FFLBoundingBox boundingBox[3];
 };
 NN_STATIC_ASSERT(sizeof(FFLiCharModel) == 0x7DC);
 
@@ -46,7 +46,8 @@ struct FFLShaderCallback;
 
 u32 FFLiGetBufferSizeCharModel(const FFLCharModelDesc* pDesc);
 
-FFLResult FFLiInitCharModelCPUStep(FFLiCharModel* pModel, const FFLCharModelSource* pSource, const FFLCharModelDesc* pDesc, FFLCharModelBuffer* pBuffer);
+FFLResult FFLiInitCharModelCPUStep(FFLiCharModel* pModel, const FFLCharModelSource* pSource,
+                                   const FFLCharModelDesc* pDesc, FFLCharModelBuffer* pBuffer);
 
 u32 FFLiGetTempBufferSizeCharModel(const FFLCharModelDesc* pDesc);
 

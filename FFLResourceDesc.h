@@ -4,15 +4,15 @@
 #include <nn/ffl/FFLResourceType.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef struct FFLResourceDesc
 {
     const void* pData[FFL_RESOURCE_TYPE_MAX];
-    u32         size[FFL_RESOURCE_TYPE_MAX];
-}
-FFLResourceDesc;
+    u32 size[FFL_RESOURCE_TYPE_MAX];
+} FFLResourceDesc;
 NN_STATIC_ASSERT(sizeof(FFLResourceDesc) == 0x10);
 
 #ifdef __cplusplus

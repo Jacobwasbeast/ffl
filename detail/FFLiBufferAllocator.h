@@ -25,8 +25,8 @@ public:
     bool CanAllocate(u32 size, u32 alignment) const;
 
 private:
-    void*   m_pBuffer;
-    u32     m_Size;
+    void* m_pBuffer;
+    u32 m_Size;
 };
 NN_STATIC_ASSERT(sizeof(FFLiBufferAllocator) == 8);
 

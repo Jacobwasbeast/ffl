@@ -5,7 +5,7 @@
 
 #include <cafe/fs.h>
 
-#define FFLI_FS_COMMAND_SIZE    (0xA84)
+#define FFLI_FS_COMMAND_SIZE (0xA84)
 
 struct FFLiFsCommandBuffer
 {
@@ -28,24 +28,15 @@ public:
     static FFLiFsCommand* PlacementNew(FFLiFsCommandBuffer* pBuffer, FFLiFsClient* pClient);
     static void PlacementDelete(FFLiFsCommand* pCommand);
 
-    FSCmdBlock& GetFSCmdBlock()
-    {
-        return m_FSCmdBlock;
-    }
+    FSCmdBlock& GetFSCmdBlock() { return m_FSCmdBlock; }
 
-    const FSCmdBlock& GetFSCmdBlock() const
-    {
-        return m_FSCmdBlock;
-    }
+    const FSCmdBlock& GetFSCmdBlock() const { return m_FSCmdBlock; }
 
-    FFLiFsClient* GetClient() const
-    {
-        return m_pFsClient;
-    }
+    FFLiFsClient* GetClient() const { return m_pFsClient; }
 
 private:
-    FSCmdBlock      m_FSCmdBlock;
-    FFLiFsClient*   m_pFsClient;
+    FSCmdBlock m_FSCmdBlock;
+    FFLiFsClient* m_pFsClient;
 };
 NN_STATIC_ASSERT(sizeof(FFLiFsCommand) == FFLI_FS_COMMAND_SIZE);
 

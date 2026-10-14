@@ -7,15 +7,15 @@
 
 enum FFLiSwapEndianType
 {
-    FFLI_SWAP_ENDIAN_TYPE_U8    = 0,
-    FFLI_SWAP_ENDIAN_TYPE_U16   = 1,
-    FFLI_SWAP_ENDIAN_TYPE_U32   = 2
+    FFLI_SWAP_ENDIAN_TYPE_U8 = 0,
+    FFLI_SWAP_ENDIAN_TYPE_U16 = 1,
+    FFLI_SWAP_ENDIAN_TYPE_U32 = 2
 };
 
 struct FFLiSwapEndianDesc
 {
-    FFLiSwapEndianType  type;
-    u32                 size;
+    FFLiSwapEndianType type;
+    u32 size;
 };
 NN_STATIC_ASSERT(sizeof(FFLiSwapEndianDesc) == 8);
 
@@ -32,10 +32,11 @@ T FFLiSwapEndianImpl(T value)
     NN_STATIC_ASSERT(count == 1 || count % 2 == 0);
     const u32 count_2 = count / 2;
 
-    union {
-        T   value;
-        u8  data[count];
-    } value_ = { value };
+    union
+    {
+        T value;
+        u8 data[count];
+    } value_ = {value};
 
     for (u32 i = 0; i < count_2; i++)
     {

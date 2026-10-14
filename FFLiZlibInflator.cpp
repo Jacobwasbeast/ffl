@@ -5,19 +5,15 @@
 
 #include <cstring>
 
-namespace {
+namespace
+{
 
 class InflateAllocator : public FFLiAllocatorInterface
 {
 public:
-    InflateAllocator(void* pBuffer, u32 size)
-    {
-        m_BufferAllocator.Init(pBuffer, size);
-    }
+    InflateAllocator(void* pBuffer, u32 size) { m_BufferAllocator.Init(pBuffer, size); }
 
-    virtual ~InflateAllocator()
-    {
-    }
+    virtual ~InflateAllocator() {}
 
     virtual void* Allocate(u32 size);
     virtual void* Allocate(u32 size, u32 alignment);
@@ -47,8 +43,8 @@ void InflateAllocator::Free(void* ptr)
 }
 
 FFLiZlibInflator::FFLiZlibInflator(FFLiAllocatorInterface& allocatorInterface, s32 windowBits)
-    : m_ZlibAllocator(allocatorInterface)
-    , m_IsStreamEnd(false)
+    : m_ZlibAllocator(allocatorInterface),
+      m_IsStreamEnd(false)
 {
     std::memset(&m_Stream, 0, sizeof(z_stream));
     m_Stream.opaque = &m_ZlibAllocator;

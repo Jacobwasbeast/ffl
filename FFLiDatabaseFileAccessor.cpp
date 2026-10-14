@@ -14,23 +14,19 @@
 
 enum FFLiFsFileResult
 {
-    FFLI_FS_FILE_RESULT_OK                  = 0,
-    FFLI_FS_FILE_RESULT_READ_BUFFER_EMPTY   = 1,
-    FFLI_FS_FILE_RESULT_WRITE_BUFFER_EMPTY  = 2,
-    FFLI_FS_FILE_RESULT_OUT_OF_MEMORY       = 3,
-    FFLI_FS_FILE_RESULT_NOT_FOUND           = 4
+    FFLI_FS_FILE_RESULT_OK = 0,
+    FFLI_FS_FILE_RESULT_READ_BUFFER_EMPTY = 1,
+    FFLI_FS_FILE_RESULT_WRITE_BUFFER_EMPTY = 2,
+    FFLI_FS_FILE_RESULT_OUT_OF_MEMORY = 3,
+    FFLI_FS_FILE_RESULT_NOT_FOUND = 4
 };
 
 struct FFLiFsResult
 {
-    FFLiFsResult(FFLiFsFileResult fileResult, FSStatus fsStatus)
-        : fileResult(fileResult)
-        , fsStatus(fsStatus)
-    {
-    }
+    FFLiFsResult(FFLiFsFileResult fileResult, FSStatus fsStatus) : fileResult(fileResult), fsStatus(fsStatus) {}
 
-    FFLiFsFileResult    fileResult;
-    FSStatus            fsStatus;
+    FFLiFsFileResult fileResult;
+    FSStatus fsStatus;
 };
 NN_STATIC_ASSERT(sizeof(FFLiFsResult) == 8);
 
@@ -64,7 +60,8 @@ static inline bool CheckFileNotFound(FSStatus status)
     return false;
 }
 
-namespace {
+namespace
+{
 
 const char* ODB_FILE_NAME = "db/FFL_ODB.dat";
 
@@ -74,22 +71,23 @@ const char* HDB_FILE_NAME = "db/FFL_HDB.dat";
 
 }
 
-FFLiDatabaseFileAccessor::FFLiDatabaseFileAccessor(FFLiFsClient* pClient, FFLiDatabaseFile* pFile, FFLiFileWriteBuffer* pWriteBuffer, FFLiAllocator* pAllocator)
-    : m_pFsClient(pClient)
-    , m_FsCommand(pClient)
-    , m_pDatabaseFile(pFile)
-    , m_pFileWriteBuffer(pWriteBuffer)
-    , m_pAllocator(pAllocator)
-    , _a94(0)
-    , m_IsPathSet(false)
-    , m_IsBackupOfficialNeed(false)
-    , m_IsHiddenSaved(false)
-    , _d9c(0)
-    , m_IsSaveHiddenNeeded(false)
+FFLiDatabaseFileAccessor::FFLiDatabaseFileAccessor(FFLiFsClient* pClient, FFLiDatabaseFile* pFile,
+                                                   FFLiFileWriteBuffer* pWriteBuffer, FFLiAllocator* pAllocator)
+    : m_pFsClient(pClient),
+      m_FsCommand(pClient),
+      m_pDatabaseFile(pFile),
+      m_pFileWriteBuffer(pWriteBuffer),
+      m_pAllocator(pAllocator),
+      _a94(0),
+      m_IsPathSet(false),
+      m_IsBackupOfficialNeed(false),
+      m_IsHiddenSaved(false),
+      _d9c(0),
+      m_IsSaveHiddenNeeded(false)
 {
     std::memset(m_PathOfficial, 0, FFL_PATH_MAX_LEN);
-    std::memset(m_PathBackup,   0, FFL_PATH_MAX_LEN);
-    std::memset(m_PathHidden,   0, FFL_PATH_MAX_LEN);
+    std::memset(m_PathBackup, 0, FFL_PATH_MAX_LEN);
+    std::memset(m_PathHidden, 0, FFL_PATH_MAX_LEN);
 }
 
 FFLiDatabaseFileAccessor::~FFLiDatabaseFileAccessor()
@@ -102,7 +100,8 @@ void FFLiDatabaseFileAccessor::Init()
     m_pDatabaseFile->hidden.Init();
 }
 
-namespace {
+namespace
+{
 
 FFLResult GetDatabasePath(char* pDst, u32 size, u64 titleID, const char* filename)
 {
@@ -130,12 +129,13 @@ FFLResult FFLiDatabaseFileAccessor::AfterConstruct(u64 titleID)
     return FFL_RESULT_OK;
 }
 
-namespace {
+namespace
+{
 
 FFLiFsResult ReadFile(void* pDst, u32 size, FFLiFsCommand* pCommand, const char* pPath)
 {
     FFLiFsFile file(pCommand);
-    
+
     FSStatus status = file.Open(pPath, "r", FS_RET_NOT_FOUND);
     if (status != FS_STATUS_OK)
     {
@@ -181,7 +181,8 @@ const char* FFLiDatabaseFileAccessor::GetPathHidden() const
     return m_PathHidden;
 }
 
-namespace {
+namespace
+{
 
 FSStatus WriteFileImpl(FFLiFsFile& file, const void* pSrc, u32 size, FFLiFileWriteBuffer* pWriteBuffer)
 {
@@ -202,7 +203,8 @@ FSStatus WriteFileImpl(FFLiFsFile& file, const void* pSrc, u32 size, FFLiFileWri
     return ret;
 }
 
-FFLiFsResult WriteFile(const void* pSrc, u32 size, FFLiFsCommand* pCommand, FFLiFileWriteBuffer* pWriteBuffer, const char* pPath)
+FFLiFsResult WriteFile(const void* pSrc, u32 size, FFLiFsCommand* pCommand, FFLiFileWriteBuffer* pWriteBuffer,
+                       const char* pPath)
 {
     FFLiFsFile file(pCommand);
 
@@ -238,7 +240,8 @@ FFLiFsResult WriteFile(const void* pSrc, u32 size, FFLiFsCommand* pCommand, FFLi
     return FFLiFsResult(FFLI_FS_FILE_RESULT_OK, FS_STATUS_OK);
 }
 
-FFLiFsResult SaveDatabaseHidden(const FFLiDatabaseFileHidden& hidden, FFLiFsCommand* pCommand, FFLiFileWriteBuffer* pWriteBuffer, const char* pPath)
+FFLiFsResult SaveDatabaseHidden(const FFLiDatabaseFileHidden& hidden, FFLiFsCommand* pCommand,
+                                FFLiFileWriteBuffer* pWriteBuffer, const char* pPath)
 {
     FFLiFsResult result = WriteFile(&hidden, sizeof(FFLiDatabaseFileHidden), pCommand, pWriteBuffer, pPath);
     return result;
@@ -281,9 +284,11 @@ const char* FFLiDatabaseFileAccessor::GetPathBackup() const
     return m_PathBackup;
 }
 
-namespace {
+namespace
+{
 
-FFLiFsResult SaveDatabaseOfficial(const FFLiDatabaseFileOfficial& official, FFLiFsCommand* pCommand, FFLiFileWriteBuffer* pWriteBuffer, const char* pPath)
+FFLiFsResult SaveDatabaseOfficial(const FFLiDatabaseFileOfficial& official, FFLiFsCommand* pCommand,
+                                  FFLiFileWriteBuffer* pWriteBuffer, const char* pPath)
 {
     FFLiFsResult result = WriteFile(&official, sizeof(FFLiDatabaseFileOfficial), pCommand, pWriteBuffer, pPath);
     return result;
@@ -376,7 +381,9 @@ FFLResult FFLiDatabaseFileAccessor::BootLoadImpl(FFLiFsCommand* pCommand)
 
 FFLResult FFLiDatabaseFileAccessor::AdjustRegularListOfficial()
 {
-    FFLiDatabaseFileOfficial::AdjustRegularBuffer* pBuffer = static_cast<FFLiDatabaseFileOfficial::AdjustRegularBuffer*>(m_pAllocator->Allocate(sizeof(FFLiDatabaseFileOfficial::AdjustRegularBuffer)));
+    FFLiDatabaseFileOfficial::AdjustRegularBuffer* pBuffer =
+        static_cast<FFLiDatabaseFileOfficial::AdjustRegularBuffer*>(
+            m_pAllocator->Allocate(sizeof(FFLiDatabaseFileOfficial::AdjustRegularBuffer)));
     if (pBuffer == NULL)
         return FFL_RESULT_OUT_OF_MEMORY;
 
@@ -410,7 +417,8 @@ FFLResult FFLiDatabaseFileAccessor::SaveHidden()
 
     m_pDatabaseFile->hidden.UpdateCrc();
 
-    FFLiFsResult result = SaveDatabaseHidden(m_pDatabaseFile->hidden, &m_FsCommand, m_pFileWriteBuffer, GetPathHidden());
+    FFLiFsResult result = SaveDatabaseHidden(m_pDatabaseFile->hidden, &m_FsCommand, m_pFileWriteBuffer,
+                                             GetPathHidden());
     if (!CheckFFLiFsResult(result))
         return ConvertFFLiFsResultToFFLResult(result, FFL_RESULT_FILE_SAVE_ERROR);
 
@@ -420,11 +428,14 @@ FFLResult FFLiDatabaseFileAccessor::SaveHidden()
     return FFL_RESULT_OK;
 }
 
-namespace {
-
-FFLiFsResult CopyDatabaseOfficial(const char* pPathTo, const char* pPathFrom, FFLiFsCommand* pCommand, FFLiFileWriteBuffer* pWriteBuffer, FFLiAllocator* pAllocator)
+namespace
 {
-    FFLiDatabaseFileOfficial* pOfficial = static_cast<FFLiDatabaseFileOfficial*>(pAllocator->Allocate(sizeof(FFLiDatabaseFileOfficial), FS_IO_BUFFER_ALIGN));
+
+FFLiFsResult CopyDatabaseOfficial(const char* pPathTo, const char* pPathFrom, FFLiFsCommand* pCommand,
+                                  FFLiFileWriteBuffer* pWriteBuffer, FFLiAllocator* pAllocator)
+{
+    FFLiDatabaseFileOfficial* pOfficial = static_cast<FFLiDatabaseFileOfficial*>(
+        pAllocator->Allocate(sizeof(FFLiDatabaseFileOfficial), FS_IO_BUFFER_ALIGN));
     if (pOfficial == NULL)
     {
         FFLiFsResult result(FFLI_FS_FILE_RESULT_OUT_OF_MEMORY, FS_STATUS_OK);
@@ -448,8 +459,8 @@ FFLResult FFLiDatabaseFileAccessor::BackupOfficial()
     if (!m_pFsClient->IsValid())
         return FFL_RESULT_FS_ERROR;
 
-    const char* pPathFrom   = GetPathOfficial();
-    const char* pPathTo     = GetPathBackup();
+    const char* pPathFrom = GetPathOfficial();
+    const char* pPathTo = GetPathBackup();
 
     FFLiFsResult result = CopyDatabaseOfficial(pPathTo, pPathFrom, &m_FsCommand, m_pFileWriteBuffer, m_pAllocator);
     if (!CheckFFLiFsResult(result))

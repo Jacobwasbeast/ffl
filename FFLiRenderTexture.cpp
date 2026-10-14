@@ -29,7 +29,8 @@ u32 FFLiGetDepthBufferSizeRenderTexture(u32 width, u32 height)
     return depthBuffer.surface.alignment + depthBuffer.surface.imageSize;
 }
 
-void FFLiInitRenderTexture(FFLiRenderTexture* pRenderTexture, u32 width, u32 height, GX2SurfaceFormat format, u32 numMips, FFLiBufferAllocator* pAllocator)
+void FFLiInitRenderTexture(FFLiRenderTexture* pRenderTexture, u32 width, u32 height, GX2SurfaceFormat format,
+                           u32 numMips, FFLiBufferAllocator* pAllocator)
 {
     std::memset(pRenderTexture, 0, sizeof(FFLiRenderTexture));
 
@@ -39,15 +40,14 @@ void FFLiInitRenderTexture(FFLiRenderTexture* pRenderTexture, u32 width, u32 hei
 
     void* imagePtr = FFLiAllocateBufferAllocator(pAllocator, surface.imageSize, surface.alignment);
 
-    void* mipPtr =
-        surface.mipSize != 0
-            ? FFLiAllocateBufferAllocator(pAllocator, surface.mipSize, surface.alignment)
-            : NULL;
+    void* mipPtr = surface.mipSize != 0 ? FFLiAllocateBufferAllocator(pAllocator, surface.mipSize, surface.alignment)
+                                        : NULL;
 
     GX2InitTexturePtrs(&pRenderTexture->gx2Texture, imagePtr, mipPtr);
 }
 
-void FFLiInitByBufferRenderTexture(FFLiRenderTexture* pRenderTexture, u32 width, u32 height, GX2SurfaceFormat format, u32 numMips, FFLiRenderTextureBuffer* pRenderTextureBuffer)
+void FFLiInitByBufferRenderTexture(FFLiRenderTexture* pRenderTexture, u32 width, u32 height, GX2SurfaceFormat format,
+                                   u32 numMips, FFLiRenderTextureBuffer* pRenderTextureBuffer)
 {
     FFLiBufferAllocator allocator;
     allocator.Init(pRenderTextureBuffer->pBuffer, pRenderTextureBuffer->size);
@@ -59,12 +59,14 @@ void FFLiInvalidateRenderTexture(FFLiRenderTexture* pRenderTexture)
     FFLiInvalidateTexture(&pRenderTexture->gx2Texture);
 }
 
-void FFLiSetupRenderTexture(FFLiRenderTexture* pRenderTexture, const FFLColor* pClearColor, void* pDepthBuffer, u32 mipLevel, GX2SurfaceFormat format, const FFLiShaderCallback* pCallback)
+void FFLiSetupRenderTexture(FFLiRenderTexture* pRenderTexture, const FFLColor* pClearColor, void* pDepthBuffer,
+                            u32 mipLevel, GX2SurfaceFormat format, const FFLiShaderCallback* pCallback)
 {
     FFLiSetupRenderTexture(&pRenderTexture->gx2Texture, pClearColor, pDepthBuffer, mipLevel, format, pCallback);
 }
 
-void FFLiSetupRenderTexture(GX2Texture* pGX2Texture, const FFLColor* pClearColor, void* pDepthBuffer, u32 mipLevel, GX2SurfaceFormat format, const FFLiShaderCallback* pCallback)
+void FFLiSetupRenderTexture(GX2Texture* pGX2Texture, const FFLColor* pClearColor, void* pDepthBuffer, u32 mipLevel,
+                            GX2SurfaceFormat format, const FFLiShaderCallback* pCallback)
 {
     GX2ColorBuffer colorBuffer;
     std::memset(&colorBuffer, 0, sizeof(GX2ColorBuffer));
@@ -85,7 +87,8 @@ void FFLiSetupRenderTexture(GX2Texture* pGX2Texture, const FFLColor* pClearColor
 
     if (pDepthBuffer != NULL)
     {
-        GX2InitDepthBuffer(&depthBuffer, pGX2Texture->surface.width, pGX2Texture->surface.height, GX2_SURFACE_FORMAT_TCD_R16_UNORM, GX2_AA_MODE_1X);
+        GX2InitDepthBuffer(&depthBuffer, pGX2Texture->surface.width, pGX2Texture->surface.height,
+                           GX2_SURFACE_FORMAT_TCD_R16_UNORM, GX2_AA_MODE_1X);
 
         GX2InitDepthBufferPtr(&depthBuffer, FFLiRoundUpPtr(pDepthBuffer, depthBuffer.surface.alignment));
         GX2SetDepthBuffer(&depthBuffer);
@@ -95,20 +98,10 @@ void FFLiSetupRenderTexture(GX2Texture* pGX2Texture, const FFLColor* pClearColor
         GX2SetDepthOnlyControl(GX2_DISABLE, GX2_DISABLE, GX2_COMPARE_NEVER);
     }
 
-    GX2SetViewport(
-        0.0f,
-        0.0f,
-        f32(FFLiGetMipMapLevelSize(colorBuffer.surface.width, mipLevel)),
-        f32(FFLiGetMipMapLevelSize(colorBuffer.surface.height, mipLevel)),
-        0.0f,
-        1.0f
-    );
-    GX2SetScissor(
-        0.0f,
-        0.0f,
-        f32(FFLiGetMipMapLevelSize(colorBuffer.surface.width, mipLevel)),
-        f32(FFLiGetMipMapLevelSize(colorBuffer.surface.height, mipLevel))
-    );
+    GX2SetViewport(0.0f, 0.0f, f32(FFLiGetMipMapLevelSize(colorBuffer.surface.width, mipLevel)),
+                   f32(FFLiGetMipMapLevelSize(colorBuffer.surface.height, mipLevel)), 0.0f, 1.0f);
+    GX2SetScissor(0.0f, 0.0f, f32(FFLiGetMipMapLevelSize(colorBuffer.surface.width, mipLevel)),
+                  f32(FFLiGetMipMapLevelSize(colorBuffer.surface.height, mipLevel)));
 
     if (pClearColor != NULL)
     {

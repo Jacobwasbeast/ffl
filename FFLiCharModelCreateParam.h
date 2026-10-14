@@ -14,7 +14,8 @@ class FFLiShaderCallback;
 class FFLiCharModelCreateParam
 {
 public:
-    FFLiCharModelCreateParam(FFLiDatabaseManager* pDatabaseManager, FFLiResourceManager* pResourceManager, FFLiShaderCallback* pCallback, bool isShaderAvailable);
+    FFLiCharModelCreateParam(FFLiDatabaseManager* pDatabaseManager, FFLiResourceManager* pResourceManager,
+                             FFLiShaderCallback* pCallback, bool isShaderAvailable);
     ~FFLiCharModelCreateParam();
 
     static u32 GetResolution(FFLResolution resolution);
@@ -22,31 +23,22 @@ public:
 
     static bool CheckModelDesc(const FFLCharModelDesc* pDesc, bool isShaderAvailable);
 
-    FFLiDatabaseManager* GetDatabaseManager() const
-    {
-        return m_pDatabaseManager;
-    }
+    FFLiDatabaseManager* GetDatabaseManager() const { return m_pDatabaseManager; }
 
-    FFLiResourceManager* GetResourceManager() const
-    {
-        return m_pResourceManager;
-    }
+    FFLiResourceManager* GetResourceManager() const { return m_pResourceManager; }
 
-    const FFLiCoordinate& GetCoordinate() const
-    {
-        return m_Coordinate;
-    }
+    const FFLiCoordinate& GetCoordinate() const { return m_Coordinate; }
 
     u32 GetBufferSize(const FFLCharModelDesc* pDesc) const;
     u32 GetTempBufferSize(const FFLCharModelDesc* pDesc) const;
     u32 GetCompressBufferSize(const FFLCharModelDesc* pDesc) const;
 
 private:
-    FFLiDatabaseManager*    m_pDatabaseManager;
-    FFLiResourceManager*    m_pResourceManager;
-    FFLiShaderCallback*     m_pShaderCallback;
-    FFLiCoordinate          m_Coordinate;
-    bool                    m_IsShaderAvailable;
+    FFLiDatabaseManager* m_pDatabaseManager;
+    FFLiResourceManager* m_pResourceManager;
+    FFLiShaderCallback* m_pShaderCallback;
+    FFLiCoordinate m_Coordinate;
+    bool m_IsShaderAvailable;
 };
 NN_STATIC_ASSERT(sizeof(FFLiCharModelCreateParam) == 0x1C);
 

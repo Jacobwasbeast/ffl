@@ -5,12 +5,12 @@
 
 struct FFLiRawMaskDrawParam
 {
-    FFLiRawMaskPartsDrawParam   drawParamRawMaskPartsEye[2];
-    FFLiRawMaskPartsDrawParam   drawParamRawMaskPartsEyebrow[2];
-    FFLiRawMaskPartsDrawParam   drawParamRawMaskPartsMouth;
-    FFLiRawMaskPartsDrawParam   drawParamRawMaskPartsMustache[2];
-    FFLiRawMaskPartsDrawParam   drawParamRawMaskPartsMole;
-    FFLiRawMaskPartsDrawParam   drawParamRawMaskPartsFill;
+    FFLiRawMaskPartsDrawParam drawParamRawMaskPartsEye[2];
+    FFLiRawMaskPartsDrawParam drawParamRawMaskPartsEyebrow[2];
+    FFLiRawMaskPartsDrawParam drawParamRawMaskPartsMouth;
+    FFLiRawMaskPartsDrawParam drawParamRawMaskPartsMustache[2];
+    FFLiRawMaskPartsDrawParam drawParamRawMaskPartsMole;
+    FFLiRawMaskPartsDrawParam drawParamRawMaskPartsFill;
 };
 NN_STATIC_ASSERT(sizeof(FFLiRawMaskDrawParam) == 0x3A8);
 
@@ -26,11 +26,13 @@ NN_STATIC_ASSERT(sizeof(FFLiRawMaskTextureDesc) == 0x20);
 
 u32 FFLiGetBufferRawMask();
 
-class   FFLiBufferAllocator;
-struct  FFLiCharInfo;
-class   FFLiShaderCallback;
+class FFLiBufferAllocator;
+struct FFLiCharInfo;
+class FFLiShaderCallback;
 
-void FFLiInitDrawParamRawMask(FFLiRawMaskDrawParam* pDrawParam, const FFLiCharInfo* pCharInfo, s32 resolution, s32 leftEyeIndex, s32 rightEyeIndex, const FFLiRawMaskTextureDesc* pDesc, FFLiBufferAllocator* pAllocator);
+void FFLiInitDrawParamRawMask(FFLiRawMaskDrawParam* pDrawParam, const FFLiCharInfo* pCharInfo, s32 resolution,
+                              s32 leftEyeIndex, s32 rightEyeIndex, const FFLiRawMaskTextureDesc* pDesc,
+                              FFLiBufferAllocator* pAllocator);
 void FFLiInvalidateRawMask(FFLiRawMaskDrawParam* pDrawParam);
 void FFLiDrawRawMask(const FFLiRawMaskDrawParam* pDrawParam, const FFLiShaderCallback* pCallback);
 

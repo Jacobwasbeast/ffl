@@ -174,9 +174,7 @@ void FFLiInitModulateShapeGlass(FFLModulateParam* pParam, s32 color, const GX2Te
     pParam->pGX2Texture = &gx2Texture;
 }
 
-static const FFLColor FILL_COLOR = {
-    0.0f, 0.0f, 0.0f, 0.0f
-};
+static const FFLColor FILL_COLOR = {0.0f, 0.0f, 0.0f, 0.0f};
 
 void FFLiInitModulateFill(FFLModulateParam* pParam)
 {

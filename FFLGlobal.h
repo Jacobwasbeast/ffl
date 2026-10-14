@@ -5,7 +5,8 @@
 #include <nn/ffl/FFLResult.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef struct FFLInitDesc FFLInitDesc;

@@ -12,14 +12,17 @@
 
 #include <math.h>
 
-namespace {
+namespace
+{
 
 bool IsExpressionContained(const FFLiCharModel* pModel, FFLExpression expression)
 {
     return (pModel->charModelDesc.expressionFlag & (1 << expression)) != 0;
 }
 
-FFLResult MakeIconImpl(GX2Texture* pTexture, const FFLiCharModel* pModel, FFLExpression expression, const FFLIconSetting* pSetting, void* pBuffer, void* pTempBuffer, const FFLShaderCallback* pCallback, bool waitDrawDone)
+FFLResult MakeIconImpl(GX2Texture* pTexture, const FFLiCharModel* pModel, FFLExpression expression,
+                       const FFLIconSetting* pSetting, void* pBuffer, void* pTempBuffer,
+                       const FFLShaderCallback* pCallback, bool waitDrawDone)
 {
     if (!FFLiManager::IsConstruct())
         return FFL_RESULT_MANAGER_NOT_CONSTRUCT;
@@ -40,13 +43,14 @@ FFLResult MakeIconImpl(GX2Texture* pTexture, const FFLiCharModel* pModel, FFLExp
     FFLiBufferAllocator tempAllocator;
     tempAllocator.Init(pTempBuffer, FFLiGetIconTempBufferSize(pSetting));
 
-    FFLiRenderTexture* pRenderTexture = static_cast<FFLiRenderTexture*>(tempAllocator.Allocate(sizeof(FFLiRenderTexture), 4));
+    FFLiRenderTexture* pRenderTexture = static_cast<FFLiRenderTexture*>(
+        tempAllocator.Allocate(sizeof(FFLiRenderTexture), 4));
     FFLiInitRenderTexture(pRenderTexture, pSetting->width, pSetting->height, pSetting->format, 1, &allocator);
 
     u32 depthBufferSize = FFLiGetDepthBufferSizeRenderTexture(pSetting->width, pSetting->height);
     void* pDepthBuffer = tempAllocator.Allocate(depthBufferSize);
 
-    FFLColor clearColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+    FFLColor clearColor = {0.0f, 0.0f, 0.0f, 0.0f};
     switch (pSetting->backgroundType)
     {
     case FFL_ICON_BACKGROUND_FAVORITE_COLOR:
@@ -99,7 +103,9 @@ u32 FFLiGetIconTempBufferSize(const FFLIconSetting* pSetting)
     return FFLiGetDepthBufferSizeRenderTexture(pSetting->width, pSetting->height) + sizeof(FFLiRenderTexture);
 }
 
-FFLResult FFLiMakeIconEx(GX2Texture* pTexture, const FFLiCharModel* pModel, FFLExpression expression, const FFLIconSetting* pSetting, void* pBuffer, void* pTempBuffer, const FFLShaderCallback* pCallback)
+FFLResult FFLiMakeIconEx(GX2Texture* pTexture, const FFLiCharModel* pModel, FFLExpression expression,
+                         const FFLIconSetting* pSetting, void* pBuffer, void* pTempBuffer,
+                         const FFLShaderCallback* pCallback)
 {
     return MakeIconImpl(pTexture, pModel, expression, pSetting, pBuffer, pTempBuffer, pCallback, false);
 }
@@ -111,8 +117,8 @@ void FFLiGetIconMatrix(Mat44* pProjection, Mat34* pView, u16 width, u16 height)
     f32 fovy = RadianToDegree(atan2f(heightScale, 500.0f)) * 2.0f;
     MTXPerspective(pProjection->mtx, fovy, aspect, 500.0f, 700.0f);
 
-    static const Vec cameraUp = { 0.0f, 1.0f, 0.0f };
-    static const Vec target = { 0.0f, 34.5f, 0.0f };
-    Vec cameraPosition = { 0.0f, 34.5f, 600.0f };
+    static const Vec cameraUp = {0.0f, 1.0f, 0.0f};
+    static const Vec target = {0.0f, 34.5f, 0.0f};
+    Vec cameraPosition = {0.0f, 34.5f, 600.0f};
     MTXLookAt(pView->mtx, &cameraPosition, &cameraUp, &target);
 }

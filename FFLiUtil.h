@@ -6,15 +6,19 @@
 template <typename T>
 T FFLiMin(T a, T b)
 {
-    if (a >= b) return b;
-    else        return a;
+    if (a >= b)
+        return b;
+    else
+        return a;
 }
 
 template <typename T>
 T FFLiMax(T a, T b)
 {
-    if (a <= b) return b;
-    else        return a;
+    if (a <= b)
+        return b;
+    else
+        return a;
 }
 
 template <typename T>

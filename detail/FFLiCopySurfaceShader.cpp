@@ -21,11 +21,11 @@ static void InvalidatePixelShader(GX2PixelShader* pShader)
 }
 
 FFLiCopySurfaceShader::FFLiCopySurfaceShader()
-    : m_FetchShader()
-    , m_pVertexShader(&FFLiCopySurfaceShaderObj_VS)
-    , m_pPixelShader(&FFLiCopySurfaceShaderObj_PS)
-    , m_Sampler()
-    , m_SamplerLocation(0)
+    : m_FetchShader(),
+      m_pVertexShader(&FFLiCopySurfaceShaderObj_VS),
+      m_pPixelShader(&FFLiCopySurfaceShaderObj_PS),
+      m_Sampler(),
+      m_SamplerLocation(0)
 {
 }
 
@@ -33,16 +33,13 @@ FFLiCopySurfaceShader::~FFLiCopySurfaceShader()
 {
 }
 
-namespace {
+namespace
+{
 
-const char* TEXTURE_SAMPLER_NAME[1] = {
-    "s_texture"
-};
+const char* TEXTURE_SAMPLER_NAME[1] = {"s_texture"};
 
-FFLiUtilShader::AttributeStreamDesc FETCH_SHADER_DESC[2] = {
-    { "a_position", 0, 0, GX2_ATTRIB_FORMAT_32_32_FLOAT },
-    { "a_texCoord", 1, 0, GX2_ATTRIB_FORMAT_32_32_FLOAT }
-};
+FFLiUtilShader::AttributeStreamDesc FETCH_SHADER_DESC[2] = {{"a_position", 0, 0, GX2_ATTRIB_FORMAT_32_32_FLOAT},
+                                                            {"a_texCoord", 1, 0, GX2_ATTRIB_FORMAT_32_32_FLOAT}};
 
 }
 

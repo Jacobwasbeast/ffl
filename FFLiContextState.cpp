@@ -3,9 +3,7 @@
 
 #include <nn/ffl/detail/FFLiBufferAllocator.h>
 
-FFLiContextState::FFLiContextState()
-    : m_IsSetup(false)
-    , m_pGX2ContextState(NULL)
+FFLiContextState::FFLiContextState() : m_IsSetup(false), m_pGX2ContextState(NULL)
 {
 }
 
@@ -20,7 +18,8 @@ u32 FFLiContextState::GetBufferSize()
 
 void FFLiContextState::Initialize(FFLiBufferAllocator* pAllocator)
 {
-    m_pGX2ContextState = static_cast<GX2ContextState*>(pAllocator->Allocate(sizeof(GX2ContextState), GX2_CONTEXT_STATE_ALIGNMENT));
+    m_pGX2ContextState = static_cast<GX2ContextState*>(
+        pAllocator->Allocate(sizeof(GX2ContextState), GX2_CONTEXT_STATE_ALIGNMENT));
 }
 
 void FFLiContextState::Setup()

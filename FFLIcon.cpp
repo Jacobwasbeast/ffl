@@ -4,7 +4,8 @@
 #include <nn/ffl/FFLiManager.h>
 #include <nn/ffl/FFLiShaderCallback.h>
 
-namespace {
+namespace
+{
 
 const FFLiCharModel* GetCharModel(const FFLCharModel* pModel)
 {
@@ -23,12 +24,15 @@ u32 FFLGetIconTempBufferSize(const FFLIconSetting* pSetting)
     return FFLiGetIconTempBufferSize(pSetting);
 }
 
-FFLResult FFLMakeIconExWithCallback(GX2Texture* pTexture, const FFLCharModel* pModel, FFLExpression expression, const FFLIconSetting* pSetting, void* pBuffer, void* pTempBuffer, const FFLShaderCallback* pCallback)
+FFLResult FFLMakeIconExWithCallback(GX2Texture* pTexture, const FFLCharModel* pModel, FFLExpression expression,
+                                    const FFLIconSetting* pSetting, void* pBuffer, void* pTempBuffer,
+                                    const FFLShaderCallback* pCallback)
 {
     return FFLiMakeIconEx(pTexture, GetCharModel(pModel), expression, pSetting, pBuffer, pTempBuffer, pCallback);
 }
 
-FFLResult FFLMakeIconEx(GX2Texture* pTexture, const FFLCharModel* pModel, FFLExpression expression, const FFLIconSetting* pSetting, void* pBuffer, void* pTempBuffer)
+FFLResult FFLMakeIconEx(GX2Texture* pTexture, const FFLCharModel* pModel, FFLExpression expression,
+                        const FFLIconSetting* pSetting, void* pBuffer, void* pTempBuffer)
 {
     const FFLShaderCallback* pCallback = NULL;
     if (FFLiManager::IsConstruct())

@@ -1,6 +1,7 @@
 #include <nn/ffl/FFLiSwapEndian.h>
 
-namespace {
+namespace
+{
 
 u32 TypeToSize(FFLiSwapEndianType type)
 {

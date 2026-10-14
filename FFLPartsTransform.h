@@ -4,7 +4,8 @@
 #include <nn/ffl/FFLVec.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef struct FFLPartsTransform
@@ -16,8 +17,7 @@ typedef struct FFLPartsTransform
     FFLVec3 _30;
     FFLVec3 _3c;
     FFLVec3 _48;
-}
-FFLPartsTransform;
+} FFLPartsTransform;
 NN_STATIC_ASSERT(sizeof(FFLPartsTransform) == 0x54);
 
 #ifdef __cplusplus

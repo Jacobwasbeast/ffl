@@ -4,17 +4,17 @@
 #include <nn/ffl/types.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef enum FFLFontRegion
 {
     FFL_FONT_REGION_JP_US_EU = 0,
-    FFL_FONT_REGION_CHINA    = 1,
-    FFL_FONT_REGION_KOREA    = 2,
-    FFL_FONT_REGION_TAIWAN   = 3
-}
-FFLFontRegion;
+    FFL_FONT_REGION_CHINA = 1,
+    FFL_FONT_REGION_KOREA = 2,
+    FFL_FONT_REGION_TAIWAN = 3
+} FFLFontRegion;
 
 #ifdef __cplusplus
 }

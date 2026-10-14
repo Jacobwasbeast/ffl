@@ -5,9 +5,7 @@
 
 #include <cstring>
 
-FFLiCompressDrawer::FFLiCompressDrawer()
-    : m_pPositionBuffer(NULL)
-    , m_pTexCoordBuffer(NULL)
+FFLiCompressDrawer::FFLiCompressDrawer() : m_pPositionBuffer(NULL), m_pTexCoordBuffer(NULL)
 {
 }
 
@@ -21,19 +19,10 @@ void FFLiCompressDrawer::SetupCPU(FFLiBufferAllocator* pAllocator)
     const u32 TEXCOORD_BUFFER_SIZE = sizeof(FFLVec2) * 4;
 
     static const FFLVec3 POSITION_BUFFER[4] = {
-        { -1.0f,  1.0f,  0.0f },
-        { -1.0f, -1.0f,  0.0f },
-        {  1.0f,  1.0f,  0.0f },
-        {  1.0f, -1.0f,  0.0f }
-    };
+        {-1.0f, 1.0f, 0.0f}, {-1.0f, -1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}, {1.0f, -1.0f, 0.0f}};
     NN_STATIC_ASSERT(sizeof(POSITION_BUFFER) == POSITION_BUFFER_SIZE);
 
-    static const FFLVec2 TEXCOORD_BUFFER[4] = {
-        { 0.0f, 0.0f },
-        { 0.0f, 1.0f },
-        { 1.0f, 0.0f },
-        { 1.0f, 1.0f }
-    };
+    static const FFLVec2 TEXCOORD_BUFFER[4] = {{0.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}};
     NN_STATIC_ASSERT(sizeof(TEXCOORD_BUFFER) == TEXCOORD_BUFFER_SIZE);
 
     m_pPositionBuffer = static_cast<FFLVec3*>(pAllocator->Allocate(POSITION_BUFFER_SIZE, GX2_VERTEX_BUFFER_ALIGNMENT));
@@ -68,11 +57,11 @@ u32 FFLiCompressDrawer::GetBufferSize()
     const u32 POSITION_BUFFER_SIZE = sizeof(FFLVec3) * 4;
     const u32 TEXCOORD_BUFFER_SIZE = sizeof(FFLVec2) * 4;
 
-    u32 ret  = GX2_VERTEX_BUFFER_ALIGNMENT;
-    ret     += POSITION_BUFFER_SIZE;
+    u32 ret = GX2_VERTEX_BUFFER_ALIGNMENT;
+    ret += POSITION_BUFFER_SIZE;
 
-    ret     += GX2_VERTEX_BUFFER_ALIGNMENT;
-    ret     += TEXCOORD_BUFFER_SIZE;
+    ret += GX2_VERTEX_BUFFER_ALIGNMENT;
+    ret += TEXCOORD_BUFFER_SIZE;
 
     return ret;
 }

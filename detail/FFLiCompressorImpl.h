@@ -19,7 +19,7 @@ class FFLiCompressorImpl
 {
 public:
     FFLiCompressorImpl(FFLiBufferAllocator* pAllocator, const void* pShaderData, u32 shaderIndex);
-    ~FFLiCompressorImpl();  // Deleted in NSMBU
+    ~FFLiCompressorImpl(); // Deleted in NSMBU
 
     static u32 GetBufferSize(const void* pShaderData, u32 shaderIndex);
     static u32 GetTextureBufferSize(u32 width, u32 height, u32 numMips);
@@ -33,10 +33,10 @@ public:
 
 private:
     FFLiBufferAllocator m_BufferAllocator;
-    FFLiContextState    m_ContextState;
-    FFLiCompressShader  m_CompressShader;
-    FFLiCompressDrawer  m_CompressDrawer;
-    GX2ColorBuffer      m_ColorBuffer;
+    FFLiContextState m_ContextState;
+    FFLiCompressShader m_CompressShader;
+    FFLiCompressDrawer m_CompressDrawer;
+    GX2ColorBuffer m_ColorBuffer;
 };
 
 typedef FFLiCompressorImpl<FFLiCompressorDescBC1> FFLiCompressorImplBC1;
@@ -47,11 +47,11 @@ NN_STATIC_ASSERT(sizeof(FFLiCompressorImplBC3) == 0xF8);
 
 template <typename T>
 FFLiCompressorImpl<T>::FFLiCompressorImpl(FFLiBufferAllocator* pAllocator, const void* pShaderData, u32 shaderIndex)
-    : m_BufferAllocator()
-    , m_ContextState()
-    , m_CompressShader()
-    , m_CompressDrawer()
-    , m_ColorBuffer()
+    : m_BufferAllocator(),
+      m_ContextState(),
+      m_CompressShader(),
+      m_CompressDrawer(),
+      m_ColorBuffer()
 {
     u32 bufferSize = GetBufferSize(pShaderData, shaderIndex);
     void* pBuffer = pAllocator->Allocate(bufferSize);
@@ -68,8 +68,8 @@ template <typename T>
 u32 FFLiCompressorImpl<T>::GetBufferSize(const void* pShaderData, u32 shaderIndex)
 {
     u32 bufferSize = FFLiContextState::GetBufferSize();
-    bufferSize    += FFLiCompressShader::GetBufferSize(pShaderData, shaderIndex);
-    bufferSize    += FFLiCompressDrawer::GetBufferSize();
+    bufferSize += FFLiCompressShader::GetBufferSize(pShaderData, shaderIndex);
+    bufferSize += FFLiCompressDrawer::GetBufferSize();
 
     return bufferSize;
 }
@@ -102,33 +102,20 @@ void FFLiCompressorImpl<T>::SetupGPU()
     m_ContextState.Setup();
     m_ContextState.Bind();
     FFLiTempSetShaderMode(UseUB() ? GX2_SHADER_MODE_UNIFORM_BLOCK : GX2_SHADER_MODE_UNIFORM_REGISTER);
-    GX2SetTargetChannelMasks(
-        GX2_CHANNEL_MASK_RGBA,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE,
-        GX2_CHANNEL_MASK_NONE
-    );
+    GX2SetTargetChannelMasks(GX2_CHANNEL_MASK_RGBA, GX2_CHANNEL_MASK_NONE, GX2_CHANNEL_MASK_NONE, GX2_CHANNEL_MASK_NONE,
+                             GX2_CHANNEL_MASK_NONE, GX2_CHANNEL_MASK_NONE, GX2_CHANNEL_MASK_NONE,
+                             GX2_CHANNEL_MASK_NONE);
     GX2SetAlphaTest(GX2_DISABLE, GX2_COMPARE_ALWAYS, 0.0f);
     GX2SetColorControl(GX2_LOGIC_OP_NONE, 0xFF, GX2_DISABLE, GX2_ENABLE);
     GX2SetDepthOnlyControl(GX2_DISABLE, GX2_DISABLE, GX2_COMPARE_LESS);
     GX2SetCullOnlyControl(GX2_FRONT_FACE_CCW, GX2_DISABLE, GX2_ENABLE);
-    GX2SetBlendControl(
-        GX2_RENDER_TARGET_0,
-        
-        GX2_BLEND_ONE,
-        GX2_BLEND_ZERO,
-        GX2_BLEND_COMBINE_ADD,
-        
-        GX2_DISABLE,
-        
-        GX2_BLEND_ONE,
-        GX2_BLEND_ZERO,
-        GX2_BLEND_COMBINE_ADD
-    );
+    GX2SetBlendControl(GX2_RENDER_TARGET_0,
+
+                       GX2_BLEND_ONE, GX2_BLEND_ZERO, GX2_BLEND_COMBINE_ADD,
+
+                       GX2_DISABLE,
+
+                       GX2_BLEND_ONE, GX2_BLEND_ZERO, GX2_BLEND_COMBINE_ADD);
     m_CompressShader.Bind();
     FFLiTempSetContextState(NULL);
 }
@@ -152,9 +139,9 @@ void FFLiCompressorImpl<T>::CompressImpl(GX2Texture* pDst, const GX2Texture* pSr
     for (u32 i = 0; i < pDst->surface.numMips; i++)
     {
         T::SetupColorBuffer(pColorBuffer, pDst, i);
-        
+
         GX2SetColorBuffer(pColorBuffer, GX2_RENDER_TARGET_0);
-        
+
         u32 width = FFLiCalculateUnitTextureResolution(pDst->surface.width, i) >> i;
         u32 height = FFLiCalculateUnitTextureResolution(pDst->surface.height, i) >> i;
         GX2SetViewport(0.0f, 0.0f, width, height, 0.0f, 1.0f);

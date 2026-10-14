@@ -1,8 +1,7 @@
 #include <nn/ffl/detail/FFLiAllocatorInterface.h>
 #include <nn/ffl/detail/FFLiZlibAllocator.h>
 
-FFLiZlibAllocator::FFLiZlibAllocator(FFLiAllocatorInterface& interface)
-    : m_pInterface(&interface)
+FFLiZlibAllocator::FFLiZlibAllocator(FFLiAllocatorInterface& interface) : m_pInterface(&interface)
 {
 }
 

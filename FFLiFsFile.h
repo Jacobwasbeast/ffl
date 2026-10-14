@@ -15,7 +15,7 @@ public:
 
     FSStatus Open(const char* path, const char* mode, u32 errHandling = FS_RET_NO_ERROR);
     FSStatus Close(u32 errHandling = FS_RET_NO_ERROR);
-    
+
     FSStatus Read(void* dst, u32 size, u32 count, u32 errHandling = FS_RET_NO_ERROR, FSFlag flag = 0);
     FSStatus ReadWithPos(void* dst, u32 size, u32 count, u32 pos, u32 errHandling = FS_RET_NO_ERROR, FSFlag flag = 0);
 
@@ -26,8 +26,8 @@ public:
     static FSStatus FlushQuota(FFLiFsCommand* pCommand, const char* path, u32 errHandling = FS_RET_NO_ERROR);
 
 private:
-    FFLiFsCommand*  m_pFsCommand;
-    FSFileHandle    m_Handle;
+    FFLiFsCommand* m_pFsCommand;
+    FSFileHandle m_Handle;
 };
 NN_STATIC_ASSERT(sizeof(FFLiFsFile) == 8);
 

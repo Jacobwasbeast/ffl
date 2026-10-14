@@ -6,7 +6,8 @@
 #include <nn/ffl/FFLResult.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #define FFL_CHAR_MODEL_SIZE (0x7DC)
@@ -18,8 +19,7 @@ typedef struct FFLCharModel
         u8 data[FFL_CHAR_MODEL_SIZE];
         u32 data32[FFL_CHAR_MODEL_SIZE / sizeof(u32)];
     };
-}
-FFLCharModel;
+} FFLCharModel;
 NN_STATIC_ASSERT(sizeof(FFLCharModel) == FFL_CHAR_MODEL_SIZE);
 
 typedef struct FFLCharModelDesc FFLCharModelDesc;
@@ -33,7 +33,8 @@ u32 FFLGetCharModelBufferSize(const FFLCharModelDesc* pDesc);
 u32 FFLGetBufferSizeCharModel(const FFLCharModelDesc* pDesc);
 u32 FFLGetTempBufferSizeCharModel(const FFLCharModelDesc* pDesc);
 
-FFLResult FFLInitCharModelCPUStep(FFLCharModel* pModel, const FFLCharModelSource* pSource, const FFLCharModelDesc* pDesc, FFLCharModelBuffer* pBuffer);
+FFLResult FFLInitCharModelCPUStep(FFLCharModel* pModel, const FFLCharModelSource* pSource,
+                                  const FFLCharModelDesc* pDesc, FFLCharModelBuffer* pBuffer);
 
 void FFLInitCharModelGPUStep(FFLCharModel* pModel);
 void FFLInitCharModelGPUStepWithCallback(FFLCharModel* pModel, const FFLShaderCallback* pCallback);

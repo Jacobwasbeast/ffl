@@ -57,7 +57,7 @@ static const s32 MONTH_OF_DAY[12 + 1] = {
     30, // September
     31, // October
     30, // November
-    31  // December
+    31 // December
 };
 
 s32 FFLiGetMonthOfDay(s32 month)
@@ -87,12 +87,12 @@ s32 FFLiDateToDays(s32 year, s32 month, s32 day)
     if (y < 0)
         leap_year_add_day = s32(FFLiIsLeapYear(y));
 
-    s32 ret  = y / 100 * 146097 / 4;
-    ret     += y % 100 * 1461  / 4;
-    ret     += (month * 153 + 2) / 5;
-    ret     += day;
-    ret     += leap_year_add_day;
-    ret     += 59;
+    s32 ret = y / 100 * 146097 / 4;
+    ret += y % 100 * 1461 / 4;
+    ret += (month * 153 + 2) / 5;
+    ret += day;
+    ret += leap_year_add_day;
+    ret += 59;
 
     return ret;
 }

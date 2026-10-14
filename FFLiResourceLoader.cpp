@@ -10,17 +10,21 @@
 
 #include <cstring>
 
-namespace {
+namespace
+{
 
-bool Uncompress(void* pDst, const void* pSrc, FFLiResourceUncompressBuffer* pBuffer, const FFLiResourcePartsInfo& partsInfo);
+bool Uncompress(void* pDst, const void* pSrc, FFLiResourceUncompressBuffer* pBuffer,
+                const FFLiResourcePartsInfo& partsInfo);
 
 }
 
-FFLiResourceLoader::FFLiResourceLoader(FFLiResourceManager* pResourceManager, FFLiResourceLoaderBuffer* pResLoaderBuffer, FFLResourceType resourceType)
-    : m_pResourceManager(pResourceManager)
-    , m_pBuffer(pResLoaderBuffer)
-    , m_FsFile(m_pFsCommand = FFLiFsCommand::PlacementNew(pResLoaderBuffer->GetCommandBuffer(), pResourceManager->GetClient()))
-    , m_ResourceType(resourceType)
+FFLiResourceLoader::FFLiResourceLoader(FFLiResourceManager* pResourceManager,
+                                       FFLiResourceLoaderBuffer* pResLoaderBuffer, FFLResourceType resourceType)
+    : m_pResourceManager(pResourceManager),
+      m_pBuffer(pResLoaderBuffer),
+      m_FsFile(m_pFsCommand = FFLiFsCommand::PlacementNew(pResLoaderBuffer->GetCommandBuffer(),
+                                                          pResourceManager->GetClient())),
+      m_ResourceType(resourceType)
 {
 }
 
@@ -71,7 +75,8 @@ FFLResult FFLiResourceLoader::LoadShape(void* pData, u32* pSize, FFLiShapePartsT
     return Load(pData, pSize, pPartsInfo[index]);
 }
 
-FFLResult FFLiResourceLoader::GetPointerTextureByExpandCache(void** ppPtr, u32* pSize, FFLiTexturePartsType partsType, u32 index)
+FFLResult FFLiResourceLoader::GetPointerTextureByExpandCache(void** ppPtr, u32* pSize, FFLiTexturePartsType partsType,
+                                                             u32 index)
 {
     if (!IsExpand())
         return FFL_RESULT_FILE_LOAD_ERROR;
@@ -178,12 +183,15 @@ FSStatus FFLiResourceLoader::Close()
     return status;
 }
 
-namespace {
-
-bool Uncompress(void* pDst, const void* pSrc, FFLiResourceUncompressBuffer* pBuffer, const FFLiResourcePartsInfo& partsInfo)
+namespace
 {
-    FFLiBufferAllocatorForZlib allocator(pBuffer->TempBuffer(), pBuffer->TempBufferSize()); 
-    FFLiZlibInflator inflator(allocator, FFLiResourceWindowBitsToZlibWindowBits(FFLiResourceWindowBits(partsInfo.windowBits)));
+
+bool Uncompress(void* pDst, const void* pSrc, FFLiResourceUncompressBuffer* pBuffer,
+                const FFLiResourcePartsInfo& partsInfo)
+{
+    FFLiBufferAllocatorForZlib allocator(pBuffer->TempBuffer(), pBuffer->TempBufferSize());
+    FFLiZlibInflator inflator(allocator,
+                              FFLiResourceWindowBitsToZlibWindowBits(FFLiResourceWindowBits(partsInfo.windowBits)));
 
     u32 dstSize = partsInfo.dataSize;
     u32 srcSize = partsInfo.compressedSize;

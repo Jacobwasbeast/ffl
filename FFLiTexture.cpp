@@ -6,12 +6,13 @@
 
 #include <nn/ffl/detail/FFLiBufferAllocator.h>
 
-#define TEXTURE_DATA_MAX_ALIGNMENT   (0x800)
+#define TEXTURE_DATA_MAX_ALIGNMENT (0x800)
 
-u32 FFLiGetTextureMaxSizeWithAlign(const FFLiResourceManager* pResourceManager, FFLResourceType resourceType, FFLiTexturePartsType partsType)
+u32 FFLiGetTextureMaxSizeWithAlign(const FFLiResourceManager* pResourceManager, FFLResourceType resourceType,
+                                   FFLiTexturePartsType partsType)
 {
-    u32 ret  = TEXTURE_DATA_MAX_ALIGNMENT;
-    ret     += sizeof(GX2Texture);
+    u32 ret = TEXTURE_DATA_MAX_ALIGNMENT;
+    ret += sizeof(GX2Texture);
 
     if (!pResourceManager->IsExpand(resourceType))
         ret += pResourceManager->GetTextureAlignedMaxSize(resourceType, partsType);
@@ -19,7 +20,8 @@ u32 FFLiGetTextureMaxSizeWithAlign(const FFLiResourceManager* pResourceManager, 
     return ret;
 }
 
-FFLResult FFLiLoadTextureWithAllocate(GX2Texture** ppGX2Texture, FFLiTexturePartsType partsType, u32 index, FFLiResourceLoader* pResLoader, FFLiBufferAllocator* pAllocator)
+FFLResult FFLiLoadTextureWithAllocate(GX2Texture** ppGX2Texture, FFLiTexturePartsType partsType, u32 index,
+                                      FFLiResourceLoader* pResLoader, FFLiBufferAllocator* pAllocator)
 {
     u32 size = pResLoader->GetTextureAlignedMaxSize(partsType);
 
@@ -40,15 +42,8 @@ FFLResult FFLiLoadTextureWithAllocate(GX2Texture** ppGX2Texture, FFLiTexturePart
 
     const FFLiResourceTextureFooter& footer = FFLiResourceTextureFooter::GetFooterImpl(pData, size);
 
-    GX2InitTexture(
-        *ppGX2Texture,
-        footer.Width(),
-        footer.Height(),
-        1,
-        footer.NumMips(),
-        footer.SurfaceFormat(),
-        GX2_SURFACE_DIM_2D
-    );
+    GX2InitTexture(*ppGX2Texture, footer.Width(), footer.Height(), 1, footer.NumMips(), footer.SurfaceFormat(),
+                   GX2_SURFACE_DIM_2D);
     void* imagePtr = footer.GetImagePtrImpl(size);
     void* mipPtr = footer.GetMipPtrImpl(size);
     GX2InitTexturePtrs(*ppGX2Texture, imagePtr, mipPtr);

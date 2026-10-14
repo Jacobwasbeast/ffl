@@ -3,8 +3,7 @@
 #include <nn/ffl/FFLiShaderCallback.h>
 #include <nn/ffl/FFLiTemp.h>
 
-FFLiShaderCallback::FFLiShaderCallback()
-    : m_pShaderCallback(NULL)
+FFLiShaderCallback::FFLiShaderCallback() : m_pShaderCallback(NULL)
 {
 }
 

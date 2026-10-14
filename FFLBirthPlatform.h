@@ -4,17 +4,17 @@
 #include <nn/ffl/types.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef enum FFLBirthPlatform
 {
-    FFL_BIRTH_PLATFORM_WII     = 1,
-    FFL_BIRTH_PLATFORM_NTR     = 2,
-    FFL_BIRTH_PLATFORM_CTR     = 3,
-    FFL_BIRTH_PLATFORM_WII_U   = 4
-}
-FFLBirthPlatform;
+    FFL_BIRTH_PLATFORM_WII = 1,
+    FFL_BIRTH_PLATFORM_NTR = 2,
+    FFL_BIRTH_PLATFORM_CTR = 3,
+    FFL_BIRTH_PLATFORM_WII_U = 4
+} FFLBirthPlatform;
 
 #ifdef __cplusplus
 }

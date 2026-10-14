@@ -8,24 +8,17 @@
 
 #include <cstring>
 
-namespace {
+namespace
+{
 
-const char* RESOUCE_FILE_NAME[2][FFL_RESOURCE_TYPE_MAX] = {
-    {
-        "FFLResMiddle.dat",
-        "FFLResHigh.dat"
-    },
-    {
-        "FFLResMiddleLG.dat",
-        "FFLResHighLG.dat"
-    }
-};
+const char* RESOUCE_FILE_NAME[2][FFL_RESOURCE_TYPE_MAX] = {{"FFLResMiddle.dat", "FFLResHigh.dat"},
+                                                           {"FFLResMiddleLG.dat", "FFLResHighLG.dat"}};
 
 }
 
 FFLiResourceManager::FFLiResourceManager(FFLiResourceMultiHeader* pHeader, FFLiFsClient* pClient)
-    : m_pResourceMultiHeader(pHeader)
-    , m_pFsClient(pClient)
+    : m_pResourceMultiHeader(pHeader),
+      m_pFsClient(pClient)
 {
     std::memset(m_pResourceMultiHeader, 0, sizeof(FFLiResourceMultiHeader));
     std::memset(m_Path, 0, FFL_RESOURCE_TYPE_MAX * FFL_PATH_MAX_LEN);

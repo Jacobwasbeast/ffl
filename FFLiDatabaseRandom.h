@@ -6,9 +6,9 @@
 #include <nn/ffl/FFLRace.h>
 #include <nn/ffl/FFLResult.h>
 
-struct  FFLiCharInfo;
-class   FFLiMiddleDB;
-class   FFLiRandomContext;
+struct FFLiCharInfo;
+class FFLiMiddleDB;
+class FFLiRandomContext;
 
 class FFLiDatabaseRandom
 {
@@ -23,7 +23,7 @@ private:
     void Get(FFLiCharInfo* pCharInfo, FFLGender gender, FFLAge age, FFLRace race);
 
 private:
-    FFLiRandomContext*  m_pRandomContext;
+    FFLiRandomContext* m_pRandomContext;
 };
 NN_STATIC_ASSERT(sizeof(FFLiDatabaseRandom) == 4);
 

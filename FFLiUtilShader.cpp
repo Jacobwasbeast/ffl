@@ -15,10 +15,7 @@ static bool GetVertexUniformBlockLocation(u32* pLocation, const GX2VertexShader*
 class FFLiUtilShaderPixel
 {
 public:
-    static u32 GetCount(const void* pShaderData)
-    {
-        return GFDGetPixelShaderCount(pShaderData);
-    }
+    static u32 GetCount(const void* pShaderData) { return GFDGetPixelShaderCount(pShaderData); }
 
     static u32 GetHeaderSize(u32 shaderIndex, const void* pShaderData)
     {
@@ -39,10 +36,7 @@ public:
 class FFLiUtilShaderVertex
 {
 public:
-    static u32 GetCount(const void* pShaderData)
-    {
-        return GFDGetVertexShaderCount(pShaderData);
-    }
+    static u32 GetCount(const void* pShaderData) { return GFDGetVertexShaderCount(pShaderData); }
 
     static u32 GetHeaderSize(u32 shaderIndex, const void* pShaderData)
     {
@@ -62,18 +56,18 @@ public:
 
 u32 FFLiUtilShader::GetBufferSize(u32 numAttribs, const void* pShaderData, u32 shaderIndex)
 {
-    u32 ret  = GX2_SHADER_ALIGNMENT;
-    ret     += GetProgramBufferSize(numAttribs, pShaderData, shaderIndex);
-    ret     += GetHeaderBufferSize(numAttribs, pShaderData, shaderIndex);
+    u32 ret = GX2_SHADER_ALIGNMENT;
+    ret += GetProgramBufferSize(numAttribs, pShaderData, shaderIndex);
+    ret += GetHeaderBufferSize(numAttribs, pShaderData, shaderIndex);
 
     return ret;
 }
 
 u32 FFLiUtilShader::GetBufferSizeForFetch(u32 numAttribs)
 {
-    u32 ret  = GX2_SHADER_ALIGNMENT;
-    ret     += GetProgramBufferSizeForFetch(numAttribs);
-    ret     += GetHeaderBufferSizeForFetch(numAttribs);
+    u32 ret = GX2_SHADER_ALIGNMENT;
+    ret += GetProgramBufferSizeForFetch(numAttribs);
+    ret += GetHeaderBufferSizeForFetch(numAttribs);
 
     return ret;
 }
@@ -81,8 +75,8 @@ u32 FFLiUtilShader::GetBufferSizeForFetch(u32 numAttribs)
 u32 FFLiUtilShader::GetHeaderBufferSize(u32 numAttribs, const void* pShaderData, u32 shaderIndex)
 {
     return GetHeaderBufferSizeForFetch(numAttribs)
-         + FFLiRoundUp(GFDGetPixelShaderHeaderSize(shaderIndex, pShaderData), 4)
-         + FFLiRoundUp(GFDGetVertexShaderHeaderSize(shaderIndex, pShaderData), 4);
+           + FFLiRoundUp(GFDGetPixelShaderHeaderSize(shaderIndex, pShaderData), 4)
+           + FFLiRoundUp(GFDGetVertexShaderHeaderSize(shaderIndex, pShaderData), 4);
 }
 
 u32 FFLiUtilShader::GetHeaderBufferSizeForFetch(u32 numAttribs)
@@ -93,8 +87,8 @@ u32 FFLiUtilShader::GetHeaderBufferSizeForFetch(u32 numAttribs)
 u32 FFLiUtilShader::GetProgramBufferSize(u32 numAttribs, const void* pShaderData, u32 shaderIndex)
 {
     return GetProgramBufferSizeForFetch(numAttribs)
-         + FFLiRoundUp(GFDGetPixelShaderProgramSize(shaderIndex, pShaderData), GX2_SHADER_ALIGNMENT)
-         + FFLiRoundUp(GFDGetVertexShaderProgramSize(shaderIndex, pShaderData), GX2_SHADER_ALIGNMENT);
+           + FFLiRoundUp(GFDGetPixelShaderProgramSize(shaderIndex, pShaderData), GX2_SHADER_ALIGNMENT)
+           + FFLiRoundUp(GFDGetVertexShaderProgramSize(shaderIndex, pShaderData), GX2_SHADER_ALIGNMENT);
 }
 
 u32 FFLiUtilShader::GetProgramBufferSizeForFetch(u32 numAttribs)
@@ -102,12 +96,15 @@ u32 FFLiUtilShader::GetProgramBufferSizeForFetch(u32 numAttribs)
     return FFLiRoundUp(GX2CalcFetchShaderSize(numAttribs), GX2_SHADER_ALIGNMENT);
 }
 
-bool FFLiUtilShader::BuildShader(FFLiUtilShader::FetchShader* pFetchShader, const GX2VertexShader* pVertexShader, FFLiUtilShaderAllocator* pAllocator, const FFLiUtilShader::AttributeStreamDesc* pAttribs, u32 numAttribs, bool invalidate)
+bool FFLiUtilShader::BuildShader(FFLiUtilShader::FetchShader* pFetchShader, const GX2VertexShader* pVertexShader,
+                                 FFLiUtilShaderAllocator* pAllocator,
+                                 const FFLiUtilShader::AttributeStreamDesc* pAttribs, u32 numAttribs, bool invalidate)
 {
     u32 size = GX2CalcFetchShaderSize(numAttribs);
     void* pBuffer = pAllocator->ProgramAllocator().Allocate(size, GX2_SHADER_ALIGNMENT);
 
-    pFetchShader->pStreams = static_cast<GX2AttribStream*>(pAllocator->HeaderAllocator().Allocate(sizeof(GX2AttribStream) * numAttribs, 4));
+    pFetchShader->pStreams = static_cast<GX2AttribStream*>(
+        pAllocator->HeaderAllocator().Allocate(sizeof(GX2AttribStream) * numAttribs, 4));
 
     for (u32 i = 0; i < numAttribs; i++)
     {
@@ -129,7 +126,8 @@ bool FFLiUtilShader::BuildShader(FFLiUtilShader::FetchShader* pFetchShader, cons
 }
 
 template <typename T, typename Shader>
-bool FFLiUtilShader::BuildShaderImpl(Shader** ppShader, FFLiUtilShaderAllocator* pAllocator, const void* pShaderData, u32 shaderIndex, bool invalidate)
+bool FFLiUtilShader::BuildShaderImpl(Shader** ppShader, FFLiUtilShaderAllocator* pAllocator, const void* pShaderData,
+                                     u32 shaderIndex, bool invalidate)
 {
     if (shaderIndex >= T::GetCount(pShaderData))
         return false;
@@ -157,12 +155,14 @@ bool FFLiUtilShader::BuildShaderImpl(Shader** ppShader, FFLiUtilShaderAllocator*
     return true;
 }
 
-bool FFLiUtilShader::BuildShader(GX2PixelShader** ppShader, FFLiUtilShaderAllocator* pAllocator, const void* pShaderData, u32 shaderIndex, bool invalidate)
+bool FFLiUtilShader::BuildShader(GX2PixelShader** ppShader, FFLiUtilShaderAllocator* pAllocator,
+                                 const void* pShaderData, u32 shaderIndex, bool invalidate)
 {
     return BuildShaderImpl<FFLiUtilShaderPixel>(ppShader, pAllocator, pShaderData, shaderIndex, invalidate);
 }
 
-bool FFLiUtilShader::BuildShader(GX2VertexShader** ppShader, FFLiUtilShaderAllocator* pAllocator, const void* pShaderData, u32 shaderIndex, bool invalidate)
+bool FFLiUtilShader::BuildShader(GX2VertexShader** ppShader, FFLiUtilShaderAllocator* pAllocator,
+                                 const void* pShaderData, u32 shaderIndex, bool invalidate)
 {
     return BuildShaderImpl<FFLiUtilShaderVertex>(ppShader, pAllocator, pShaderData, shaderIndex, invalidate);
 }

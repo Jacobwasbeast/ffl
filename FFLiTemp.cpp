@@ -1,6 +1,7 @@
 #include <nn/ffl/FFLiTemp.h>
 
-namespace {
+namespace
+{
 
 void Invalidate();
 bool ShouldCallInvalidate(GX2ShaderMode shaderMode);
@@ -22,7 +23,8 @@ void FFLiTempSetShaderMode(GX2ShaderMode shaderMode)
         Invalidate();
 }
 
-namespace {
+namespace
+{
 
 void Invalidate()
 {

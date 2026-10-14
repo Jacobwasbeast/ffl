@@ -4,15 +4,15 @@
 #include <nn/ffl/FFLVec.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef struct FFLBoundingBox
 {
     FFLVec3 min;
     FFLVec3 max;
-}
-FFLBoundingBox;
+} FFLBoundingBox;
 NN_STATIC_ASSERT(sizeof(FFLBoundingBox) == 0x18);
 
 #ifdef __cplusplus

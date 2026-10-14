@@ -8,12 +8,14 @@
 
 #include <cstring>
 
-namespace {
+namespace
+{
 
 void CalcMVMatrix(Mat34* pMVMatrix, const FFLiRawMaskPartsDesc* pDesc);
 
 void InitPrimitive(FFLPrimitiveParam* pPrimitive, FFLiBufferAllocator* pAllocator);
-void InitAttributes(FFLAttributeBufferParam* pAttributes, FFLiOriginPosition originPosition, FFLiBufferAllocator* pAllocator, const Mat44* pMVPMatrix);
+void InitAttributes(FFLAttributeBufferParam* pAttributes, FFLiOriginPosition originPosition,
+                    FFLiBufferAllocator* pAllocator, const Mat44* pMVPMatrix);
 
 void InvalidatePrimitive(FFLPrimitiveParam* pPrimitive);
 void InvalidateAttributes(FFLAttributeBufferParam* pAttributes);
@@ -28,14 +30,15 @@ u32 FFLiGetBufferRawMaskParts()
     const u32 POSITION_BUFFER_SIZE = sizeof(FFLVec4) * 4;
     const u32 TEXCOORD_BUFFER_SIZE = sizeof(FFLVec2) * 4;
 
-    u32 ret  = GX2_VERTEX_BUFFER_ALIGNMENT; // max(GX2_INDEX_BUFFER_ALIGNMENT, GX2_VERTEX_BUFFER_ALIGNMENT)
-    ret     += FFLiRoundUp(FFLiBugCanVgtFixedIndexSize(FFLiBugCanSwapSize(INDEX_BUFFER_SIZE)), GX2_INDEX_BUFFER_ALIGNMENT);
-    ret     += FFLiRoundUp(FFLiBugCanSwapSize(POSITION_BUFFER_SIZE), GX2_VERTEX_BUFFER_ALIGNMENT);
-    ret     += FFLiRoundUp(FFLiBugCanSwapSize(TEXCOORD_BUFFER_SIZE), GX2_VERTEX_BUFFER_ALIGNMENT);
+    u32 ret = GX2_VERTEX_BUFFER_ALIGNMENT; // max(GX2_INDEX_BUFFER_ALIGNMENT, GX2_VERTEX_BUFFER_ALIGNMENT)
+    ret += FFLiRoundUp(FFLiBugCanVgtFixedIndexSize(FFLiBugCanSwapSize(INDEX_BUFFER_SIZE)), GX2_INDEX_BUFFER_ALIGNMENT);
+    ret += FFLiRoundUp(FFLiBugCanSwapSize(POSITION_BUFFER_SIZE), GX2_VERTEX_BUFFER_ALIGNMENT);
+    ret += FFLiRoundUp(FFLiBugCanSwapSize(TEXCOORD_BUFFER_SIZE), GX2_VERTEX_BUFFER_ALIGNMENT);
     return ret;
 }
 
-void FFLiInitDrawParamRawMaskParts(FFLiRawMaskPartsDrawParam* pDrawParam, const FFLiRawMaskPartsDesc* pDesc, const Mat44* pProjMatrix, FFLiBufferAllocator* pAllocator)
+void FFLiInitDrawParamRawMaskParts(FFLiRawMaskPartsDrawParam* pDrawParam, const FFLiRawMaskPartsDesc* pDesc,
+                                   const Mat44* pProjMatrix, FFLiBufferAllocator* pAllocator)
 {
     Mat44 mvpMatrix;
     Mat34 mvMatrix;
@@ -67,7 +70,8 @@ void FFLiDrawRawMaskParts(const FFLiRawMaskPartsDrawParam* pDrawParam, const FFL
     pCallback->CallDraw(*pDrawParam);
 }
 
-namespace {
+namespace
+{
 
 void CalcMVMatrix(Mat34* pMVMatrix, const FFLiRawMaskPartsDesc* pDesc)
 {
@@ -99,13 +103,14 @@ void InitPrimitive(FFLPrimitiveParam* pPrimitive, FFLiBufferAllocator* pAllocato
 {
     const u32 INDEX_BUFFER_SIZE = sizeof(u16) * 4;
 
-    static const u16 INDEX_BUFFER[4] = { 2, 1, 3, 0 };
+    static const u16 INDEX_BUFFER[4] = {2, 1, 3, 0};
     NN_STATIC_ASSERT(sizeof(INDEX_BUFFER) == INDEX_BUFFER_SIZE);
 
     pPrimitive->primitiveType = GX2_PRIMITIVE_TRIANGLE_STRIP;
     pPrimitive->indexFormat = GX2_INDEX_FORMAT_U16;
     pPrimitive->indexCount = 4;
-    pPrimitive->pIndexBuffer = FFLiBugVgtFixedIndexPtr(Allocate(pAllocator, FFLiBugCanVgtFixedIndexSize(FFLiBugCanSwapSize(INDEX_BUFFER_SIZE)), GX2_INDEX_BUFFER_ALIGNMENT));
+    pPrimitive->pIndexBuffer = FFLiBugVgtFixedIndexPtr(Allocate(
+        pAllocator, FFLiBugCanVgtFixedIndexSize(FFLiBugCanSwapSize(INDEX_BUFFER_SIZE)), GX2_INDEX_BUFFER_ALIGNMENT));
 
     std::memcpy(pPrimitive->pIndexBuffer, INDEX_BUFFER, INDEX_BUFFER_SIZE);
     EndianSwap(pPrimitive->pIndexBuffer, INDEX_BUFFER_SIZE);
@@ -132,9 +137,9 @@ void CalcAttribute(FFLVec4* pPosBuf, FFLVec2* pTexBuf, FFLiOriginPosition origin
         break;
     }
 
-    f32 posX[4] = { 1.0f, 1.0f, 0.0f, 0.0f };
-    f32 posY[4] = { -0.5f, 0.5f, 0.5f, -0.5f };
-    f32 texCoordY[4] = { 0.0f, 1.0f, 1.0f, 0.0f };
+    f32 posX[4] = {1.0f, 1.0f, 0.0f, 0.0f};
+    f32 posY[4] = {-0.5f, 0.5f, 0.5f, -0.5f};
+    f32 texCoordY[4] = {0.0f, 1.0f, 1.0f, 0.0f};
 
     for (u32 i = 0; i < 4; i++)
     {
@@ -152,33 +157,28 @@ void CalcAttribute(FFLVec4* pPosBuf, FFLVec2* pTexBuf, FFLiOriginPosition origin
     pTexBuf[3].x = texCoordX23;
 
     for (u32 i = 0; i < 4; i++)
-        MAT44MultVec(pMVPMatrix, (VecPtr)&(pPosBuf[i]), (VecPtr)&(pPosBuf[i]));
+        MAT44MultVec(pMVPMatrix, (VecPtr) & (pPosBuf[i]), (VecPtr) & (pPosBuf[i]));
 }
 
-void InitAttributes(FFLAttributeBufferParam* pAttributes, FFLiOriginPosition originPosition, FFLiBufferAllocator* pAllocator, const Mat44* pMVPMatrix)
+void InitAttributes(FFLAttributeBufferParam* pAttributes, FFLiOriginPosition originPosition,
+                    FFLiBufferAllocator* pAllocator, const Mat44* pMVPMatrix)
 {
     const u32 POSITION_BUFFER_SIZE = sizeof(FFLVec4) * 4;
     const u32 TEXCOORD_BUFFER_SIZE = sizeof(FFLVec2) * 4;
 
-    static const FFLAttributeBufferParam ATTRIBUTES = { {
-        { POSITION_BUFFER_SIZE, sizeof(FFLVec4) },
-        { TEXCOORD_BUFFER_SIZE, sizeof(FFLVec2) },
-        { 0, 0 },
-        { 0, 0 },
-        { 0, 0 }
-    } };
+    static const FFLAttributeBufferParam ATTRIBUTES = {
+        {{POSITION_BUFFER_SIZE, sizeof(FFLVec4)}, {TEXCOORD_BUFFER_SIZE, sizeof(FFLVec2)}, {0, 0}, {0, 0}, {0, 0}}};
 
     std::memcpy(pAttributes, &ATTRIBUTES, sizeof(FFLAttributeBufferParam));
 
-    pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr = Allocate(pAllocator, FFLiBugCanSwapSize(POSITION_BUFFER_SIZE), GX2_VERTEX_BUFFER_ALIGNMENT);
-    pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].ptr = Allocate(pAllocator, FFLiBugCanSwapSize(TEXCOORD_BUFFER_SIZE), GX2_VERTEX_BUFFER_ALIGNMENT);
+    pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr = Allocate(
+        pAllocator, FFLiBugCanSwapSize(POSITION_BUFFER_SIZE), GX2_VERTEX_BUFFER_ALIGNMENT);
+    pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].ptr = Allocate(
+        pAllocator, FFLiBugCanSwapSize(TEXCOORD_BUFFER_SIZE), GX2_VERTEX_BUFFER_ALIGNMENT);
 
-    CalcAttribute(
-        static_cast<FFLVec4*>(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr),
-        static_cast<FFLVec2*>(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].ptr),
-        originPosition,
-        pMVPMatrix
-    );
+    CalcAttribute(static_cast<FFLVec4*>(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr),
+                  static_cast<FFLVec2*>(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].ptr),
+                  originPosition, pMVPMatrix);
 
     EndianSwap(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr, POSITION_BUFFER_SIZE);
     EndianSwap(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_TEXCOORD].ptr, TEXCOORD_BUFFER_SIZE);
@@ -186,10 +186,8 @@ void InitAttributes(FFLAttributeBufferParam* pAttributes, FFLiOriginPosition ori
 
 void InvalidatePrimitive(FFLPrimitiveParam* pPrimitive)
 {
-    FFLiInvalidate(
-        GX2_INVALIDATE_CPU_ATTRIB_BUFFER,
-        pPrimitive->pIndexBuffer,
-        sizeof(u16) * pPrimitive->indexCount    // Apparently Nintendo forgot the index count is 4
+    FFLiInvalidate(GX2_INVALIDATE_CPU_ATTRIB_BUFFER, pPrimitive->pIndexBuffer,
+                   sizeof(u16) * pPrimitive->indexCount // Apparently Nintendo forgot the index count is 4
     );
 }
 
@@ -200,11 +198,7 @@ void InvalidateAttributes(FFLAttributeBufferParam* pAttributes)
         FFLAttributeBuffer* pBuffer = &pAttributes->attributeBuffers[i];
         void* ptr = pBuffer->ptr;
         if (ptr != NULL)
-            FFLiInvalidate(
-                GX2_INVALIDATE_CPU_ATTRIB_BUFFER,
-                ptr,
-                pBuffer->size
-            );
+            FFLiInvalidate(GX2_INVALIDATE_CPU_ATTRIB_BUFFER, ptr, pBuffer->size);
     }
 }
 
@@ -213,26 +207,19 @@ void InitAttributesForFill(FFLAttributeBufferParam* pAttributes, FFLiBufferAlloc
     const u32 POSITION_BUFFER_SIZE = sizeof(FFLVec4) * 4;
 
     static const FFLVec4 POSITION_BUFFER[4] = {
-        {  1.0f, -1.0f,  0.0f,  0.0f },
-        {  1.0f,  1.0f,  0.0f,  0.0f },
-        { -1.0f,  1.0f,  0.0f,  0.0f },
-        { -1.0f, -1.0f,  0.0f,  0.0f }
-    };
+        {1.0f, -1.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0.0f, 0.0f}, {-1.0f, 1.0f, 0.0f, 0.0f}, {-1.0f, -1.0f, 0.0f, 0.0f}};
     NN_STATIC_ASSERT(sizeof(POSITION_BUFFER) == POSITION_BUFFER_SIZE);
 
-    static const FFLAttributeBufferParam ATTRIBUTES = { {
-        { POSITION_BUFFER_SIZE, sizeof(FFLVec4) },
-        { 0, 0 },
-        { 0, 0 },
-        { 0, 0 },
-        { 0, 0 }
-    } };
+    static const FFLAttributeBufferParam ATTRIBUTES = {
+        {{POSITION_BUFFER_SIZE, sizeof(FFLVec4)}, {0, 0}, {0, 0}, {0, 0}, {0, 0}}};
 
     std::memcpy(pAttributes, &ATTRIBUTES, sizeof(FFLAttributeBufferParam));
 
-    pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr = Allocate(pAllocator, FFLiBugCanSwapSize(POSITION_BUFFER_SIZE), GX2_VERTEX_BUFFER_ALIGNMENT);
+    pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr = Allocate(
+        pAllocator, FFLiBugCanSwapSize(POSITION_BUFFER_SIZE), GX2_VERTEX_BUFFER_ALIGNMENT);
 
-    std::memcpy(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr, POSITION_BUFFER, POSITION_BUFFER_SIZE);
+    std::memcpy(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr, POSITION_BUFFER,
+                POSITION_BUFFER_SIZE);
     EndianSwap(pAttributes->attributeBuffers[FFL_ATTRIBUTE_BUFFER_TYPE_POSITION].ptr, POSITION_BUFFER_SIZE);
 }
 

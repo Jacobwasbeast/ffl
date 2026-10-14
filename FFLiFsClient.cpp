@@ -1,7 +1,6 @@
 #include <nn/ffl/FFLiFsClient.h>
 
-FFLiFsClient::FFLiFsClient()
-    : m_IsValid(false)
+FFLiFsClient::FFLiFsClient() : m_IsValid(false)
 
 {
 }
@@ -10,16 +9,16 @@ FFLiFsClient::~FFLiFsClient()
 {
 }
 
-namespace {
+namespace
+{
 
 void StateChangeCallback(FSClient* pClient, FSVolumeState state, void* pContext)
 {
-    OSReport("client = %p state = %u context = %p lastError = %d\n", pClient, u32(state), pContext, FSGetLastError(pClient));
+    OSReport("client = %p state = %u context = %p lastError = %d\n", pClient, u32(state), pContext,
+             FSGetLastError(pClient));
 }
 
-FSStateChangeParams s_Param = {
-    StateChangeCallback
-};
+FSStateChangeParams s_Param = {StateChangeCallback};
 
 }
 

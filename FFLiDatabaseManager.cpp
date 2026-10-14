@@ -9,11 +9,12 @@
 
 #include <cstring>
 
-FFLiDatabaseManager::FFLiDatabaseManager(FFLiDatabaseFile* pFile, FFLiFileWriteBuffer* pWriteBuffer, FFLiSystemContext* pContext, FFLiFsClient* pClient, FFLiAllocator* pAllocator)
-    : m_pSystemContext(pContext)
-    , m_DatabaseFileAccessor(pClient, pFile, pWriteBuffer, pAllocator)
-    , m_DatabaseRandom(pContext->RandomContext())
-    , m_pAllocator(pAllocator)
+FFLiDatabaseManager::FFLiDatabaseManager(FFLiDatabaseFile* pFile, FFLiFileWriteBuffer* pWriteBuffer,
+                                         FFLiSystemContext* pContext, FFLiFsClient* pClient, FFLiAllocator* pAllocator)
+    : m_pSystemContext(pContext),
+      m_DatabaseFileAccessor(pClient, pFile, pWriteBuffer, pAllocator),
+      m_DatabaseRandom(pContext->RandomContext()),
+      m_pAllocator(pAllocator)
 {
     m_IsEnabledSpecialMii = false;
     m_DatabaseFileAccessor.Init();
@@ -77,20 +78,23 @@ FFLResult FFLiDatabaseManager::GetCharInfoFromDefault(FFLiCharInfo* pCharInfo, u
     return FFL_RESULT_OK;
 }
 
-FFLResult FFLiDatabaseManager::GetCharInfoFromStoreData(FFLiCharInfo* pCharInfo, FFLDataSource dataSource, const FFLiStoreDataCFL* pStoreDataCFL, u16 index)
+FFLResult FFLiDatabaseManager::GetCharInfoFromStoreData(FFLiCharInfo* pCharInfo, FFLDataSource dataSource,
+                                                        const FFLiStoreDataCFL* pStoreDataCFL, u16 index)
 {
     FFLResult result = FFLiStoreDataCFLToCharInfo(pCharInfo, pStoreDataCFL[index]);
     if (result == FFL_RESULT_OK)
     {
         u16 miiDataIndex;
-        if (dataSource == FFL_DATA_SOURCE_STORE_DATA_OFFICIAL && m_DatabaseFileAccessor.GetDatabaseFile()->official.Search(&miiDataIndex, pCharInfo->creatorID))
+        if (dataSource == FFL_DATA_SOURCE_STORE_DATA_OFFICIAL
+            && m_DatabaseFileAccessor.GetDatabaseFile()->official.Search(&miiDataIndex, pCharInfo->creatorID))
             result = GetCharInfoFromOfficial(pCharInfo, miiDataIndex);
     }
 
     return result;
 }
 
-namespace {
+namespace
+{
 
 void ReplaceNameIfAccord(u16* s, u32 size)
 {
@@ -111,13 +115,14 @@ void ReplaceNameIfAccord(u16* s, u32 size)
 
 void ReplaceNameAndCreatorIfAccord(FFLiCharInfo* pCharInfo)
 {
-    ReplaceNameIfAccord(pCharInfo->name,        10 + 1);
+    ReplaceNameIfAccord(pCharInfo->name, 10 + 1);
     ReplaceNameIfAccord(pCharInfo->creatorName, 10 + 1);
 }
 
 }
 
-FFLResult FFLiDatabaseManager::PickupCharInfo(FFLiCharInfo* pCharInfo, FFLDataSource dataSource, const void* pBuffer, u16 index)
+FFLResult FFLiDatabaseManager::PickupCharInfo(FFLiCharInfo* pCharInfo, FFLDataSource dataSource, const void* pBuffer,
+                                              u16 index)
 {
     FFLResult result = FFL_RESULT_ERROR;
 

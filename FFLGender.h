@@ -4,16 +4,16 @@
 #include <nn/ffl/types.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef enum FFLGender
 {
-    FFL_GENDER_MALE     = 0,
-    FFL_GENDER_FEMALE   = 1,
-    FFL_GENDER_MAX      = 2
-}
-FFLGender;
+    FFL_GENDER_MALE = 0,
+    FFL_GENDER_FEMALE = 1,
+    FFL_GENDER_MAX = 2
+} FFLGender;
 
 #ifdef __cplusplus
 }

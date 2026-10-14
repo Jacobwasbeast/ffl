@@ -4,10 +4,11 @@
 #include <nn/ffl/FFLCreateID.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-#define FFLI_CREATE_ID_BASE_SIZE  (6)
+#define FFLI_CREATE_ID_BASE_SIZE (6)
 
 typedef struct FFLiCreateIDBase
 {
@@ -17,24 +18,22 @@ typedef struct FFLiCreateIDBase
         u8 data[FFLI_CREATE_ID_BASE_SIZE];
         u16 value16[FFLI_CREATE_ID_BASE_SIZE / sizeof(u16)];
     };
-}
-FFLiCreateIDBase;
+} FFLiCreateIDBase;
 NN_STATIC_ASSERT(sizeof(FFLiCreateIDBase) == FFLI_CREATE_ID_BASE_SIZE);
 
-#define FFLI_CREATE_ID_FLAG_UNKNOWN_0   (1 << 4)
-#define FFLI_CREATE_ID_FLAG_TEMPORARY   (1 << 5)
-#define FFLI_CREATE_ID_FLAG_UNKNOWN_2   (1 << 6)
-#define FFLI_CREATE_ID_FLAG_NORMAL      (1 << 7)
+#define FFLI_CREATE_ID_FLAG_UNKNOWN_0 (1 << 4)
+#define FFLI_CREATE_ID_FLAG_TEMPORARY (1 << 5)
+#define FFLI_CREATE_ID_FLAG_UNKNOWN_2 (1 << 6)
+#define FFLI_CREATE_ID_FLAG_NORMAL (1 << 7)
 
 typedef struct FFLiCreateID
 {
-    u8                  flags;
-    u8                  _1;
-    u8                  _2;
-    u8                  databaseIndex;
-    FFLiCreateIDBase    base;
-}
-FFLiCreateID;
+    u8 flags;
+    u8 _1;
+    u8 _2;
+    u8 databaseIndex;
+    FFLiCreateIDBase base;
+} FFLiCreateID;
 NN_STATIC_ASSERT(sizeof(FFLiCreateID) == FFL_CREATE_ID_SIZE);
 
 BOOL FFLiIsNullMiiID(const FFLCreateID* pCreateID);

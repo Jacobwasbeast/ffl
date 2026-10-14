@@ -4,17 +4,17 @@
 #include <nn/ffl/types.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef enum FFLAge
 {
-    FFL_AGE_0   = 0,
-    FFL_AGE_1   = 1,
-    FFL_AGE_2   = 2,
+    FFL_AGE_0 = 0,
+    FFL_AGE_1 = 1,
+    FFL_AGE_2 = 2,
     FFL_AGE_MAX = 3
-}
-FFLAge;
+} FFLAge;
 
 #ifdef __cplusplus
 }

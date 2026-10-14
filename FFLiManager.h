@@ -17,11 +17,11 @@
 
 struct FFLResourceDesc;
 
-class   FFLiBufferAllocator;
-class   FFLiCompressor;
-struct  FFLiDatabaseFile;
-struct  FFLiFileWriteBuffer;
-struct  FFLiResourceMultiHeader;
+class FFLiBufferAllocator;
+class FFLiCompressor;
+struct FFLiDatabaseFile;
+struct FFLiFileWriteBuffer;
+struct FFLiResourceMultiHeader;
 
 FFLResult FFLiInitRes(void* pBuffer, const FFLInitDesc* pInitDesc);
 FFLResult FFLiInitResEx(void* pBuffer, const FFLInitDesc* pInitDesc, const FFLResourceDesc* pResDesc);
@@ -29,7 +29,7 @@ void FFLiInitResGPUStep();
 
 u32 FFLiGetWorkSize(const FFLInitDesc* pInitDesc);
 
-extern "C" FFLResult FFLiFlushQuota(bool force);    // No idea why this in particular is extern "C"
+extern "C" FFLResult FFLiFlushQuota(bool force); // No idea why this in particular is extern "C"
 
 FFLResult FFLiExit();
 
@@ -56,55 +56,25 @@ private:
     FFLResult BeforeDestruct();
 
 public:
-    const FFLiSystemContext& GetSystemContext() const
-    {
-        return m_SystemContext;
-    }
+    const FFLiSystemContext& GetSystemContext() const { return m_SystemContext; }
 
-    FFLiDatabaseManager& GetDatabaseManager()
-    {
-        return m_DatabaseManager;
-    }
+    FFLiDatabaseManager& GetDatabaseManager() { return m_DatabaseManager; }
 
-    FFLiShaderCallback& GetShaderCallback()
-    {
-        return m_ShaderCallback;
-    }
+    FFLiShaderCallback& GetShaderCallback() { return m_ShaderCallback; }
 
-    const FFLiShaderCallback& GetShaderCallback() const
-    {
-        return m_ShaderCallback;
-    }
+    const FFLiShaderCallback& GetShaderCallback() const { return m_ShaderCallback; }
 
-    FFLiCharModelCreateParam& GetCharModelCreateParam()
-    {
-        return m_CharModelCreateParam;
-    }
+    FFLiCharModelCreateParam& GetCharModelCreateParam() { return m_CharModelCreateParam; }
 
-    const FFLiCharModelCreateParam& GetCharModelCreateParam() const
-    {
-        return m_CharModelCreateParam;
-    }
+    const FFLiCharModelCreateParam& GetCharModelCreateParam() const { return m_CharModelCreateParam; }
 
-    const FFLInitDesc& GetInitDesc() const
-    {
-        return m_InitDesc;
-    }
+    const FFLInitDesc& GetInitDesc() const { return m_InitDesc; }
 
-    FFLiCompressor* GetCompressor() const
-    {
-        return m_pCompressor;
-    }
+    FFLiCompressor* GetCompressor() const { return m_pCompressor; }
 
-    FFLiCopySurface& GetCopySurface()
-    {
-        return m_CopySurface;
-    }
+    FFLiCopySurface& GetCopySurface() { return m_CopySurface; }
 
-    const FFLiCopySurface& GetCopySurface() const
-    {
-        return m_CopySurface;
-    }
+    const FFLiCopySurface& GetCopySurface() const { return m_CopySurface; }
 
     bool CanInitCharModel() const;
 
@@ -113,21 +83,21 @@ public:
     FFLResult FlushQuota(bool force);
 
 private:
-    FFLiAllocator               m_Allocator;
-    FFLiSystemContext           m_SystemContext;
-    FFLiResourceMultiHeader*    m_pResourceMultiHeader;
-    FFLiDatabaseFile*           m_pDatabaseFile;
-    FFLiFileWriteBuffer*        m_pFileWriteBuffer;
-    FFLiFsClient                m_FsClient;
-    FFLiResourceManager         m_ResourceManager;
-    FFLiDatabaseManager         m_DatabaseManager;
-    FFLiShaderCallback          m_ShaderCallback;
-    FFLiCharModelCreateParam    m_CharModelCreateParam;
-    FFLInitDesc                 m_InitDesc;
-    FFLiCompressor*             m_pCompressor;
-    FFLiCopySurface             m_CopySurface;
-    bool                        m_IsSetupGPU;
-    u8                          _29ad;
+    FFLiAllocator m_Allocator;
+    FFLiSystemContext m_SystemContext;
+    FFLiResourceMultiHeader* m_pResourceMultiHeader;
+    FFLiDatabaseFile* m_pDatabaseFile;
+    FFLiFileWriteBuffer* m_pFileWriteBuffer;
+    FFLiFsClient m_FsClient;
+    FFLiResourceManager m_ResourceManager;
+    FFLiDatabaseManager m_DatabaseManager;
+    FFLiShaderCallback m_ShaderCallback;
+    FFLiCharModelCreateParam m_CharModelCreateParam;
+    FFLInitDesc m_InitDesc;
+    FFLiCompressor* m_pCompressor;
+    FFLiCopySurface m_CopySurface;
+    bool m_IsSetupGPU;
+    u8 _29ad;
 };
 NN_STATIC_ASSERT(sizeof(FFLiManager) == 0x29B0);
 

@@ -12,16 +12,16 @@ class FFLiUtilShader
 public:
     struct FetchShader
     {
-        GX2FetchShader      fetchShader;
-        GX2AttribStream*    pStreams;
+        GX2FetchShader fetchShader;
+        GX2AttribStream* pStreams;
     };
     NN_STATIC_ASSERT(sizeof(FetchShader) == 0x24);
 
     struct AttributeStreamDesc
     {
-        const char*     name;
-        u32             buffer;
-        u32             offset;
+        const char* name;
+        u32 buffer;
+        u32 offset;
         GX2AttribFormat format;
     };
     NN_STATIC_ASSERT(sizeof(AttributeStreamDesc) == 0x10);
@@ -36,9 +36,13 @@ public:
     static u32 GetProgramBufferSize(u32 numAttribs, const void* pShaderData, u32 shaderIndex);
     static u32 GetProgramBufferSizeForFetch(u32 numAttribs);
 
-    static bool BuildShader(FFLiUtilShader::FetchShader* pFetchShader, const GX2VertexShader* pVertexShader, FFLiUtilShaderAllocator* pAllocator, const FFLiUtilShader::AttributeStreamDesc* pAttribs, u32 numAttribs, bool invalidate);
-    static bool BuildShader(GX2PixelShader** ppShader, FFLiUtilShaderAllocator* pAllocator, const void* pShaderData, u32 shaderIndex, bool invalidate);
-    static bool BuildShader(GX2VertexShader** ppShader, FFLiUtilShaderAllocator* pAllocator, const void* pShaderData, u32 shaderIndex, bool invalidate);
+    static bool BuildShader(FFLiUtilShader::FetchShader* pFetchShader, const GX2VertexShader* pVertexShader,
+                            FFLiUtilShaderAllocator* pAllocator, const FFLiUtilShader::AttributeStreamDesc* pAttribs,
+                            u32 numAttribs, bool invalidate);
+    static bool BuildShader(GX2PixelShader** ppShader, FFLiUtilShaderAllocator* pAllocator, const void* pShaderData,
+                            u32 shaderIndex, bool invalidate);
+    static bool BuildShader(GX2VertexShader** ppShader, FFLiUtilShaderAllocator* pAllocator, const void* pShaderData,
+                            u32 shaderIndex, bool invalidate);
 
     static bool GetUniformLocation(u32* pLocation, const GX2PixelShader* pShader, const char* name);
     static bool GetUniformLocation(u32* pLocation, const GX2VertexShader* pShader, const char* name);
@@ -50,7 +54,8 @@ public:
 
 private:
     template <typename T, typename Shader>
-    static bool BuildShaderImpl(Shader** ppShader, FFLiUtilShaderAllocator* pAllocator, const void* pShaderData, u32 shaderIndex, bool invalidate);
+    static bool BuildShaderImpl(Shader** ppShader, FFLiUtilShaderAllocator* pAllocator, const void* pShaderData,
+                                u32 shaderIndex, bool invalidate);
 
     static const GX2UniformVar* GetUniformVar(const GX2PixelShader* pShader, const char* name);
     static const GX2UniformVar* GetUniformVar(const GX2VertexShader* pShader, const char* name);

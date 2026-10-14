@@ -9,15 +9,9 @@ public:
     FFLiUtilShaderAllocator(FFLiBufferAllocator* pAllocator, u32 numAttribs, const void* pShaderData, u32 shaderIndex);
     FFLiUtilShaderAllocator(FFLiBufferAllocator* pAllocator, u32 numAttribs);
 
-    FFLiBufferAllocator& HeaderAllocator()
-    {
-        return m_BufferAllocatorHeader;
-    }
+    FFLiBufferAllocator& HeaderAllocator() { return m_BufferAllocatorHeader; }
 
-    FFLiBufferAllocator& ProgramAllocator()
-    {
-        return m_BufferAllocatorProgram;
-    }
+    FFLiBufferAllocator& ProgramAllocator() { return m_BufferAllocatorProgram; }
 
 private:
     FFLiBufferAllocator m_BufferAllocatorHeader;

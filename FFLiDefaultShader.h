@@ -15,67 +15,67 @@ struct FFLDrawParam;
 
 struct FFLiDefaultShaderLight
 {
-    BOOL        enable;
-    FFLVec3     direction;
-    FFLColor    ambient;
-    FFLColor    diffuse;
-    FFLColor    specular;
+    BOOL enable;
+    FFLVec3 direction;
+    FFLColor ambient;
+    FFLColor diffuse;
+    FFLColor specular;
 };
 NN_STATIC_ASSERT(sizeof(FFLiDefaultShaderLight) == 0x40);
 
 struct FFLiDefaultShaderMaterial
 {
-    FFLColor        ambient;
-    FFLColor        diffuse;
-    FFLColor        specular;
-    f32             specularPower;
+    FFLColor ambient;
+    FFLColor diffuse;
+    FFLColor specular;
+    f32 specularPower;
     FFLSpecularMode specularMode;
 };
 NN_STATIC_ASSERT(sizeof(FFLiDefaultShaderMaterial) == 0x38);
 
 struct FFLiDefaultShaderParam
 {
-    Mat44                       projection;
-    Mat44                       modelView;
-    f32                         inverseTranspose[3][4];
-    FFLiDefaultShaderLight      light;
-    FFLiDefaultShaderMaterial   material[FFL_DRAW_TYPE_MAX];
-    FFLColor                    rimColor;
-    f32                         rimPower;
-    BOOL                        cullBack;
+    Mat44 projection;
+    Mat44 modelView;
+    f32 inverseTranspose[3][4];
+    FFLiDefaultShaderLight light;
+    FFLiDefaultShaderMaterial material[FFL_DRAW_TYPE_MAX];
+    FFLColor rimColor;
+    f32 rimPower;
+    BOOL cullBack;
 };
 NN_STATIC_ASSERT(sizeof(FFLiDefaultShaderParam) == 0x300);
 
 struct FFLiDefaultShader
 {
-    FFLShaderCallback           callback;
-    GX2VertexShader*            pVertexShader;
-    GX2PixelShader*             pPixelShader;
+    FFLShaderCallback callback;
+    GX2VertexShader* pVertexShader;
+    GX2PixelShader* pPixelShader;
     FFLiUtilShader::FetchShader fetchShader;
-    GX2Sampler                  sampler;
-    GX2Sampler                  eyebrowSampler;
-    bool                        useEyebrowSampler;
-    u32                         projectionLocation;
-    u32                         modelViewLocation;
-    u32                         inverseTransposeLocation;
-    u32                         textureLocation;
-    u32                         modeLocation;
-    u32                         const1Location;
-    u32                         const2Location;
-    u32                         const3Location;
-    u32                         lightEnableLocation;
-    u32                         lightDirectionLocation;
-    u32                         lightAmbientLocation;
-    u32                         lightDiffuseLocation;
-    u32                         lightSpecularLocation;
-    u32                         materialAmbientLocation;
-    u32                         materialDiffuseLocation;
-    u32                         materialSpecularLocation;
-    u32                         materialSpecularPowerLocation;
-    u32                         materialSpecularModeLocation;
-    u32                         rimColorLocation;
-    u32                         rimPowerLocation;
-    FFLiDefaultShaderParam      param;
+    GX2Sampler sampler;
+    GX2Sampler eyebrowSampler;
+    bool useEyebrowSampler;
+    u32 projectionLocation;
+    u32 modelViewLocation;
+    u32 inverseTransposeLocation;
+    u32 textureLocation;
+    u32 modeLocation;
+    u32 const1Location;
+    u32 const2Location;
+    u32 const3Location;
+    u32 lightEnableLocation;
+    u32 lightDirectionLocation;
+    u32 lightAmbientLocation;
+    u32 lightDiffuseLocation;
+    u32 lightSpecularLocation;
+    u32 materialAmbientLocation;
+    u32 materialDiffuseLocation;
+    u32 materialSpecularLocation;
+    u32 materialSpecularPowerLocation;
+    u32 materialSpecularModeLocation;
+    u32 rimColorLocation;
+    u32 rimPowerLocation;
+    FFLiDefaultShaderParam param;
 };
 NN_STATIC_ASSERT(sizeof(FFLiDefaultShader) == 0x3A8);
 
@@ -100,7 +100,8 @@ GX2ContextState* FFLiGetContextStateDefaultShader(FFLiDefaultShader* pShader);
 GX2Sampler* FFLiGetSamplerDefaultShader(FFLiDefaultShader* pShader);
 
 void FFLiSetMatrixDefaultShader(FFLiDefaultShader* pShader, const Mat44* pProjection, const Mat34* pModelView);
-void FFLiSetMatrixExDefaultShader(FFLiDefaultShader* pShader, const Mat44* pProjection, const Mat34* pModelView, const Mat34* pInverseTranspose);
+void FFLiSetMatrixExDefaultShader(FFLiDefaultShader* pShader, const Mat44* pProjection, const Mat34* pModelView,
+                                  const Mat34* pInverseTranspose);
 
 void FFLiSetCullBackDefaultShader(FFLiDefaultShader* pShader, BOOL cullBack);
 

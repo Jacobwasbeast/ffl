@@ -16,10 +16,7 @@ public:
 
     bool IsExist() const;
 
-    const FFLShaderCallback* Get() const
-    {
-        return m_pShaderCallback;
-    }
+    const FFLShaderCallback* Get() const { return m_pShaderCallback; }
 
     void Set(const FFLShaderCallback* pCallback);
 
@@ -28,7 +25,7 @@ public:
     void CallSetContextState() const;
 
 private:
-    const FFLShaderCallback*    m_pShaderCallback;
+    const FFLShaderCallback* m_pShaderCallback;
 };
 NN_STATIC_ASSERT(sizeof(FFLiShaderCallback) == 4);
 

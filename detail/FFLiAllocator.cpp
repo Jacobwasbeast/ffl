@@ -1,7 +1,6 @@
 #include <nn/ffl/detail/FFLiAllocator.h>
 
-FFLiAllocator::FFLiAllocator()
-    : m_HeapHandle(MEM_HEAP_INVALID_HANDLE)
+FFLiAllocator::FFLiAllocator() : m_HeapHandle(MEM_HEAP_INVALID_HANDLE)
 {
 }
 

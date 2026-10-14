@@ -8,7 +8,8 @@
 
 #include <cstring>
 
-namespace {
+namespace
+{
 
 const s32* RflToFaceLineAndMake(s32 type);
 
@@ -16,7 +17,8 @@ bool ReplaceNameFromRFL(u16* s, s32 size, s32 maxNumberCharCount);
 
 }
 
-bool FFLiMiiDataCoreRFL2MiiDataCore(FFLiMiiDataCore* pMiiDataCore, const FFLiMiiDataCoreRFL& miiDataCoreRFL, bool replaceName)
+bool FFLiMiiDataCoreRFL2MiiDataCore(FFLiMiiDataCore* pMiiDataCore, const FFLiMiiDataCoreRFL& miiDataCoreRFL,
+                                    bool replaceName)
 {
     FFLiCharInfo charInfo;
     bool ret = FFLiMiiDataCoreRFL2CharInfo(&charInfo, miiDataCoreRFL, NULL, replaceName);
@@ -24,7 +26,8 @@ bool FFLiMiiDataCoreRFL2MiiDataCore(FFLiMiiDataCore* pMiiDataCore, const FFLiMii
     return ret;
 }
 
-bool FFLiMiiDataCoreRFL2CharInfo(FFLiCharInfo* pCharInfo, const FFLiMiiDataCoreRFL& miiDataCoreRFL, const u16* pCreatorName, bool replaceName)
+bool FFLiMiiDataCoreRFL2CharInfo(FFLiCharInfo* pCharInfo, const FFLiMiiDataCoreRFL& miiDataCoreRFL,
+                                 const u16* pCreatorName, bool replaceName)
 {
     pCharInfo->miiVersion = 3;
 
@@ -134,7 +137,8 @@ void FFLiClearCreatorNameFromOfficial(FFLiMiiDataOfficial* pMiiDataOfficial)
     std::memset(pMiiDataOfficial->CreatorName(), 0, sizeof(u16) * 10);
 }
 
-void FFLiMiiDataCore2CharInfo(FFLiCharInfo* pCharInfo, const FFLiMiiDataCore& miiDataCore, const u16* pCreatorName, bool resetBirthday)
+void FFLiMiiDataCore2CharInfo(FFLiCharInfo* pCharInfo, const FFLiMiiDataCore& miiDataCore, const u16* pCreatorName,
+                              bool resetBirthday)
 {
     pCharInfo->miiVersion = miiDataCore.MiiVersion();
 
@@ -313,7 +317,8 @@ void FFLiMiiDataOfficial2CharInfo(FFLiCharInfo* pCharInfo, const FFLiMiiDataOffi
     FFLiMiiDataCore2CharInfo(pCharInfo, miiDataOfficial, miiDataOfficial.CreatorName(), false);
 }
 
-void FFLiCharInfo2MiiDataOfficial(FFLiMiiDataOfficial* pMiiDataOfficial, const FFLiCharInfo& charInfo, bool resetBirthday)
+void FFLiCharInfo2MiiDataOfficial(FFLiMiiDataOfficial* pMiiDataOfficial, const FFLiCharInfo& charInfo,
+                                  bool resetBirthday)
 {
     FFLiCharInfo2MiiDataCore(pMiiDataOfficial, charInfo, resetBirthday);
     std::memcpy(pMiiDataOfficial->CreatorName(), charInfo.creatorName, sizeof(u16) * 10);
@@ -349,22 +354,11 @@ void FFLiMiiDataOfficialToStoreDataCFL(FFLiStoreDataCFL& storeDataCFL, const FFL
     std::memcpy(&storeDataCFL, &storeData, FFL_STOREDATA_SIZE);
 }
 
-namespace {
+namespace
+{
 
-static const s32 RFL_FACE_LINE_AND_MAKE[12][2] = {
-    {  0,  0 },
-    {  0,  1 },
-    {  0,  6 },
-    {  0,  9 },
-    {  5,  0 },
-    {  2,  0 },
-    {  3,  0 },
-    {  7,  0 },
-    {  8,  0 },
-    {  0, 10 },
-    {  9,  0 },
-    { 11,  0 }
-};
+static const s32 RFL_FACE_LINE_AND_MAKE[12][2] = {{0, 0}, {0, 1}, {0, 6}, {0, 9},  {5, 0}, {2, 0},
+                                                  {3, 0}, {7, 0}, {8, 0}, {0, 10}, {9, 0}, {11, 0}};
 
 const s32* RflToFaceLineAndMake(s32 type)
 {

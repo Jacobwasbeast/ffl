@@ -8,16 +8,17 @@
 #include <nn/ffl/FFLiShapePartsType.h>
 #include <nn/ffl/FFLiTexturePartsType.h>
 
-class   FFLiFsCommand;
-class   FFLiResourceHeader;
-class   FFLiResourceLoaderBuffer;
-class   FFLiResourceManager;
-struct  FFLiResourcePartsInfo;
+class FFLiFsCommand;
+class FFLiResourceHeader;
+class FFLiResourceLoaderBuffer;
+class FFLiResourceManager;
+struct FFLiResourcePartsInfo;
 
 class FFLiResourceLoader
 {
 public:
-    FFLiResourceLoader(FFLiResourceManager* pResourceManager, FFLiResourceLoaderBuffer* pResLoaderBuffer, FFLResourceType resourceType);
+    FFLiResourceLoader(FFLiResourceManager* pResourceManager, FFLiResourceLoaderBuffer* pResLoaderBuffer,
+                       FFLResourceType resourceType);
     ~FFLiResourceLoader();
 
     bool IsExpand() const;
@@ -46,11 +47,11 @@ private:
     FSStatus Close();
 
 private:
-    FFLiResourceManager*        m_pResourceManager;
-    FFLiResourceLoaderBuffer*   m_pBuffer;
-    FFLiFsCommand*              m_pFsCommand;
-    FFLiFsFile                  m_FsFile;
-    FFLResourceType             m_ResourceType;
+    FFLiResourceManager* m_pResourceManager;
+    FFLiResourceLoaderBuffer* m_pBuffer;
+    FFLiFsCommand* m_pFsCommand;
+    FFLiFsFile m_FsFile;
+    FFLResourceType m_ResourceType;
 };
 NN_STATIC_ASSERT(sizeof(FFLiResourceLoader) == 0x18);
 

@@ -20,8 +20,8 @@ public:
     static u32 GetBufferSize();
 
 private:
-    FFLVec3*    m_pPositionBuffer;
-    FFLVec2*    m_pTexCoordBuffer;
+    FFLVec3* m_pPositionBuffer;
+    FFLVec2* m_pTexCoordBuffer;
 };
 NN_STATIC_ASSERT(sizeof(FFLiCompressDrawer) == 8);
 

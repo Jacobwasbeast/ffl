@@ -10,7 +10,8 @@
 
 #include <cstring>
 
-namespace {
+namespace
+{
 
 void ReplaceInvalidNameChar(u16* s, s32 len)
 {
@@ -43,11 +44,12 @@ void ReplaceNonAsciiNameChar(u16* s, s32 len)
 
 }
 
-void FFLiGetAdditionalInfo(FFLAdditionalInfo* pAdditionalInfo, const FFLiCharInfo* pCharInfo, BOOL checkFontRegion, FFLFontRegion fontRegion)
+void FFLiGetAdditionalInfo(FFLAdditionalInfo* pAdditionalInfo, const FFLiCharInfo* pCharInfo, BOOL checkFontRegion,
+                           FFLFontRegion fontRegion)
 {
     if (pCharInfo->ngWord && !FFLiIsHomeAuthorID(&pCharInfo->authorID))
     {
-        FFLiCopyWcharT2U16(pAdditionalInfo->name,        10 + 1, L"???");
+        FFLiCopyWcharT2U16(pAdditionalInfo->name, 10 + 1, L"???");
         FFLiCopyWcharT2U16(pAdditionalInfo->creatorName, 10 + 1, L"???");
     }
     else

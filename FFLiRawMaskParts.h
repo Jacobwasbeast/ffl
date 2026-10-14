@@ -14,16 +14,16 @@ NN_STATIC_ASSERT(sizeof(FFLiRawMaskPartsDrawParam) == 0x68);
 enum FFLiOriginPosition
 {
     FFLI_ORIGIN_POSITION_CENTER = 0,
-    FFLI_ORIGIN_POSITION_RIGHT  = 1,
-    FFLI_ORIGIN_POSITION_LEFT   = 2
+    FFLI_ORIGIN_POSITION_RIGHT = 1,
+    FFLI_ORIGIN_POSITION_LEFT = 2
 };
 
 struct FFLiRawMaskPartsDesc
 {
-    FFLVec2             pos;
-    FFLVec2             scale;
-    f32                 rot;
-    FFLiOriginPosition  originPos;
+    FFLVec2 pos;
+    FFLVec2 scale;
+    f32 rot;
+    FFLiOriginPosition originPos;
 };
 NN_STATIC_ASSERT(sizeof(FFLiRawMaskPartsDesc) == 0x18);
 
@@ -32,7 +32,8 @@ u32 FFLiGetBufferRawMaskParts();
 class FFLiBufferAllocator;
 class FFLiShaderCallback;
 
-void FFLiInitDrawParamRawMaskParts(FFLiRawMaskPartsDrawParam* pDrawParam, const FFLiRawMaskPartsDesc* pDesc, const Mat44* pProjMatrix, FFLiBufferAllocator* pAllocator);
+void FFLiInitDrawParamRawMaskParts(FFLiRawMaskPartsDrawParam* pDrawParam, const FFLiRawMaskPartsDesc* pDesc,
+                                   const Mat44* pProjMatrix, FFLiBufferAllocator* pAllocator);
 void FFLiInvalidateDrawParamRawMaskParts(FFLiRawMaskPartsDrawParam* pDrawParam);
 void FFLiInitDrawParamRawMaskPartsFill(FFLiRawMaskPartsDrawParam* pDrawParam, FFLiBufferAllocator* pAllocator);
 void FFLiDrawRawMaskParts(const FFLiRawMaskPartsDrawParam* pDrawParam, const FFLiShaderCallback* pCallback);

@@ -3,13 +3,13 @@
 #include <nn/ffl/FFLiCoordinate.h>
 
 FFLiCoordinate::FFLiCoordinate()
-    : m_SwizzleY(1)
-    , m_SwizzleZ(2)
-    , m_SwizzleX(0)
-    , m_FlipY(false)
-    , m_FlipZ(false)
-    , m_FlipX(false)
-    , m_Scale(1.0f)
+    : m_SwizzleY(1),
+      m_SwizzleZ(2),
+      m_SwizzleX(0),
+      m_FlipY(false),
+      m_FlipZ(false),
+      m_FlipX(false),
+      m_Scale(1.0f)
 {
 }
 
@@ -25,7 +25,7 @@ f32 FFLiCoordinate::FlipValue(FFLVec3*, f32 value)
 template <typename ValueType, typename VectorType>
 void FFLiCoordinate::TransformImpl(VectorType* pVec) const
 {
-    ValueType values[3] = { pVec->x, pVec->y, pVec->z };
+    ValueType values[3] = {pVec->x, pVec->y, pVec->z};
 
     ValueType x = m_FlipX ? FlipValue(pVec, values[0]) : values[0];
     ValueType y = m_FlipY ? FlipValue(pVec, values[1]) : values[1];
@@ -78,7 +78,6 @@ u32 FFLiCoordinate::FlipValue(FFLiSnorm10_10_10_2* pVec, u32 value)
 
     else
         return 0x400 - value & 0x3ff;
-    
 }
 
 void FFLiCoordinate::TransformWithoutScale(FFLiSnorm10_10_10_2* pVec) const

@@ -11,7 +11,8 @@ u32 FFLiGetBufferSizeCharModel(const FFLCharModelDesc* pDesc)
     return 0;
 }
 
-FFLResult FFLiInitCharModelCPUStep(FFLiCharModel* pModel, const FFLCharModelSource* pSource, const FFLCharModelDesc* pDesc, FFLCharModelBuffer* pBuffer)
+FFLResult FFLiInitCharModelCPUStep(FFLiCharModel* pModel, const FFLCharModelSource* pSource,
+                                   const FFLCharModelDesc* pDesc, FFLCharModelBuffer* pBuffer)
 {
     if (!FFLiManager::IsConstruct())
         return FFL_RESULT_MANAGER_NOT_CONSTRUCT;
@@ -20,7 +21,8 @@ FFLResult FFLiInitCharModelCPUStep(FFLiCharModel* pModel, const FFLCharModelSour
     if (!pManager->CanInitCharModel())
         return FFL_RESULT_ERROR;
 
-    return FFLiCharModelCreator(&pManager->GetCharModelCreateParam(), pManager).ExecuteCPUStep(pModel, pSource, pDesc, pBuffer);
+    return FFLiCharModelCreator(&pManager->GetCharModelCreateParam(), pManager)
+        .ExecuteCPUStep(pModel, pSource, pDesc, pBuffer);
 }
 
 u32 FFLiGetTempBufferSizeCharModel(const FFLCharModelDesc* pDesc)
@@ -50,7 +52,8 @@ void FFLiSetExpression(FFLiCharModel* pModel, FFLExpression expression)
     if (1 << expression & pModel->charModelDesc.expressionFlag)
     {
         pModel->expression = expression;
-        FFLiInitModulateShapeMask(&pModel->drawParam[FFLI_SHAPE_TYPE_XLU_MASK].modulateParam, pModel->maskTextures.pRenderTextures[expression]->gx2Texture);
+        FFLiInitModulateShapeMask(&pModel->drawParam[FFLI_SHAPE_TYPE_XLU_MASK].modulateParam,
+                                  pModel->maskTextures.pRenderTextures[expression]->gx2Texture);
     }
 }
 
@@ -66,8 +69,7 @@ void FFLiGetPartsTransform(FFLPartsTransform* pTransform, const FFLiCharModel* p
 
 void FFLiSetViewModelType(FFLiCharModel* pModel, FFLModelType type)
 {
-    if (type < FFL_MODEL_TYPE_MAX &&
-        (pModel->charModelDesc).modelFlag & 1 << type)
+    if (type < FFL_MODEL_TYPE_MAX && (pModel->charModelDesc).modelFlag & 1 << type)
     {
         pModel->modelType = type;
     }
@@ -88,27 +90,19 @@ const FFLDrawParam* FFLiGetDrawParamOpaNoseFromCharModel(const FFLiCharModel* pM
     return &(pModel->drawParam[FFLI_SHAPE_TYPE_OPA_NOSE]);
 }
 
-namespace {
+namespace
+{
 
 struct FFLiShapeTypeInfo
 {
-    FFLiShapeType   hairIndex;
-    FFLiShapeType   foreheadIndex;
-    FFLiShapeType   capIndex;
+    FFLiShapeType hairIndex;
+    FFLiShapeType foreheadIndex;
+    FFLiShapeType capIndex;
 };
 
 const FFLiShapeTypeInfo SHAPE_TYPE_INFO[2] = {
-    {
-        FFLI_SHAPE_TYPE_OPA_HAIR_1,
-        FFLI_SHAPE_TYPE_OPA_FOREHEAD_1,
-        FFLI_SHAPE_TYPE_OPA_CAP_1
-    },
-    {
-        FFLI_SHAPE_TYPE_OPA_HAIR_2,
-        FFLI_SHAPE_TYPE_OPA_FOREHEAD_2,
-        FFLI_SHAPE_TYPE_OPA_CAP_2
-    }
-};
+    {FFLI_SHAPE_TYPE_OPA_HAIR_1, FFLI_SHAPE_TYPE_OPA_FOREHEAD_1, FFLI_SHAPE_TYPE_OPA_CAP_1},
+    {FFLI_SHAPE_TYPE_OPA_HAIR_2, FFLI_SHAPE_TYPE_OPA_FOREHEAD_2, FFLI_SHAPE_TYPE_OPA_CAP_2}};
 
 const FFLiShapeTypeInfo& GetShapeTypeInfo(FFLModelType type)
 {
@@ -127,18 +121,15 @@ const FFLiShapeTypeInfo& GetShapeTypeInfo(FFLModelType type)
 
 const FFLDrawParam* FFLiGetDrawParamOpaForeheadFromCharModel(const FFLiCharModel* pModel)
 {
-    return
-        pModel->modelType == FFL_MODEL_TYPE_2
-            ? NULL
-            : &(pModel->drawParam[GetShapeTypeInfo(pModel->modelType).foreheadIndex]);
+    return pModel->modelType == FFL_MODEL_TYPE_2
+               ? NULL
+               : &(pModel->drawParam[GetShapeTypeInfo(pModel->modelType).foreheadIndex]);
 }
 
 const FFLDrawParam* FFLiGetDrawParamOpaHairFromCharModel(const FFLiCharModel* pModel)
 {
-    return
-        pModel->modelType == FFL_MODEL_TYPE_2
-            ? NULL
-            : &(pModel->drawParam[GetShapeTypeInfo(pModel->modelType).hairIndex]);
+    return pModel->modelType == FFL_MODEL_TYPE_2 ? NULL
+                                                 : &(pModel->drawParam[GetShapeTypeInfo(pModel->modelType).hairIndex]);
 }
 
 const FFLDrawParam* FFLiGetDrawParamOpaCapFromCharModel(const FFLiCharModel* pModel)
@@ -156,16 +147,10 @@ const FFLDrawParam* FFLiGetDrawParamXluMaskFromCharModel(const FFLiCharModel* pM
 
 const FFLDrawParam* FFLiGetDrawParamXluNoseLineFromCharModel(const FFLiCharModel* pModel)
 {
-    return
-        pModel->pNoselineTexture == NULL
-            ? NULL
-            : &(pModel->drawParam[FFLI_SHAPE_TYPE_XLU_NOSELINE]);
+    return pModel->pNoselineTexture == NULL ? NULL : &(pModel->drawParam[FFLI_SHAPE_TYPE_XLU_NOSELINE]);
 }
 
 const FFLDrawParam* FFLiGetDrawParamXluGlassFromCharModel(const FFLiCharModel* pModel)
 {
-    return
-        pModel->pGlassTexture == NULL
-            ? NULL
-            : &(pModel->drawParam[FFLI_SHAPE_TYPE_XLU_GLASS]);
+    return pModel->pGlassTexture == NULL ? NULL : &(pModel->drawParam[FFLI_SHAPE_TYPE_XLU_GLASS]);
 }

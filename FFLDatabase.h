@@ -5,7 +5,8 @@
 #include <nn/ffl/FFLResult.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef struct FFLAdditionalInfo FFLAdditionalInfo;
@@ -17,7 +18,8 @@ u16 FFLGetAvailableOfficialDataNum(void);
 BOOL FFLIsAvailableOfficialData(u16 index);
 BOOL FFLIsRegularOfficialData(u16 index);
 
-FFLResult FFLGetAdditionalInfo(FFLAdditionalInfo* pAdditionalInfo, FFLDataSource dataSource, const void* pBuffer, u16 index, BOOL checkFontRegion);
+FFLResult FFLGetAdditionalInfo(FFLAdditionalInfo* pAdditionalInfo, FFLDataSource dataSource, const void* pBuffer,
+                               u16 index, BOOL checkFontRegion);
 
 void FFLiEnableSpecialMii(u32 key);
 

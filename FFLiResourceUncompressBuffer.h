@@ -9,7 +9,8 @@ class FFLiResourceManager;
 class FFLiResourceUncompressBuffer
 {
 public:
-    FFLiResourceUncompressBuffer(const FFLiResourceManager* pResourceManager, FFLiBufferAllocator* pAllocator, FFLResourceType resourceType);
+    FFLiResourceUncompressBuffer(const FFLiResourceManager* pResourceManager, FFLiBufferAllocator* pAllocator,
+                                 FFLResourceType resourceType);
     ~FFLiResourceUncompressBuffer();
 
     void* Buffer();
@@ -20,8 +21,8 @@ public:
     static u32 GetBufferSize(const FFLiResourceManager* pResourceManager, FFLResourceType resourceType);
 
 private:
-    void*   m_pBuffer;
-    void*   m_pTempBuffer;
+    void* m_pBuffer;
+    void* m_pTempBuffer;
 };
 NN_STATIC_ASSERT(sizeof(FFLiResourceUncompressBuffer) == 8);
 

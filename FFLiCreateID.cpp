@@ -1,13 +1,11 @@
 #include <nn/ffl/FFLiCreateID.h>
 
-static inline
-FFLiCreateID* GetCreateID(FFLCreateID* pCreateID)
+static inline FFLiCreateID* GetCreateID(FFLCreateID* pCreateID)
 {
     return reinterpret_cast<FFLiCreateID*>(pCreateID);
 }
 
-static inline
-const FFLiCreateID* GetCreateID(const FFLCreateID* pCreateID)
+static inline const FFLiCreateID* GetCreateID(const FFLCreateID* pCreateID)
 {
     return reinterpret_cast<const FFLiCreateID*>(pCreateID);
 }
@@ -21,11 +19,8 @@ BOOL FFLiIsNullMiiID(const FFLCreateID* pCreateID)
     NN_STATIC_ASSERT(count == 5);
 
     BOOL ret = false;
-    if (pCreateID->value16[0] == 0 &&
-        pCreateID->value16[1] == 0 &&
-        pCreateID->value16[2] == 0 &&
-        pCreateID->value16[3] == 0 &&
-        pCreateID->value16[4] == 0)
+    if (pCreateID->value16[0] == 0 && pCreateID->value16[1] == 0 && pCreateID->value16[2] == 0
+        && pCreateID->value16[3] == 0 && pCreateID->value16[4] == 0)
     {
         ret = true;
     }
@@ -34,9 +29,7 @@ BOOL FFLiIsNullMiiID(const FFLCreateID* pCreateID)
 
 void FFLiGetTemporaryMiiID(FFLCreateID* pCreateID)
 {
-    static const FFLiCreateID temporaryMiiID = {
-        FFLI_CREATE_ID_FLAG_TEMPORARY
-    };
+    static const FFLiCreateID temporaryMiiID = {FFLI_CREATE_ID_FLAG_TEMPORARY};
 
     *GetCreateID(pCreateID) = temporaryMiiID;
 }
@@ -85,11 +78,7 @@ BOOL FFLiIsSameMiiID(const FFLCreateID* a, const FFLCreateID* b)
         const u16* pB = b->value16;
 
         BOOL ret = false;
-        if (pA[0] == pB[0] &&
-            pA[1] == pB[1] &&
-            pA[2] == pB[2] &&
-            pA[3] == pB[3] &&
-            pA[4] == pB[4])
+        if (pA[0] == pB[0] && pA[1] == pB[1] && pA[2] == pB[2] && pA[3] == pB[3] && pA[4] == pB[4])
         {
             ret = true;
         }

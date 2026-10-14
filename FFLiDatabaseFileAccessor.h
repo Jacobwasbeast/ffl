@@ -11,13 +11,11 @@ class FFLiFsClient;
 class FFLiDatabaseFileAccessor
 {
 public:
-    FFLiDatabaseFileAccessor(FFLiFsClient* pClient, FFLiDatabaseFile* pFile, FFLiFileWriteBuffer* pWriteBuffer, FFLiAllocator* pAllocator);
+    FFLiDatabaseFileAccessor(FFLiFsClient* pClient, FFLiDatabaseFile* pFile, FFLiFileWriteBuffer* pWriteBuffer,
+                             FFLiAllocator* pAllocator);
     ~FFLiDatabaseFileAccessor();
 
-    FFLiDatabaseFile* GetDatabaseFile() const
-    {
-        return m_pDatabaseFile;
-    }
+    FFLiDatabaseFile* GetDatabaseFile() const { return m_pDatabaseFile; }
 
     void Init();
 
@@ -41,21 +39,21 @@ public:
     bool IsExistFile(const char* pPath);
 
 private:
-    FFLiFsClient*           m_pFsClient;
-    FFLiFsCommand           m_FsCommand;
-    FFLiDatabaseFile*       m_pDatabaseFile;
-    FFLiFileWriteBuffer*    m_pFileWriteBuffer;
-    FFLiAllocator*          m_pAllocator;
-    u32                     _a94;
-    char                    m_PathOfficial[FFL_PATH_MAX_LEN];
-    char                    m_PathBackup[FFL_PATH_MAX_LEN];
-    char                    m_PathHidden[FFL_PATH_MAX_LEN];
-    bool                    m_IsPathSet;
-    bool                    m_IsBackupOfficialNeed;
-    bool                    m_IsHiddenSaved;
-    bool                    m_IsFlushQuotaNeeded;
-    u8                      _d9c;
-    bool                    m_IsSaveHiddenNeeded;
+    FFLiFsClient* m_pFsClient;
+    FFLiFsCommand m_FsCommand;
+    FFLiDatabaseFile* m_pDatabaseFile;
+    FFLiFileWriteBuffer* m_pFileWriteBuffer;
+    FFLiAllocator* m_pAllocator;
+    u32 _a94;
+    char m_PathOfficial[FFL_PATH_MAX_LEN];
+    char m_PathBackup[FFL_PATH_MAX_LEN];
+    char m_PathHidden[FFL_PATH_MAX_LEN];
+    bool m_IsPathSet;
+    bool m_IsBackupOfficialNeed;
+    bool m_IsHiddenSaved;
+    bool m_IsFlushQuotaNeeded;
+    u8 _d9c;
+    bool m_IsSaveHiddenNeeded;
 };
 NN_STATIC_ASSERT(sizeof(FFLiDatabaseFileAccessor) == 0xDA0);
 

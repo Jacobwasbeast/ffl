@@ -8,20 +8,18 @@
 #include <nn/ffl/FFLiDatabaseFileAccessor.h>
 #include <nn/ffl/FFLiDatabaseRandom.h>
 
-struct  FFLiCharInfo;
-class   FFLiMiddleDB;
-class   FFLiSystemContext;
+struct FFLiCharInfo;
+class FFLiMiddleDB;
+class FFLiSystemContext;
 
 class FFLiDatabaseManager
 {
 public:
-    FFLiDatabaseManager(FFLiDatabaseFile* pFile, FFLiFileWriteBuffer* pWriteBuffer, FFLiSystemContext* pContext, FFLiFsClient* pClient, FFLiAllocator* pAllocator);
+    FFLiDatabaseManager(FFLiDatabaseFile* pFile, FFLiFileWriteBuffer* pWriteBuffer, FFLiSystemContext* pContext,
+                        FFLiFsClient* pClient, FFLiAllocator* pAllocator);
     ~FFLiDatabaseManager();
 
-    FFLiDatabaseFileAccessor& GetDatabaseFileAccessor()
-    {
-        return m_DatabaseFileAccessor;
-    }
+    FFLiDatabaseFileAccessor& GetDatabaseFileAccessor() { return m_DatabaseFileAccessor; }
 
     FFLResult AfterConstruct();
     FFLResult BeforeDestruct();
@@ -32,19 +30,20 @@ public:
 
     FFLResult GetCharInfoFromOfficial(FFLiCharInfo* pCharInfo, u16 index);
     FFLResult GetCharInfoFromDefault(FFLiCharInfo* pCharInfo, u16 index);
-    FFLResult GetCharInfoFromStoreData(FFLiCharInfo* pCharInfo, FFLDataSource dataSource, const FFLiStoreDataCFL* pStoreDataCFL, u16 index);
+    FFLResult GetCharInfoFromStoreData(FFLiCharInfo* pCharInfo, FFLDataSource dataSource,
+                                       const FFLiStoreDataCFL* pStoreDataCFL, u16 index);
     FFLResult PickupCharInfo(FFLiCharInfo* pCharInfo, FFLDataSource dataSource, const void* pBuffer, u16 index);
     FFLResult GetStoreData(FFLiStoreDataCFL* pStoreDataCFL, FFLDataSource dataSource, u16 index);
 
     FFLResult UpdateMiddleDB(FFLiMiddleDB* pMiddleDB);
 
 private:
-    FFLiSystemContext*          m_pSystemContext;
-    FFLiDatabaseFileAccessor    m_DatabaseFileAccessor;
-    FFLiDatabaseDefault         m_DatabaseDefault;
-    FFLiDatabaseRandom          m_DatabaseRandom;
-    bool                        m_IsEnabledSpecialMii;
-    FFLiAllocator*              m_pAllocator;
+    FFLiSystemContext* m_pSystemContext;
+    FFLiDatabaseFileAccessor m_DatabaseFileAccessor;
+    FFLiDatabaseDefault m_DatabaseDefault;
+    FFLiDatabaseRandom m_DatabaseRandom;
+    bool m_IsEnabledSpecialMii;
+    FFLiAllocator* m_pAllocator;
 };
 NN_STATIC_ASSERT(sizeof(FFLiDatabaseManager) == 0xFD8);
 

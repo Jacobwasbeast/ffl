@@ -19,19 +19,13 @@ public:
     FSStatus Shutdown(u32 errHandling = FS_RET_NO_ERROR);
     FSStatus ShutdownIfValid(u32 errHandling = FS_RET_NO_ERROR);
 
-    FSClient& GetFSClient()
-    {
-        return m_FSClient;
-    }
+    FSClient& GetFSClient() { return m_FSClient; }
 
-    const FSClient& GetFSClient() const
-    {
-        return m_FSClient;
-    }
+    const FSClient& GetFSClient() const { return m_FSClient; }
 
 private:
-    FSClient    m_FSClient;
-    bool        m_IsValid;
+    FSClient m_FSClient;
+    bool m_IsValid;
 };
 NN_STATIC_ASSERT(sizeof(FFLiFsClient) == 0x1701);
 

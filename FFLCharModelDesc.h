@@ -5,18 +5,18 @@
 #include <nn/ffl/FFLResourceType.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 typedef struct FFLCharModelDesc
 {
-    FFLResolution   resolution;
-    u32             expressionFlag;
-    u32             modelFlag;
+    FFLResolution resolution;
+    u32 expressionFlag;
+    u32 modelFlag;
     FFLResourceType resourceType;
-    BOOL            compressTexture;
-}
-FFLCharModelDesc;
+    BOOL compressTexture;
+} FFLCharModelDesc;
 NN_STATIC_ASSERT(sizeof(FFLCharModelDesc) == 0x14);
 
 #ifdef __cplusplus

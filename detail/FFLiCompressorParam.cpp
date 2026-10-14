@@ -6,17 +6,15 @@
 
 #include <new>
 
-FFLiCompressorParam::FFLiCompressorParam()
-    : m_NumMips(0)
-    , m_ppUniform(NULL)
+FFLiCompressorParam::FFLiCompressorParam() : m_NumMips(0), m_ppUniform(NULL)
 {
 }
 
 u32 FFLiCompressorParam::GetBufferSize(u32 numMips)
 {
-    u32 ret  = sizeof(FFLiCompressUniform*)         * numMips;
-    ret     += sizeof(FFLiCompressUniform)          * numMips;
-    ret     += FFLiCompressUniform::GetBufferSize() * numMips;
+    u32 ret = sizeof(FFLiCompressUniform*) * numMips;
+    ret += sizeof(FFLiCompressUniform) * numMips;
+    ret += FFLiCompressUniform::GetBufferSize() * numMips;
 
     return ret;
 }
@@ -36,7 +34,7 @@ void FFLiCompressorParam::SetTexture(const GX2Texture* pGX2Texture)
 {
     for (u32 i = 0; i < pGX2Texture->surface.numMips; i++)
     {
-        u32 width  = FFLiGetMipMapLevelSize(pGX2Texture->surface.width,  i);
+        u32 width = FFLiGetMipMapLevelSize(pGX2Texture->surface.width, i);
         u32 height = FFLiGetMipMapLevelSize(pGX2Texture->surface.height, i);
         m_ppUniform[i]->SetResolution(width, height);
         m_ppUniform[i]->SetMipLevel(i);

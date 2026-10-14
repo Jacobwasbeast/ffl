@@ -8,11 +8,11 @@
 
 #include <nn/ffl/detail/FFLiResourceCache.h>
 
-class   FFLiFsClient;
-class   FFLiFsCommand;
-struct  FFLiFsCommandBuffer;
-struct  FFLiResourceHeader;
-struct  FFLiResourceMultiHeader;
+class FFLiFsClient;
+class FFLiFsCommand;
+struct FFLiFsCommandBuffer;
+struct FFLiResourceHeader;
+struct FFLiResourceMultiHeader;
 
 class FFLiResourceManager
 {
@@ -43,28 +43,19 @@ public:
 
     u32 GetUncompressBufferSize(FFLResourceType resourceType) const;
 
-    FFLiFsClient* GetClient() const
-    {
-        return m_pFsClient;
-    }
+    FFLiFsClient* GetClient() const { return m_pFsClient; }
 
-    FFLiResourceCache& GetResourceCache()
-    {
-        return m_ResourceCache;
-    }
+    FFLiResourceCache& GetResourceCache() { return m_ResourceCache; }
 
-    const FFLiResourceCache& GetResourceCache() const
-    {
-        return m_ResourceCache;
-    }
+    const FFLiResourceCache& GetResourceCache() const { return m_ResourceCache; }
 
     const char* GetPath(FFLResourceType resourceType) const;
 
 private:
-    FFLiResourceMultiHeader*    m_pResourceMultiHeader;
-    FFLiFsClient*               m_pFsClient;
-    FFLiResourceCache           m_ResourceCache;
-    char                        m_Path[FFL_RESOURCE_TYPE_MAX][FFL_PATH_MAX_LEN];
+    FFLiResourceMultiHeader* m_pResourceMultiHeader;
+    FFLiFsClient* m_pFsClient;
+    FFLiResourceCache m_ResourceCache;
+    char m_Path[FFL_RESOURCE_TYPE_MAX][FFL_PATH_MAX_LEN];
 };
 NN_STATIC_ASSERT(sizeof(FFLiResourceManager) == 0x218);
 

@@ -18,7 +18,8 @@ u32 FFLGetTempBufferSizeCharModel(const FFLCharModelDesc* pDesc)
     return FFLiGetTempBufferSizeCharModel(pDesc);
 }
 
-namespace {
+namespace
+{
 
 FFLiCharModel* GetCharModel(FFLCharModel* pModel)
 {
@@ -27,7 +28,8 @@ FFLiCharModel* GetCharModel(FFLCharModel* pModel)
 
 }
 
-FFLResult FFLInitCharModelCPUStep(FFLCharModel* pModel, const FFLCharModelSource* pSource, const FFLCharModelDesc* pDesc, FFLCharModelBuffer* pBuffer)
+FFLResult FFLInitCharModelCPUStep(FFLCharModel* pModel, const FFLCharModelSource* pSource,
+                                  const FFLCharModelDesc* pDesc, FFLCharModelBuffer* pBuffer)
 {
     return FFLiInitCharModelCPUStep(GetCharModel(pModel), pSource, pDesc, pBuffer);
 }
@@ -51,7 +53,8 @@ void FFLDeleteCharModel(FFLCharModel* pModel)
     FFLiDeleteCharModel(GetCharModel(pModel));
 }
 
-namespace {
+namespace
+{
 
 const FFLiCharModel* GetCharModel(const FFLCharModel* pModel)
 {

@@ -7,19 +7,13 @@ class FFLiCompressor
 {
 public:
     FFLiCompressor(FFLiBufferAllocator* pAllocator, const void* pShaderData);
-    ~FFLiCompressor();  // Deleted in NSMBU
+    ~FFLiCompressor(); // Deleted in NSMBU
 
     static u32 GetBufferSize(const void* pShaderData);
 
-    FFLiCompressorImplBC1& GetCompressorImplBC1()
-    {
-        return m_CompressorImplBC1;
-    }
+    FFLiCompressorImplBC1& GetCompressorImplBC1() { return m_CompressorImplBC1; }
 
-    FFLiCompressorImplBC3& GetCompressorImplBC3()
-    {
-        return m_CompressorImplBC3;
-    }
+    FFLiCompressorImplBC3& GetCompressorImplBC3() { return m_CompressorImplBC3; }
 
     bool SetupCPU(const void* pShaderData);
     void SetupGPU();
@@ -27,8 +21,8 @@ public:
     bool UseUB() const;
 
 private:
-    FFLiCompressorImplBC1   m_CompressorImplBC1;
-    FFLiCompressorImplBC3   m_CompressorImplBC3;
+    FFLiCompressorImplBC1 m_CompressorImplBC1;
+    FFLiCompressorImplBC3 m_CompressorImplBC3;
 };
 NN_STATIC_ASSERT(sizeof(FFLiCompressor) == 0x1F0);
 

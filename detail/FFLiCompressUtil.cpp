@@ -2,7 +2,8 @@
 
 #include <cstring>
 
-namespace {
+namespace
+{
 
 void SetupColorBuffer(GX2ColorBuffer* pColorBuffer, GX2Texture* pTexture, u32 mipLevel, GX2SurfaceFormat format);
 
@@ -25,11 +26,12 @@ void FFLiSetupColorBufferForBC1(GX2ColorBuffer* pColorBuffer, GX2Texture* pTextu
     SetupColorBuffer(pColorBuffer, pTexture, mipLevel, GX2_SURFACE_FORMAT_TC_R16_G16_B16_A16_UINT);
 }
 
-namespace {
+namespace
+{
 
 void SetupColorBuffer(GX2ColorBuffer* pColorBuffer, GX2Texture* pTexture, u32 mipLevel, GX2SurfaceFormat format)
 {
-    u32 width = FFLiCalculateUnitTextureResolution(pTexture->surface.width,  mipLevel);
+    u32 width = FFLiCalculateUnitTextureResolution(pTexture->surface.width, mipLevel);
     u32 height = FFLiCalculateUnitTextureResolution(pTexture->surface.height, mipLevel);
 
     std::memset(pColorBuffer, 0, sizeof(GX2ColorBuffer));
