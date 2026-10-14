@@ -644,6 +644,56 @@ public:
         return m_MolePositionY;
     }
 
+    void ClearPadding0Bit31()
+    {
+        _0_31 = 0;
+    }
+
+    void ClearPadding0Bit14To15()
+    {
+        _0_14_15 = 0;
+    }
+
+    void ClearPadding32Bit12To15()
+    {
+        _32_12_15 = 0;
+    }
+
+    void ClearPadding36Bit14To15()
+    {
+        _36_14_15 = 0;
+    }
+
+    void ClearPadding38Bit15()
+    {
+        _38_15 = 0;
+    }
+
+    void ClearPadding3ABit14To15()
+    {
+        _3A_14_15 = 0;
+    }
+
+    void ClearPadding3CBit14To15()
+    {
+        _3C_14_15 = 0;
+    }
+
+    void ClearPadding40Bit8To15()
+    {
+        _40_8_15 = 0;
+    }
+
+    void ClearPadding42Bit15()
+    {
+        _42_15 = 0;
+    }
+
+    void ClearPadding46Bit15()
+    {
+        _46_15 = 0;
+    }
+
     void SetPlaceHolder(s32 value)
     {
         m_PlaceHolder = value;
@@ -652,12 +702,12 @@ public:
     void SwapEndian();
 
 private:
-    u32                     : 1;
+    u32 _0_31               : 1;
     u32 m_BirthPlatform     : 3;
     u32 _0_24_27            : 4;
     u32 m_SlotIndex         : 4;
     u32 m_PageIndex         : 4;
-    u32                     : 2;
+    u32 _0_14_15            : 2;
     u32 m_FontRegion        : 2;
     u32 m_RegionMove        : 2;
     u32 m_NgWord            : 1;
@@ -696,7 +746,7 @@ private:
     u16 m_FacelineColor     : 3;
     u16 m_FaceType          : 4;
     u16 m_LocalOnly         : 1;
-    u16                     : 4;
+    u16 _32_12_15           : 4;
     u16 m_HairDir           : 1;
     u16 m_HairColor         : 3;
     u16 m_HairType          : 8;
@@ -705,22 +755,22 @@ private:
     u16 m_EyeScale          : 4;
     u16 m_EyeColor          : 3;
     u16 m_EyeType           : 6;
-    u16                     : 2;
+    u16 _36_14_15           : 2;
     u16 m_EyePositionY      : 5;
     u16 m_EyeSpacingX       : 4;
     u16 m_EyeRotate         : 5;
 
-    u16                     : 1;
+    u16 _38_15              : 1;
     u16 m_EyebrowScaleY     : 3;
     u16 m_EyebrowScale      : 4;
     u16 m_EyebrowColor      : 3;
     u16 m_EyebrowType       : 5;
-    u16                     : 2;
+    u16 _3A_14_15           : 2;
     u16 m_EyebrowPositionY  : 5;
     u16 m_EyebrowSpacingX   : 4;
     u16 m_EyebrowRotate     : 5;
 
-    u16                     : 2;
+    u16 _3C_14_15           : 2;
     u16 m_NosePositionY     : 5;
     u16 m_NoseScale         : 4;
     u16 m_NoseType          : 5;
@@ -729,10 +779,10 @@ private:
     u16 m_MouthColor        : 3;
     u16 m_MouthType         : 6;
 
-    u16                     : 8;
+    u16 _40_8_15            : 8;
     u16 m_MustacheType      : 3;
     u16 m_MouthPositionY    : 5;
-    u16                     : 1;
+    u16 _42_15              : 1;
     u16 m_MustachePositionY : 5;
     u16 m_MustacheScale     : 4;
     u16 m_BeardColor        : 3;
@@ -742,7 +792,7 @@ private:
     u16 m_GlassScale        : 4;
     u16 m_GlassColor        : 3;
     u16 m_GlassType         : 4;
-    u16                     : 1;
+    u16 _46_15              : 1;
     u16 m_MolePositionY     : 5;
     u16 m_MolePositionX     : 5;
     u16 m_MoleScale         : 4;

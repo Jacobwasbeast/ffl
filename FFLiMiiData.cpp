@@ -238,10 +238,12 @@ void FFLiCharInfo2MiiDataCore(FFLiMiiDataCore* pMiiDataCore, const FFLiCharInfo&
     pMiiDataCore->SetRegionMove(charInfo.regionMove);
     pMiiDataCore->SetLocalOnly(charInfo.localOnly);
     pMiiDataCore->SetFontRegion(charInfo.fontRegion);
+    pMiiDataCore->ClearPadding0Bit14To15();
     pMiiDataCore->SetPageIndex(charInfo.pageIndex);
     pMiiDataCore->SetSlotIndex(charInfo.slotIndex);
     pMiiDataCore->SetFlagBit24To27(charInfo._114);
     pMiiDataCore->SetBirthPlatform(charInfo.birthPlatform);
+    pMiiDataCore->ClearPadding0Bit31();
     std::memcpy(&pMiiDataCore->AuthorID(), &charInfo.authorID, sizeof(FFLiAuthorID));
     std::memcpy(&pMiiDataCore->CreatorID(), &charInfo.creatorID, sizeof(FFLCreateID));
     std::memset(pMiiDataCore->Padding1(), 0, pMiiDataCore->Padding1Size());
@@ -260,6 +262,7 @@ void FFLiCharInfo2MiiDataCore(FFLiMiiDataCore* pMiiDataCore, const FFLiCharInfo&
     pMiiDataCore->SetHairType(charInfo.parts.hairType);
     pMiiDataCore->SetHairColor(charInfo.parts.hairColor);
     pMiiDataCore->SetHairDir(charInfo.parts.hairDir);
+    pMiiDataCore->ClearPadding32Bit12To15();
     pMiiDataCore->SetEyeType(charInfo.parts.eyeType);
     pMiiDataCore->SetEyeColor(charInfo.parts.eyeColor);
     pMiiDataCore->SetEyeScale(charInfo.parts.eyeScale);
@@ -267,26 +270,32 @@ void FFLiCharInfo2MiiDataCore(FFLiMiiDataCore* pMiiDataCore, const FFLiCharInfo&
     pMiiDataCore->SetEyeRotate(charInfo.parts.eyeRotate);
     pMiiDataCore->SetEyeSpacing(charInfo.parts.eyeSpacingX);
     pMiiDataCore->SetEyePosition(charInfo.parts.eyePositionY);
+    pMiiDataCore->ClearPadding36Bit14To15();
     pMiiDataCore->SetEyebrowType(charInfo.parts.eyebrowType);
     pMiiDataCore->SetEyebrowColor(charInfo.parts.eyebrowColor);
     pMiiDataCore->SetEyebrowScale(charInfo.parts.eyebrowScale);
     pMiiDataCore->SetEyebrowScaleY(charInfo.parts.eyebrowScaleY);
+    pMiiDataCore->ClearPadding38Bit15();
     pMiiDataCore->SetEyebrowRotate(charInfo.parts.eyebrowRotate);
     pMiiDataCore->SetEyebrowSpacing(charInfo.parts.eyebrowSpacingX);
     pMiiDataCore->SetEyebrowPosition(charInfo.parts.eyebrowPositionY);
+    pMiiDataCore->ClearPadding3ABit14To15();
     pMiiDataCore->SetNoseType(charInfo.parts.noseType);
     pMiiDataCore->SetNoseScale(charInfo.parts.noseScale);
     pMiiDataCore->SetNosePosition(charInfo.parts.nosePositionY);
+    pMiiDataCore->ClearPadding3CBit14To15();
     pMiiDataCore->SetMouthType(charInfo.parts.mouthType);
     pMiiDataCore->SetMouthColor(charInfo.parts.mouthColor);
     pMiiDataCore->SetMouthScale(charInfo.parts.mouthScale);
     pMiiDataCore->SetMouthScaleY(charInfo.parts.mouthScaleY);
     pMiiDataCore->SetMouthPosition(charInfo.parts.mouthPositionY);
     pMiiDataCore->SetMustacheType(charInfo.parts.mustacheType);
+    pMiiDataCore->ClearPadding40Bit8To15();
     pMiiDataCore->SetBeardType(charInfo.parts.beardType);
     pMiiDataCore->SetBeardColor(charInfo.parts.beardColor);
     pMiiDataCore->SetMustacheScale(charInfo.parts.mustacheScale);
     pMiiDataCore->SetMustachePosition(charInfo.parts.mustachePositionY);
+    pMiiDataCore->ClearPadding42Bit15();
     pMiiDataCore->SetGlassType(charInfo.parts.glassType);
     pMiiDataCore->SetGlassColor(charInfo.parts.glassColor);
     pMiiDataCore->SetGlassScale(charInfo.parts.glassScale);
@@ -295,6 +304,7 @@ void FFLiCharInfo2MiiDataCore(FFLiMiiDataCore* pMiiDataCore, const FFLiCharInfo&
     pMiiDataCore->SetMoleScale(charInfo.parts.moleScale);
     pMiiDataCore->SetMolePositionX(charInfo.parts.molePositionX);
     pMiiDataCore->SetMolePositionY(charInfo.parts.molePositionY);
+    pMiiDataCore->ClearPadding46Bit15();
     pMiiDataCore->SetPlaceHolder(0);
 }
 
